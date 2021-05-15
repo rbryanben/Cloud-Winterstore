@@ -1,0 +1,318 @@
+    /* summary ruppee 
+    
+        component used on landing page
+    */
+    
+    .summary-block-rupee-header {
+        margin-top: 5px;
+        color: white;
+        font-size: large;
+        font-weight: 600;
+    }
+    
+    .summary-block-rupee-subtext {
+        font-size: small;
+        color: white;
+        margin-top: 20px;
+    }
+    
+    .summary-block-rupee-button-block {
+        margin-top: 20px;
+        display: grid;
+        width: 390px;
+        grid-template-columns: 1fr 1fr;
+    }
+    /* Japan block */
+    
+    .japan-block {
+        background-color: rgb(37, 97, 112);
+        height: 340px;
+        padding: 60px;
+    }
+    
+    .japan-block-header {
+        color: white;
+        text-align: center;
+        margin-top: 20px;
+        font-size: 32pt;
+    }
+    /*
+         century block
+    */
+    
+    .century-block {
+        background-color: rgba(226, 226, 226, 0.562);
+        height: 350px;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .century-block-header {
+        font-size: x-large;
+    }
+    
+    .century-block-subtext {
+        margin-top: 20px;
+        width: 600px;
+    }
+    /* 
+    window shopper
+
+    */
+    
+    .window-shopper {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        padding: 40px;
+        margin-top: 20px;
+        margin-bottom: 60px;
+        gap: 30px;
+        margin-right: 10%;
+        margin-left: 10%;
+    }
+    
+    .window-shoper-item {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        padding: 20px;
+        border-radius: 6px;
+        cursor: pointer;
+        width: 250px;
+    }
+    
+    .window-shoper-item-image-img {
+        height: 80px;
+    }
+    
+    .window-shoper-item-image {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .window-shopper-item-devider {
+        width: 100px;
+        border: none;
+        margin-top: 20px;
+        border-bottom: solid lightgray 2px;
+    }
+    
+    .window-shopper-item-header {
+        margin-top: 20px;
+        color: rgba(65, 75, 75, 0.774);
+        font-size: 12pt;
+        font-weight: 600;
+    }
+    
+    .window-shopper-item-subtext {
+        margin-top: 20px;
+        color: rgba(65, 75, 75, 0.774);
+        font-size: small;
+    }
+    
+    .window-shoper-item-learn-more {
+        margin-top: 20px;
+        margin-bottom: 25px;
+        font-size: small;
+        color: lightseagreen;
+    }
+    /*
+         century block white
+    */
+    
+    .century-block-white {
+        background-color: white;
+        height: 250px;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .century-block-header {
+        font-size: x-large;
+    }
+    
+    .century-block-subtext {
+        margin-top: 20px;
+        width: 600px;
+    }
+    /*
+         marxwell block
+    */
+    
+    .marxwell-block {
+        background-color: white;
+        height: 280px;
+        color: gray;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .marxwell-body-header {
+        font-size: x-large;
+    }
+    
+    .marxwell-body-subtext {
+        margin-top: 40px;
+        width: 500px;
+    }
+    /* 
+    martial buttons
+     */
+    
+    .martial-button-white {
+        background-color: white;
+        width: 160px;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: small;
+        color: rgba(28, 113, 128, 0.589);
+        cursor: pointer;
+        transition: all 0.5s ease;
+        border-radius: 6px;
+    }
+    
+    .martial-button-white:hover {
+        background-color: rgba(255, 255, 255, 0);
+        color: white;
+        border: white solid 1px;
+    }
+    /*
+        Sabi buttons 
+    */
+    
+    .sabi-button-green {
+        background-color: rgba(19, 138, 112, 0.719);
+        width: 160px;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: small;
+        color: white;
+        cursor: pointer;
+        transition: all 0.5s ease;
+        border-radius: 6px;
+    }
+    
+    .sabi-button-green:hover {
+        background-color: rgba(19, 138, 112, 0.473);
+    }
+    
+    .sabi-button-lg-green {
+        background-color: rgba(19, 138, 112, 0.719);
+        width: 210px;
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: small;
+        color: white;
+        cursor: pointer;
+        transition: all 0.5s ease;
+        border-radius: 6px;
+    }
+    
+    .sabi-button-lg-green:hover {
+        background-color: rgba(19, 138, 112, 0.473);
+    }
+    
+    .sabi-button-blue {
+        background-color: rgba(19, 80, 138, 0.719);
+        width: 160px;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: small;
+        color: white;
+        cursor: pointer;
+        transition: all 0.5s ease;
+        border-radius: 6px;
+    }
+    
+    .sabi-button-sm-blue {
+        background-color: rgba(19, 80, 138, 0.719);
+        width: 80px;
+        height: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: x-small;
+        color: white;
+        cursor: pointer;
+        transition: all 0.5s ease;
+        border-radius: 4px;
+    }
+    
+    .sabi-button-sm-blue:hover {
+        background-color: rgba(19, 80, 138, 0.432);
+    }
+    /*
+     osprey buttons 
+     */
+    
+    .osprey-button-white {
+        background-color: rgba(255, 0, 0, 0);
+        width: 160px;
+        height: 40px;
+        display: flex;
+        border: solid white 1px;
+        justify-content: center;
+        align-items: center;
+        font-size: small;
+        color: white;
+        cursor: pointer;
+        border-radius: 6px;
+    }
+    /* himatachi */
+    
+    .himatachi-body {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        padding: 60px;
+        margin-left: 5%;
+        margin-right: 5%;
+        gap: 20px;
+    }
+    
+    .himatachi-item {
+        color: rgba(128, 128, 128, 0.685);
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    
+    .himatachi-item:hover {
+        transform: scale(1.1);
+    }
+    
+    .himatachi-item-text {
+        margin-top: 15px;
+        font-size: x-large;
+        padding: 0;
+        text-align: center;
+    }
+    /* buttom helpers */
+    
+    .center-button {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    /* block helpers */
+    
+    .block-tall {
+        height: 400px;
+    }
+    /* div helpers */
+    
+    .div-flex-center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }

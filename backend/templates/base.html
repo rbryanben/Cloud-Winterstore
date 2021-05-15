@@ -8,8 +8,14 @@
     <title>{% block title %} {% endblock %}</title>
     <!-- favicon -->
     <link rel="shortcut icon" type="image/jpg" href="{% static 'png/logo.png' %}" />
-    <!-- imports come here-->
-    {% block imports %} {% endblock %}
+    <!-- styles and JS -->
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/canarymodalpack.css' %}">
+    <link rel="stylesheet" href="{% static 'css/eaglepack.css' %}">
+    <script src="{% static 'js/base.js'%}"></script>
+    <script src="{% static 'js/communication.js'%}"></script>
+    <link href="{% static '/fontawesome-free-5.15.3-web/css/all.css' %}" rel="stylesheet">
+    <!-- imports come here-->{% block imports %} {% endblock %}
 </head>
 
 <!-- direct style-->
@@ -17,7 +23,50 @@
 
 <body>
     <!-- body  comes here -->
-    {% block body %} {% endblock %}
+    <div id="pagerBody" class="pager-body">
+        {% block body %} {% endblock %}
+    </div>
+
+    <!--modal section -->
+
+    <!-- login modal-->
+    <div id="loginModal" class="login-modal">
+        <div class="login-modal-close" onclick="hideLoginModal()">
+            <i class="fas fa-times"></i>
+        </div>
+        <div class="login-modal-header">
+            Log In To Your Account
+        </div>
+        <hr class="loginModalDevider">
+        <!-- username input-->
+        <div class="div-flex-center">
+            <input id="loginUsername" placeholder="Username or Email" class="Protea-input-box">
+        </div>
+        <!-- password input-->
+        <div class="div-flex-center">
+            <input id="loginPassword" placeholder="Password" type="password" class="Protea-input-box">
+        </div>
+        <!-- modal footer -->
+        <div class="login-modal-footer">
+            <div class="login-modal-footer-left">
+                <div class="login-modal-footer-link">
+                    Forgot Password
+                </div>
+                <div class="login-modal-footer-link">
+                    Create An Account
+                </div>
+            </div>
+            <div class="login-modal-footer-right">
+                <div class="sabi-button-sm-blue center-button" onclick="login()">Sign In</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- notification box -->
+    <div id="notificationContainer" class="notification-block">
+
+    </div>
+
 </body>
 
 </html>
