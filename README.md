@@ -1,6 +1,8 @@
 # Winterstore
 Cloud-Hosted NoSQL Database For Storing Files Securely 
 
+<img src="logos/logo.jpg">
+
 # Why Winterstore 
 One thing to note is that I am a very big fan of google firebase (https://firebase.google.com/), my favorite part being the fact that it is 
 free to use : ) However there are other factors like its very easy to use, hence you do not need to know a lot about backend to build an entire 
