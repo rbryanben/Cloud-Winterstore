@@ -1,0 +1,190 @@
+{% extends "base.html" %}{% load static %}
+<!-- title -->
+{% block title %} Winterstore | Signup {% endblock %}
+
+<!-- imports -->
+{% block imports %}
+<link rel="stylesheet" href="{% static 'css/signup.css' %}">
+<script src="{% static 'js/signup.js' %}"></script> {% endblock %}
+
+<!-- direct style-->
+{% block style %}
+<style>
+    body {
+        background-size: cover;
+        background-image: url("{% static 'png/signup_wallpaper.png' %}");
+    }
+</style>
+{% endblock %}
+
+<!-- body  comes here -->
+{% block body %}
+
+<img src="{% static 'png/logo_full.png' %}" class="body-logo">
+<!-- logo-->
+<div class="navbar-logo" style="font-size: x-small; text-align: right; padding-right: 16%;">
+    Secure <span style="color: rgb(86, 226, 219); font-size: x-small;">Cloud</span> Storage
+</div>
+
+<div class="signup-body">
+    <div class="signup-body-left">
+        <div class="plain-header-icon">
+            Create Your Winterstore Account<i class="fas fa-user-plus fa-1x"></i>
+        </div>
+
+        <div class="indicator-icon">
+            <i class="fas fa-asterisk"></i>Indicates required fields
+        </div>
+
+        <!-- emai; input-->
+        <div class="div-flex-center" style="margin-top: 20px;">
+            <input id="signupEmailInput" type="email" placeholder="Email" class="Protea-input-box fill tall"><i class="fas fa-asterisk"></i>
+        </div>
+
+        <!-- password input-->
+        <div class="div-flex-center">
+            <input type="password" id="signupPasswordInput" placeholder="Password" class="Protea-input-box fill tall"> <i class="fas fa-asterisk"></i>
+        </div>
+
+        <!-- username input-->
+        <div class="div-flex-center">
+            <input type="text" id="signupUsernameInput" placeholder="Username" class="Protea-input-box fill tall"><i class="fas fa-asterisk"></i>
+        </div>
+
+
+        <!-- upgrade section -->
+        <div class="marxwell-body-subtext" style="margin-top: 40px; font-size: medium; ">
+            Why not upgrade?
+        </div>
+        <div class="marxwell-body-subtext" style="margin-top: 10px; font-size: small; ">
+            Upgrade to Enhance your Cloud Storage Today. Learn more below.
+        </div>
+
+        <!-- table-->
+        <div class="table">
+            <div class="table-cell"></div>
+            <div class="table-cell plattform">
+                <h3>Enhanced</h3>
+            </div>
+            <div class="table-cell enterprise">
+                <h3>Free</h3>
+            </div>
+            <div class="table-cell cell-feature">15GB Free Storage</div>
+            <div class="table-cell">
+                <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+                <title>check_blue</title>
+                <path d="M6.116 14.884c.488.488 1.28.488 1.768 0l10-10c.488-.488.488-1.28 0-1.768s-1.28-.488-1.768 0l-9.08 9.15-4.152-4.15c-.488-.488-1.28-.488-1.768 0s-.488 1.28 0 1.768l5 5z" fill="limegreen" fill-rule="evenodd"/>
+              </svg>
+            </div>
+            <div class="table-cell">
+                <svg class="enterprise-check" width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+                <title>check_blue</title>
+                <path d="M6.116 14.884c.488.488 1.28.488 1.768 0l10-10c.488-.488.488-1.28 0-1.768s-1.28-.488-1.768 0l-9.08 9.15-4.152-4.15c-.488-.488-1.28-.488-1.768 0s-.488 1.28 0 1.768l5 5z" fill="limegreen" fill-rule="evenodd"/>
+              </svg>
+            </div>
+            <div class="table-cell cell-feature">Unlimited Storage</div>
+            <div class="table-cell">
+                <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+                <title>check_blue</title>
+                <path d="M6.116 14.884c.488.488 1.28.488 1.768 0l10-10c.488-.488.488-1.28 0-1.768s-1.28-.488-1.768 0l-9.08 9.15-4.152-4.15c-.488-.488-1.28-.488-1.768 0s-.488 1.28 0 1.768l5 5z" fill="limegreen" fill-rule="evenodd"/>
+              </svg>
+            </div>
+            <div class="table-cell">
+
+            </div>
+            <div class="table-cell cell-feature">Cloud Support</div>
+            <div class="table-cell">
+                <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+                <title>check_blue</title>
+                <path d="M6.116 14.884c.488.488 1.28.488 1.768 0l10-10c.488-.488.488-1.28 0-1.768s-1.28-.488-1.768 0l-9.08 9.15-4.152-4.15c-.488-.488-1.28-.488-1.768 0s-.488 1.28 0 1.768l5 5z" fill="limegreen" fill-rule="evenodd"/>
+              </svg>
+            </div>
+            <div class="table-cell">
+                <svg class="enterprise-check" width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+                <title>check_blue</title>
+                <path d="M6.116 14.884c.488.488 1.28.488 1.768 0l10-10c.488-.488.488-1.28 0-1.768s-1.28-.488-1.768 0l-9.08 9.15-4.152-4.15c-.488-.488-1.28-.488-1.768 0s-.488 1.28 0 1.768l5 5z" fill="limegreen" fill-rule="evenodd"/>
+              </svg>
+            </div>
+            <div class="table-cell cell-feature">500 Accounts</div>
+            <div class="table-cell">
+                <svg width="18" height="18" viewBox="0 0 18 18">
+                <title>check_blue</title>
+                <path d="M6.116 14.884c.488.488 1.28.488 1.768 0l10-10c.488-.488.488-1.28 0-1.768s-1.28-.488-1.768 0l-9.08 9.15-4.152-4.15c-.488-.488-1.28-.488-1.768 0s-.488 1.28 0 1.768l5 5z" fill="limegreen" fill-rule="evenodd"/>
+              </svg>
+            </div>
+            <div class="table-cell">
+                <svg class="enterprise-check" width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+                <title>check_blue</title>
+                <path d="M6.116 14.884c.488.488 1.28.488 1.768 0l10-10c.488-.488.488-1.28 0-1.768s-1.28-.488-1.768 0l-9.08 9.15-4.152-4.15c-.488-.488-1.28-.488-1.768 0s-.488 1.28 0 1.768l5 5z" fill="limegreen" fill-rule="evenodd"/>
+              </svg>
+            </div>
+            <div class="table-cell cell-feature">Unlimited Accounts</div>
+            <div class="table-cell">
+                <svg width="18" height="18" viewBox="0 0 18 18">
+                    <title>check_blue</title>
+                    <path d="M6.116 14.884c.488.488 1.28.488 1.768 0l10-10c.488-.488.488-1.28 0-1.768s-1.28-.488-1.768 0l-9.08 9.15-4.152-4.15c-.488-.488-1.28-.488-1.768 0s-.488 1.28 0 1.768l5 5z" fill="limegreen" fill-rule="evenodd"/>
+                  </svg>
+            </div>
+            <div class="table-cell">
+
+            </div>
+
+            <div class="table-cell cell-feature"></div>
+            <div class="table-cell" style="border-right: none;">
+                RTGS$ 99.99
+            </div>
+            <div class="table-cell">
+                RTGS$ 0.00
+            </div>
+
+        </div>
+
+        <!-- terms and conditions -->
+        <div class="indicator-icon-left">
+            Terms of Service and Privacy Policy<i class="fas fa-asterisk"></i>
+        </div>
+
+        <div class="checkbox-me">
+            <input id="signupTermsInput" type="checkbox" name="terms" value="false">I agree to the <span style="color: rgb(86, 226, 219);">Terms of Service</span> and <span style="color: rgb(86, 226, 219);">Privacy Policy</span>. I also agree that I will
+            only create one free account.
+        </div>
+
+
+        <!-- email opt -->
+        <div class="indicator-icon-left" onclick="showLoading()">
+            Email Opt-In
+        </div>
+
+        <div class="checkbox-me">
+            <input type="checkbox" name="notifications" value="false"> Send me newsletter & special offers.
+        </div>
+
+        <!-- signup button -->
+        <div class="div-flex-end" style="margin-top: 40px;">
+            <div style="margin-top: 20px; margin-right: 10px;" class="sabi-button-green center-button tall">Get Enhanced</div>
+            <div class="osprey-button-grey tall" onclick="signupClient()">
+                Free Sign Up
+            </div>
+        </div>
+    </div>
+
+    <div class="signup-body-right">
+        <div class="text-small" style="margin-top: 164px; font-size: x-small;">
+            Minimum of 8 charectors.
+        </div>
+
+        <!-- password strength bar -->
+        <div id="passwordStrengthMeter" class="password-strength-bar">
+            Password Strength
+        </div>
+
+        <div class="text-small" style="margin-top: 20px; font-size: x-small;">
+            Username should be 8 charectors long and unique.
+        </div>
+        <div class="text-small" style=" margin-top: 5px; font-size: x-small;">
+            Upon registering, we will send you a confirmation email to veryfy your account.
+        </div>
+    </div>
+</div>
+
+{% endblock %}

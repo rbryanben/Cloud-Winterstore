@@ -40,11 +40,11 @@
         <hr class="loginModalDevider">
         <!-- username input-->
         <div class="div-flex-center">
-            <input id="loginUsername" placeholder="Username or Email" class="Protea-input-box">
+            <input name="username" id="loginUsername" placeholder="Username or Email" class="Protea-input-box">
         </div>
         <!-- password input-->
         <div class="div-flex-center">
-            <input id="loginPassword" placeholder="Password" type="password" class="Protea-input-box">
+            <input name="password" id="loginPassword" placeholder="Password" type="password" class="Protea-input-box">
         </div>
         <!-- modal footer -->
         <div class="login-modal-footer">
@@ -52,7 +52,7 @@
                 <div class="login-modal-footer-link">
                     Forgot Password
                 </div>
-                <div class="login-modal-footer-link">
+                <div class="login-modal-footer-link" onclick="goto('/sign-up')">
                     Create An Account
                 </div>
             </div>
@@ -64,6 +64,30 @@
 
     <!-- notification box -->
     <div id="notificationContainer" class="notification-block">
+
+    </div>
+
+    <!-- loading panel -->
+    <div id="loader" class="loading-panel">
+        <div class="loading-panel-body">
+            <div class="lds-spinner">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <div class="" style="text-align: center; margin-top: -10px;color: rgb(235, 235, 235);font-size: small;">
+                Working
+            </div>
+        </div>
 
     </div>
 

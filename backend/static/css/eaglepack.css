@@ -271,6 +271,20 @@
         cursor: pointer;
         border-radius: 6px;
     }
+    
+    .osprey-button-grey {
+        background-color: rgba(255, 0, 0, 0);
+        width: 160px;
+        height: 40px;
+        display: flex;
+        border: solid rgb(104, 104, 104) 1px;
+        justify-content: center;
+        align-items: center;
+        font-size: small;
+        color: solid rgb(104, 104, 104);
+        cursor: pointer;
+        border-radius: 6px;
+    }
     /* himatachi */
     
     .himatachi-body {
@@ -315,4 +329,37 @@
         display: flex;
         justify-content: center;
         align-items: center;
+    }
+    /* text sizes */
+    
+    .text-small {
+        font-size: small;
+    }
+    /* password strength bar */
+    
+    .password-strength-bar {
+        background-color: rgba(211, 211, 211, 0.582);
+        color: gray;
+        width: 200px;
+        padding: 5px;
+        font-size: x-small;
+        text-align: center;
+        border-radius: 4px;
+        margin-top: 8px;
+        transition: all 0.5s ease;
+    }
+    
+    .password-strength-bar.strong {
+        background-color: rgba(56, 116, 56, 0.966);
+        color: white;
+    }
+    
+    .password-strength-bar.medium {
+        background-color: orange;
+        color: white;
+    }
+    
+    .password-strength-bar.weak {
+        background-color: rgb(255, 83, 71);
+        color: white;
     }

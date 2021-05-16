@@ -1,0 +1,149 @@
+.signup-body {
+    margin-left: 12%;
+    margin-right: 15%;
+    border-radius: 6px;
+    margin-top: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    display: grid;
+    grid-template-columns: 60% 40%;
+    padding: 40px;
+    gap: 30px;
+    background-color: rgb(250, 250, 250);
+}
+
+
+/* div flex */
+
+.div-flex-end {
+    display: flex;
+    justify-content: flex-end;
+    align-items: baseline;
+}
+
+
+/* checkbox me */
+
+.checkbox-me {
+    margin-top: 10px;
+    font-size: x-small;
+}
+
+
+/*  indicator icon */
+
+.indicator-icon {
+    text-align: right;
+    font-size: x-small;
+    margin-top: 40px;
+}
+
+.indicator-icon>i {
+    color: rgba(153, 13, 13, 0.863);
+    margin-right: 2px;
+}
+
+.indicator-icon-left {
+    text-align: left;
+    font-size: medium;
+    margin-top: 40px;
+}
+
+.indicator-icon-left>i {
+    color: rgba(153, 13, 13, 0.863);
+    margin-left: 3px;
+    font-size: small;
+}
+
+
+/* button modifier */
+
+.fill {
+    width: 100%;
+}
+
+.div-flex-center {
+    position: relative;
+}
+
+.div-flex-center>i {
+    position: absolute;
+    right: 15px;
+    margin-top: 7px;
+    font-size: small;
+    color: rgba(153, 13, 13, 0.863);
+}
+
+.tall {
+    height: 45px;
+}
+
+
+/* body logo */
+
+.body-logo {
+    height: 80px;
+    margin-left: 12%;
+}
+
+
+/* plain header with icon */
+
+.plain-header-icon {
+    font-size: larger;
+    display: flex;
+}
+
+.plain-header-icon>i {
+    margin-left: auto;
+    color: rgba(128, 128, 128, 0.644);
+}
+
+
+/* table */
+
+body {
+    color: slategray;
+}
+
+.table {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 auto;
+    padding: 2rem 0rem 0rem 0rem;
+    max-width: 1100px;
+    border-radius: 6px;
+}
+
+.table-cell {
+    box-sizing: border-box;
+    flex-grow: 1;
+    width: 100%;
+    padding: 0.8em 1.2em;
+    overflow: hidden;
+    list-style-type: none;
+    outline: 1px solid #ddd;
+    text-align: center;
+    font-weight: 300;
+}
+
+
+/* Table columns
+  ================================== */
+
+.table-cell {
+    width: calc(33.33% - 1px);
+}
+
+svg.enterprise-check path {
+    fill: #30305b !important;
+}
+
+a.btn {
+    border: 2px solid;
+    padding: .6rem .9rem .6rem .9rem;
+    font-weight: 400;
+}
+
+.table-cell {
+    font-size: small;
+}

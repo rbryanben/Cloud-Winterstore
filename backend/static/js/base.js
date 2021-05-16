@@ -52,7 +52,7 @@ function login() {
             "password": password
         }
         //attempt login
-    postToServer("http://127.0.0.1:8000/login", credentials, function(responce) {
+    postToServer("/login", credentials, function(responce) {
         if (responce == "200") {
             ShowSuccess("Login Successful")
         } else {
@@ -89,4 +89,26 @@ function ShowSuccess(text) {
     `;
 
     document.getElementById("notificationContainer").innerHTML = waringNotification;
+}
+
+////
+//// This function goes to a page
+function goto(url) {
+    window.location.href = (url)
+}
+
+///
+///function to show loader 
+function showLoading() {
+    var loader = document.getElementById("loader")
+    if (!loader.classList.contains("show")) {
+        loader.classList.add("show")
+    }
+    disableScrolling()
+}
+
+function hideLoading() {
+    document.getElementById("loader").style.visibility = "hidden"
+    loader.classList.remove("show")
+    enableScrolling()
 }

@@ -5,37 +5,10 @@
 <!-- imports -->
 {% block imports %}
 <script src="{% static 'js/landing.js' %}"></script>
-{% endblock %}
+<link rel="stylesheet" href="{% static 'css/landing.css' %}"> {% endblock %}
 
 <!-- direct style-->
-{% block style %}
-<style>
-    .summary-block {
-        height: 220px;
-        background-color: rgba(28, 113, 128, 0.589);
-        display: grid;
-        padding: 40px;
-        grid-template-columns: 60% 40%;
-    }
-    
-    .summary-block-left {
-        display: flex;
-        justify-content: start;
-        align-items: baseline;
-        margin-top: auto;
-        margin-bottom: auto;
-    }
-    
-    .summary-block-illustration {
-        height: 230px;
-    }
-    
-    .summary-block-right {
-        margin-top: auto;
-        margin-bottom: auto;
-    }
-</style>
-{% endblock %}
+{% block style %} {% endblock %}
 
 <!-- body-->
 {% block body %}
