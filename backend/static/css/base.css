@@ -3,6 +3,7 @@ body {
     color: rgb(70, 70, 70);
     padding: 0;
     margin: 0;
+    width: 100%;
 }
 
 .pager-body {
@@ -56,3 +57,15 @@ body {
     height: 80px;
     width: 300px;
 }
+
+@media only screen and (max-width: 1055px) {}
+
+@media only screen and (max-width: 800px) {}
+
+@media only screen and (max-width: 600px) {}
+
+@media only screen and (max-width: 500px) {}
+
+@media only screen and (max-width: 400px) {}
+
+@media only screen and (max-width: 340px) {}

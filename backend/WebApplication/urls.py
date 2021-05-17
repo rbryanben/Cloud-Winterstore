@@ -13,5 +13,5 @@ urlpatterns = [
     path("login",views.loginAPI), #login
     path("hjkdjNHjnudellphgy",views.checkUsername), #checks username
     path("hudiueiewfefrefrde",views.checkEmail), #checks email
-    
+    path("new-free-user",views.NewFreeUserAccount), #new free user
 ]

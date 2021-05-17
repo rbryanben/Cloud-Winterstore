@@ -146,10 +146,31 @@ function validateEmail(email) {
 }
 
 //signup 
-function signupClient() {
+function signupFreeClient() {
+    var usernameInput = document.getElementById("signupUsernameInput")
+    var emailInput = document.getElementById("signupEmailInput")
+    var passwordBox = document.getElementById("signupPasswordInput");
+
     if (usernamePass && passwordPass && termsPass && emailPass) {
-        ShowSuccess("Registering")
         showLoading();
+
+        //data to be posted
+        //dont worry I am checking on the server side too
+        data = {
+            "username": usernameInput.value,
+            "email": emailInput.value,
+            "password": passwordBox.value
+        }
+        postToServer("/new-free-user", data, function(responce) {
+            if (responce == "200") {
+                hideLoading()
+                ShowSuccess("Registered")
+            } else {
+                hideLoading()
+                ShowSuccess("Registered")
+            }
+        })
+
     } else {
         //alert user where problem is 
         if (!usernamePass) {

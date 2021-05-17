@@ -3,6 +3,31 @@
         component used on landing page
     */
     
+    .summary-block {
+        height: 220px;
+        background-color: rgba(28, 113, 128, 0.589);
+        display: grid;
+        padding: 40px;
+        grid-template-columns: 6fr 4fr;
+    }
+    
+    .summary-block-left {
+        display: flex;
+        justify-content: start;
+        align-items: baseline;
+        margin-top: auto;
+        margin-bottom: auto;
+    }
+    
+    .summary-block-illustration {
+        height: 230px;
+    }
+    
+    .summary-block-right {
+        margin-top: auto;
+        margin-bottom: auto;
+    }
+    
     .summary-block-rupee-header {
         margin-top: 5px;
         color: white;
@@ -27,7 +52,9 @@
     .japan-block {
         background-color: rgb(37, 97, 112);
         height: 340px;
-        padding: 60px;
+        padding: 10px;
+        width: 100%;
+        margin-top: 100px;
     }
     
     .japan-block-header {
@@ -35,6 +62,11 @@
         text-align: center;
         margin-top: 20px;
         font-size: 32pt;
+    }
+    
+    .japan-block-subtext {
+        color: rgba(255, 255, 255, 0.678);
+        margin-top: 10px;
     }
     /*
          century block
@@ -46,6 +78,7 @@
         text-align: center;
         display: flex;
         justify-content: center;
+        width: 100%;
         align-items: center;
     }
     
@@ -65,7 +98,7 @@
     .window-shopper {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        padding: 40px;
+        padding: 10px;
         margin-top: 20px;
         margin-bottom: 60px;
         gap: 30px;
@@ -290,10 +323,9 @@
     .himatachi-body {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        padding: 60px;
-        margin-left: 5%;
-        margin-right: 5%;
+        padding: 10px;
         gap: 20px;
+        width: 100%;
     }
     
     .himatachi-item {
@@ -362,4 +394,115 @@
     .password-strength-bar.weak {
         background-color: rgb(255, 83, 71);
         color: white;
+    }
+    /* adaptivenes */
+    
+    @media only screen and (max-width: 1055px) {
+        .window-shopper {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+    
+    @media only screen and (max-width: 800px) {
+        .summary-block-illustration {
+            height: 170px;
+        }
+        .japan-block-header {
+            font-size: 21pt;
+            margin-left: 40px;
+            margin-right: 40px;
+        }
+        .japan-block-subtext {
+            margin-left: 40px;
+            margin-right: 40px;
+        }
+        .sabi-button-lg-green {
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 60px;
+        }
+        .window-shopper {
+            grid-template-columns: 1fr;
+        }
+    }
+    
+    @media only screen and (max-width: 700px) {
+        .summary-block {
+            grid-template-columns: 1fr;
+        }
+        .summary-block-right {
+            display: none;
+        }
+        .century-block-subtext {
+            margin-left: 10%;
+            margin-right: 10%;
+            width: auto;
+        }
+        .century-block-header {
+            margin-right: 20px;
+            margin-left: 20px;
+        }
+        .marxwell-body-subtext {
+            width: auto;
+            margin-left: 10%;
+            margin-right: 10%;
+        }
+    }
+    
+    @media only screen and (max-width: 600px) {
+        .himatachi-body {
+            grid-template-columns: 1fr;
+        }
+        .himatachi-item {
+            margin-top: 40px;
+        }
+        .window-shoper-item {
+            height: 380px;
+        }
+        .japan-block-header {
+            font-size: 21pt;
+            margin-left: 40px;
+            margin-right: 40px;
+        }
+        .japan-block-subtext {
+            text-align: center;
+            margin-top: 20px;
+            margin-left: 40px;
+            margin-right: 40px;
+        }
+        .sabi-button-lg-green {
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 60px;
+        }
+    }
+    
+    @media only screen and (max-width: 500px) {
+        .summary-block-rupee-button-block {
+            width: auto;
+            grid-template-columns: 1fr;
+        }
+        .summary-block-rupee-button-block>.osprey-button-white {
+            margin-top: 20px;
+        }
+        .japan-block-header {
+            font-size: x-large;
+        }
+    }
+    
+    @media only screen and (max-width: 400px) {}
+    
+    @media only screen and (max-width: 340px) {
+        .century-block-header {
+            font-size: medium;
+        }
+        .century-block-subtext {
+            font-size: small;
+        }
+        .marxwell-body-subtext {
+            font-size: small;
+        }
+        .marxwell-body-header {
+            font-size: medium;
+        }
     }
