@@ -164,10 +164,10 @@ function signupFreeClient() {
         postToServer("/new-free-user", data, function(responce) {
             if (responce == "200") {
                 hideLoading()
-                ShowSuccess("Registered")
+                ShowSuccess("Verification Code Sent")
             } else {
                 hideLoading()
-                ShowSuccess("Registered")
+                ShowWarning("Verification Code Sent")
             }
         })
 

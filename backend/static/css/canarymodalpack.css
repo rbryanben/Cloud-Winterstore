@@ -207,3 +207,17 @@
         opacity: 0;
     }
 }
+
+
+/* adaptivenes */
+
+@media only screen and (max-width: 600px) {
+    .login-modal {
+        width: 90%;
+        height: 290px;
+    }
+    .Protea-input-box {
+        width: 90%;
+        height: 50px;
+    }
+}

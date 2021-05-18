@@ -147,3 +147,40 @@ a.btn {
 .table-cell {
     font-size: small;
 }
+
+
+/* adaptivenes */
+
+@media only screen and (max-width: 1100px) {
+    .signup-body {
+        grid-template-columns: 1fr;
+    }
+    .signup-body-right {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 800px) {
+    .signup-body {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .signup-body {
+        grid-template-columns: 1fr;
+        margin-left: 0px;
+        margin-right: 0px;
+        box-shadow: none;
+    }
+}
+
+@media only screen and (max-width: 340px) {
+    .signup-body {
+        grid-template-columns: 1fr;
+        margin-left: 0px;
+        margin-right: 0px;
+        box-shadow: none;
+        background: white;
+    }
+}

@@ -1,5 +1,5 @@
 //this is the global server url
-let serverURL = "http://127.0.0.1:8000";
+let serverURL = window.location.origin;
 
 
 function postToServer(url, data, callback) {
