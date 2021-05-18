@@ -8,6 +8,7 @@
         background-color: rgba(28, 113, 128, 0.589);
         display: grid;
         padding: 40px;
+        display: none;
         grid-template-columns: 6fr 4fr;
     }
     
@@ -53,7 +54,6 @@
         background-color: rgb(37, 97, 112);
         height: 340px;
         padding: 10px;
-        width: 100%;
         margin-top: 100px;
     }
     
@@ -78,7 +78,6 @@
         text-align: center;
         display: flex;
         justify-content: center;
-        width: 100%;
         align-items: center;
     }
     
@@ -325,7 +324,6 @@
         grid-template-columns: repeat(3, 1fr);
         padding: 10px;
         gap: 20px;
-        width: 100%;
     }
     
     .himatachi-item {
@@ -504,5 +502,9 @@
         }
         .marxwell-body-header {
             font-size: medium;
+        }
+        .window-shoper-item {
+            width: 180px;
+            height: 340px;
         }
     }

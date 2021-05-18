@@ -38,9 +38,68 @@
         align-items: center;
     }
     
+    .mobile {
+        display: none;
+    }
+    /* mobile and tablet */
+    
+    .mobile-menu-button {
+        margin: auto;
+    }
+    
+    .mobile-menu {
+        display: none;
+        height: 0;
+        width: 100%;
+        transition: all 0.5s ease;
+    }
+    
+    .mobile-menu.show {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        display: block;
+        height: auto;
+    }
+    
+    .mobile-menu-item {
+        height: 30px;
+        padding: 10px;
+        background-color: white;
+        display: flex;
+        justify-content: start;
+        align-items: center;
+        padding-left: 40px;
+        color: rgb(148, 148, 148);
+        border-bottom: lightgray solid 0.5px;
+    }
+    
+    .mobile-menu-item>i {
+        margin-left: auto;
+        margin-right: 10px;
+    }
+    
     @media only screen and (max-width: 1100px) {
-        .navbar-item {
+        /* adjust navbar grid to properly fit items */
+        .navbar {
+            grid-template-columns: 7fr 0.9fr 2fr 0.9fr 0.1fr;
+        }
+        .hide-for-tablet {
             display: none;
+        }
+    }
+    
+    @media only screen and (max-width: 600px) {
+        /* adjust navbar grid to properly fit items */
+        .navbar {
+            grid-template-columns: 9fr 1fr 0.2fr;
+        }
+        .hide-for-mobile {
+            display: none;
+        }
+        .navbar-logo {
+            padding-left: 40px;
+        }
+        .mobile-menu-button {
+            display: block;
         }
     }
 </style>
@@ -54,27 +113,50 @@
         </div>
 
         <!-- about-->
-        <div class="navbar-item">
+        <div class="navbar-item hide-for-mobile">
             About
         </div>
 
         <!-- doumentation-->
-        <div class="navbar-item">
+        <div class="navbar-item hide-for-mobile">
             Documentation
         </div>
 
         <!-- doumentation-->
-        <div class="navbar-item">
+        <div class="navbar-item hide-for-tablet hide-for-mobile">
             Eaglepack
         </div>
 
         <!-- doumentation-->
-        <div class="navbar-item">
+        <div class="navbar-item hide-for-tablet hide-for-mobile">
             Contribute
         </div>
 
         <!-- console -->
-        <div class="navbar-item" onclick=" showLoginModal()">
+        <div class="navbar-item hide-for-mobile" onclick=" showLoginModal()">
+            Console
+        </div>
+
+        <!-- mobile section -->
+        <div class="mobile mobile-menu-button">
+            <i class="fas fa-bars"></i>
+        </div>
+    </div>
+    <!-- menu items -->
+    <div id="mobileMenu" class="mobile-menu mobile">
+        <div class="mobile-menu-item ">
+            About <i class="fas fa-chevron-right"></i>
+        </div>
+        <div class="mobile-menu-item ">
+            Eaglepack <i class="fas fa-chevron-right"></i>
+        </div>
+        <div class="mobile-menu-item ">
+            Contribute
+        </div>
+        <div class="mobile-menu-item ">
+            Documentation <i class="fas fa-chevron-right"></i>
+        </div>
+        <div class="mobile-menu-item " onclick="showLoginModal()">
             Console
         </div>
     </div>
@@ -82,5 +164,31 @@
     <!-- script -->
     <script>
         //when scrolling extend navbar
+        window.addEventListener("DOMContentLoaded", function() {
+            NavbarListener();
+        })
+
+
+        ///this function watches if the navbar has been clicked
+        function NavbarListener() {
+            var navBarButton = document.querySelector(".mobile-menu-button")
+            var navBarmenu = document.getElementById("mobileMenu")
+
+            navBarButton.addEventListener("click", function() {
+                if (navBarmenu.classList.contains("show")) {
+                    navBarmenu.classList.remove("show")
+                } else {
+                    navBarmenu.classList.add("show")
+                }
+            })
+        }
+
+        //hide menu if the user resizes 
+        window.addEventListener("resize", (event) => {
+            console.warn(window.innerWidth);
+            if (window.innerWidth >= 601) {
+                document.getElementById("mobileMenu").classList.remove("show")
+            }
+        })
     </script>
 </body>
