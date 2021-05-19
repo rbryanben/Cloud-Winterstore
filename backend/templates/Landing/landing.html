@@ -1,0 +1,207 @@
+{% extends "base.html" %}{% load static %}
+<!-- title -->
+{% block title %}Winterstore | Landing {% endblock %}
+
+<!-- imports -->
+{% block imports %}
+<script src="{% static 'js/landing.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/landing.css' %}"> {% endblock %}
+
+<!-- direct style-->
+{% block style %} {% endblock %}
+
+<!-- body-->
+{% block body %}
+<!-- navbar -->
+{% include 'WebApplication/components/navbar.html' %}
+
+<!--summary block -->
+<div class="summary-block">
+    <div class="summary-block-left">
+        <div class="summary-block-rupee">
+            <div class="summary-block-rupee-header">
+                Privacy Matters
+            </div>
+            <div class="summary-block-rupee-header">
+                Lets Keep It Secure
+            </div>
+            <div class="summary-block-rupee-subtext">
+                The cloud storage platform that atually has your security for your clients in mind
+            </div>
+            <div class="summary-block-rupee-button-block">
+
+                <div class="martial-button-white">
+                    GET STARTED
+                </div>
+                <div class="osprey-button-white">
+                    REQUEST DEMO
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="summary-block-right">
+        <img class="summary-block-illustration" src="{% static 'svg/undraw_Secure_server_re_8wsq.svg' %}">
+    </div>
+</div>
+
+
+<!-- century block  -->
+
+<div class="century-block">
+    <div class="century-block-body">
+        <div class="century-block-header">
+            Need help with making that switch?
+        </div>
+        <div class="century-block-subtext">
+            We know some engineers that could do everything for you at a relatively low price, we really want you to be part of us
+        </div>
+        <div style="margin-top: 20px;" class="sabi-button-lg-green center-button">Make the switch</div>
+    </div>
+</div>
+
+
+<!-- century block white  -->
+<div class="marxwell-block">
+    <div class="marxwell-body">
+        <div class="marxwell-body-header">
+            Stay Connected
+        </div>
+        <div class="marxwell-body-subtext">
+            Our Storage solution aims to be on all platforms, we have done a few but we are not yet there
+        </div>
+        <div style="margin-top: 40px;" class="sabi-button-sm-blue center-button">Learn More</div>
+    </div>
+</div>
+
+<!-- window shopper -->
+<div class="window-shopper" style="margin-top: -10px;">
+
+
+    <div class="div-flex-center">
+        <div class="window-shoper-item">
+            <div class="window-shoper-item-image">
+                <img class=" window-shoper-item-image-img" src="{% static 'png/android_studio.png' %}">
+            </div>
+            <hr class="window-shopper-item-devider">
+            <div class="window-shopper-item-header">
+                Get Us On Android
+            </div>
+            <div class="window-shopper-item-subtext">
+                The reason Android rules the app market is its ability to run on more devices than its competitors. Manufacturers that make devices supporting Android apps outnumber those developing to suit iOS specific apps.
+            </div>
+
+            <div class="window-shoper-item-learn-more">
+                Learn How >
+            </div>
+
+        </div>
+    </div>
+
+    <div class="div-flex-center">
+        <div class="window-shoper-item">
+            <div class="window-shoper-item-image">
+                <img class=" window-shoper-item-image-img" src="{% static 'png/NET_Core_Logo.svg.png' %}">
+            </div>
+            <hr class="window-shopper-item-devider">
+            <div class="window-shopper-item-header">
+                Get Us On Desktop Applications
+            </div>
+            <div class="window-shopper-item-subtext">
+                .NET is the future of development not only for the Windows platform, but other operating systems as well. If you are not moving to .NET now, you should at least be keeping up to date with it and reevaluating it at regular intervals to determine when you
+                will begin moving to it.
+            </div>
+
+            <div class="window-shoper-item-learn-more">
+                Learn How >
+            </div>
+
+        </div>
+    </div>
+
+    <div class="div-flex-center">
+        <div class="window-shoper-item">
+            <div class="window-shoper-item-image">
+                <img class=" window-shoper-item-image-img" src="{% static 'png/rest.png' %}">
+            </div>
+            <hr class="window-shopper-item-devider">
+            <div class="window-shopper-item-header">
+                Using Rest API
+            </div>
+            <div class="window-shopper-item-subtext">
+                An API is a set of definitions and protocols for building and integrating application software. It’s sometimes referred to as a contract between an information provider and an information user—establishing the content required from the consumer (the call)
+                and the content required by the producer (the response).
+            </div>
+
+            <div class="window-shoper-item-learn-more">
+                Learn How >
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- statistics block white  -->
+<div class="marxwell-block" style="margin-top: -100px;">
+    <div class="marxwell-body">
+        <div class="marxwell-body-header">
+            Some Statistics
+        </div>
+        <div class="marxwell-body-subtext" style="margin-top: 10px;">
+            Here is a slight summary of what we are hosting
+        </div>
+    </div>
+</div>
+
+
+<!-- statistics div - himatachi -->
+<div class="himatachi-body" style="margin-top: -20px;">
+
+    <!-- data stored -->
+    <div class="himatachi-item">
+        <div class="div-flex-center">
+            <i class="fas fa-user fa-6x" style="margin-left: auto; margin-right: auto;"></i>
+        </div>
+        <div class="himatachi-item-text">
+            4 Accounts
+        </div>
+    </div>
+    <!-- data stored -->
+    <div class="himatachi-item">
+        <div class="div-flex-center">
+            <i class="fas fa-database fa-6x" style="margin-left: auto; margin-right: auto;"></i>
+        </div>
+        <div class="himatachi-item-text">
+            0.0GB Stored
+        </div>
+    </div>
+    <!-- data stored -->
+    <div class="himatachi-item">
+        <div class="div-flex-center">
+            <i class="fas fa-layer-group fa-6x" style="margin-left: auto; margin-right: auto;"></i>
+        </div>
+        <div class="himatachi-item-text">
+            1 Clusters
+        </div>
+    </div>
+</div>
+
+
+<!-- get free storage -->
+<div class="japan-block div-flex-center">
+    <div class="japan-block-wrapper">
+        <div class="japan-block-header">
+            Are you ready to secure your clients files?
+        </div>
+        <div class="japan-block-subtext">
+            New accounts get 15gb free valid for 3 months, just to get you started
+        </div>
+        <div style="margin-top: 20px;" class="sabi-button-lg-green ">Create Account</div>
+    </div>
+</div>
+</div>
+
+
+
+<!-- navbar -->
+{% include 'WebApplication/components/footer.html' %} {% endblock %}

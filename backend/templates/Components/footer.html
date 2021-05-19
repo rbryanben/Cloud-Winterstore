@@ -1,0 +1,132 @@
+<style>
+    .footer {
+        height: 300px;
+        position: relative;
+        display: grid;
+        padding: 20px;
+        margin-top: 20px;
+        grid-template-columns: repeat(4, 1fr);
+        cursor: pointer;
+    }
+    
+    .footer-item-header {
+        color: rgb(51, 51, 51);
+        font-size: larger;
+    }
+    
+    .footer-item {
+        padding: 10px;
+    }
+    
+    .footer-devider {
+        width: 100%;
+        grid-column: 1/5;
+        border: none;
+        border-top: solid 1px lightgray;
+    }
+    
+    .footer-item-link {
+        margin-top: 20px;
+        font-size: small;
+        color: rgb(128, 128, 128);
+        cursor: pointer;
+    }
+    
+    .footer-bottom {
+        color: rgb(144, 238, 207);
+        font-size: small;
+        padding-left: 20px;
+        text-align: right;
+        grid-column: 1/5;
+    }
+    
+    .japan-block-subtext {
+        margin-top: 20px;
+        color: white;
+    }
+    
+    @media only screen and (max-width: 600px) {
+        .footer {
+            grid-template-columns: 1fr 1fr;
+            display: none;
+        }
+    }
+</style>
+
+<body>
+    <div class="footer">
+        <div class="footer-item">
+            <div class="footer-item-header">
+                Documentation
+            </div>
+            <div class="footer-item-link">
+                Android (Java) Documentation
+            </div>
+            <div class="footer-item-link">
+                .NET Core (C#) Documentation
+            </div>
+            <div class="footer-item-link">
+                RestAPI Documentation
+            </div>
+            <div class="footer-item-link">
+                Project Documentation
+            </div>
+        </div>
+
+
+        <div class="footer-item">
+            <div class="footer-item-header">
+                Support
+            </div>
+            <div class="footer-item-link">
+                Get Started
+            </div>
+            <div class="footer-item-link">
+                Open Issue
+            </div>
+            <div class="footer-item-link">
+                Contact Engineer
+            </div>
+            <div class="footer-item-link">
+                System Status
+            </div>
+        </div>
+
+
+        <div class="footer-item">
+            <div class="footer-item-header">
+                Company
+            </div>
+            <div class="footer-item-link">
+                About Us
+            </div>
+            <div class="footer-item-link">
+                Contact us
+            </div>
+            <div class="footer-item-link">
+                Privacy Policy
+            </div>
+            <div class="footer-item-link">
+                Security Policy
+            </div>
+        </div>
+
+        <div class="footer-item">
+            <div class="footer-item-header">
+                Resources
+            </div>
+            <div class="footer-item-link">
+                Project Github Page
+            </div>
+            <div class="footer-item-link">
+                Sample Projects
+            </div>
+            <div class="footer-item-link">
+                Blog
+            </div>
+        </div>
+
+        <hr class="footer-devider">
+        <div class="footer-bottom">2021 Winterstore, Inc. No Rights Reserved</div>
+    </div>
+</body>
