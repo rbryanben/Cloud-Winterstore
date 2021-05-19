@@ -80,11 +80,6 @@
 
 /* body logo */
 
-.body-logo {
-    height: 80px;
-    margin-left: 12%;
-}
-
 
 /* plain header with icon */
 
@@ -181,6 +176,6 @@ a.btn {
         margin-left: 0px;
         margin-right: 0px;
         box-shadow: none;
-        background: white;
+        background: whitecd;
     }
 }

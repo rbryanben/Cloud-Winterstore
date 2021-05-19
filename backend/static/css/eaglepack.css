@@ -360,6 +360,12 @@
         justify-content: center;
         align-items: center;
     }
+    /* body logo */
+    
+    .body-logo {
+        height: 80px;
+        margin-left: 12%;
+    }
     /* text sizes */
     
     .text-small {

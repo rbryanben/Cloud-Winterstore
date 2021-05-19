@@ -145,6 +145,8 @@ function validateEmail(email) {
     return re.test(email);
 }
 
+
+
 //signup 
 function signupFreeClient() {
     var usernameInput = document.getElementById("signupUsernameInput")
@@ -164,10 +166,14 @@ function signupFreeClient() {
         postToServer("/new-free-user", data, function(responce) {
             if (responce == "200") {
                 hideLoading()
-                ShowSuccess("Verification Code Sent")
+                ShowSuccess("Verification Link Sent")
+                setTimeout(function() {
+                    window.location.replace("/link-sent")
+                }, 2000)
+
             } else {
                 hideLoading()
-                ShowWarning("Verification Code Sent")
+                ShowWarning("Failed to Send Verification Link")
             }
         })
 
