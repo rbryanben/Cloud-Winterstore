@@ -15,3 +15,7 @@ class UnverifiedUser(models.Model):
         self.password = password
         self.verificationLink = verificatonLink 
         self.save()
+
+#class
+class dummy(models.Model):
+    data = models.TextField()

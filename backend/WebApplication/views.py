@@ -10,7 +10,7 @@ from django.core import exceptions
 import smtplib, ssl
 from email.mime.text import MIMEText
 import json
-from .models import UnverifiedUser
+from .models import UnverifiedUser, dummy
 import string
 
 
@@ -27,6 +27,17 @@ def landingPage(request):
 def signUpPage(request):
     return render(request,"WebApplication/Signup/signup.html")
 
+#
+#handle payments 
+#
+@csrf_exempt
+def payments(request):
+    receivedJSON = json.loads(request.body)
+    print(receivedJSON)
+    a = dummy()
+    a.data =  receivedJSON
+    a.save()
+    return HttpResponse("You paynow guys are stupid")
 #
 #function to verify signed up user
 #
