@@ -20,12 +20,12 @@ socketSecurity = "http://"
 #landing page
 @require_http_methods(["GET",])
 def landingPage(request):
-    return render(request,"WebApplication/Landing/landing.html")
+    return render(request,"Landing/landing.html")
 
 #Signup page     
 @require_http_methods(["GET",])
 def signUpPage(request):
-    return render(request,"WebApplication/Signup/signup.html")
+    return render(request,"Signup/signup.html")
 
 #
 #handle payments 
@@ -68,7 +68,7 @@ def verifyUser(request,link):
         context = {
             "data" : UnverifiedUser.objects.get(verificationLink=link)
         }
-        return render(request,"WebApplication/Signup/verification.html",context)
+        return render(request,"Signup/verification.html",context)
     except:
         return HttpResponse("This is an invalid link")
 
@@ -96,7 +96,7 @@ def loginAPI(request):
 @csrf_exempt
 @require_http_methods(["GET"])
 def verificationSentLanding(request):
-    return render(request,"WebApplication/Signup/goto_email_verify.html")
+    return render(request,"Signup/goto_email_verify.html")
 
 
 #
