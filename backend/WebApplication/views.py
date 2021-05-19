@@ -20,7 +20,7 @@ socketSecurity = "http://"
 #landing page
 @require_http_methods(["GET",])
 def landingPage(request):
-    return render(request,"/Landing/landing.html")
+    return render(request,"WebApplication/Landing/landing.html")
 
 #Signup page     
 @require_http_methods(["GET",])
