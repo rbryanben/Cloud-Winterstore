@@ -7,9 +7,8 @@ urlpatterns = [
     ############## Pages
     path("",views.landingPage,name="Landing Page") , #Landing Page
     path("sign-up",views.signUpPage), #Sign Up Page
-    path("link-sent",views.verificationSentLanding), #verififcation link sent page
     path("verify/<str:link>",views.verifyUser), #to handle verification links
-    path("payments",views.payments), #to receive payments
+ 
     ##############
     ############## API's
     path("login",views.loginAPI), #login

@@ -164,11 +164,11 @@ function signupFreeClient() {
             "password": passwordBox.value
         }
         postToServer("/new-free-user", data, function(responce) {
-            if (responce == "200") {
+            if (responce != "500") {
                 hideLoading()
                 ShowSuccess("Verification Link Sent")
                 setTimeout(function() {
-                    window.location.replace("/link-sent")
+                    window.location.replace("/verify/" + responce)
                 }, 2000)
 
             } else {

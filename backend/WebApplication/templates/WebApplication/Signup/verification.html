@@ -57,11 +57,12 @@
         Hi there
     </div>
     <div class="verification-body-subtext" style="margin-top: 20px;">
-        Please click on the button to complete the verification process for
+        Enter the code sent to your email below to complete the verification process for
     </div>
     <div class="verification-body-subtext">
         {{data.email}}.
     </div>
+    <input name="code" id="code" placeholder="Code" class="Protea-input-box">
     <div style="margin-top: 20px;" class="sabi-button-green " onclick="verify()">Verify Your Email</div>
     <div class="verification-body-subtext" style="margin-top: 20px;">
         If you did'nt wish to verify your email address with Winterstore, please
@@ -82,7 +83,8 @@
     function verify() {
         showLoading();
         data = {
-            "link": "{{data.verificationLink}}"
+            "link": "{{data.verificationLink}}",
+            "code": document.getElementById("code").value
         }
         postToServer("/verify/{{data.verificationLink}}", data, function(responce) {
             hideLoading()

@@ -1,4 +1,4 @@
-import random
+from random import randint
 from django.http import request
 from django.http.response import HttpResponse
 from django.shortcuts import render
@@ -10,8 +10,8 @@ from django.core import exceptions
 import smtplib, ssl
 from email.mime.text import MIMEText
 import json
-from .models import UnverifiedUser, dummy
-import string
+import uuid
+from .models import UnverifiedUser
 
 
 #Clicking verification link may not work is I am using SSL
@@ -27,17 +27,7 @@ def landingPage(request):
 def signUpPage(request):
     return render(request,"WebApplication/Signup/signup.html")
 
-#
-#handle payments 
-#
-@csrf_exempt
-def payments(request):
-    receivedJSON = json.loads(request.body)
-    print(receivedJSON)
-    a = dummy()
-    a.data =  receivedJSON
-    a.save()
-    return HttpResponse("You paynow guys are stupid")
+
 #
 #function to verify signed up user
 #
@@ -49,6 +39,10 @@ def verifyUser(request,link):
         try:
             receivedJSON = json.loads(request.body)
             receivedUser = UnverifiedUser.objects.get(verificationLink=receivedJSON["link"])
+            #if codes dont match return 
+            print(receivedJSON["code"])
+            if (receivedUser.verificationCode != receivedJSON["code"]):
+                return HttpResponse("500")
             #create a new user account
             newUser = User()
             newUser.email = receivedUser.email
@@ -92,11 +86,6 @@ def loginAPI(request):
         return HttpResponse("500")
 
 
-#function called when verification link has been sent
-@csrf_exempt
-@require_http_methods(["GET"])
-def verificationSentLanding(request):
-    return render(request,"WebApplication/Signup/goto_email_verify.html")
 
 
 #
@@ -142,18 +131,16 @@ def NewFreeUserAccount(request):
     #add to unverified users 
     try:
         newUnverifiedUser = UnverifiedUser()
-        newUnverifiedUser.create(receivedJSON["username"],receivedJSON["email"],receivedJSON["password"],verification_link_generator())
-        sendEmail(newUnverifiedUser.email,newUnverifiedUser.verificationLink,str(get_current_site(request)))
-        return HttpResponse("200")
+        newUnverifiedUser.create(receivedJSON["username"],receivedJSON["email"],receivedJSON["password"],random_with_N_digits(6),my_random_string())
+        sendEmail(newUnverifiedUser.email,newUnverifiedUser.verificationCode)
+        return HttpResponse(newUnverifiedUser.verificationLink)
     except:
         return HttpResponse("500")
 
 
 
-def sendEmail(email,linkString,absoluteURL):
-    #body
-    VerificationLink = socketSecurity + absoluteURL + "/verify/" + linkString 
-    body_of_email = "Verify your account by clicking this <a href='"+ VerificationLink +"'>Link</a> or " + VerificationLink  
+def sendEmail(email,code):
+    body_of_email =   "Your verification code is " + str(code)
     sender = 'cloudwinterstore@gmail.com'
     receivers = [email]
     msg = MIMEText(body_of_email, 'html')
@@ -165,5 +152,13 @@ def sendEmail(email,linkString,absoluteURL):
     s.sendmail(sender, receivers, msg.as_string())
     s.quit()
 
-def verification_link_generator(size=128, chars=string.ascii_uppercase + string.digits):
-    return ''.join(random.choice(chars) for _ in range(size))
+def random_with_N_digits(n):
+    range_start = 10**(n-1)
+    range_end = (10**n)-1
+    return randint(range_start, range_end)
+
+def my_random_string(string_length=128):
+    """Returns a random string of length string_length."""
+    random = str(uuid.uuid4()) # Convert UUID format to a Python string.
+    random = random.replace("-","") # Remove the UUID '-'.
+    return random[0:string_length] # Return the random string.
