@@ -237,6 +237,20 @@
         background-color: rgba(19, 138, 112, 0.473);
     }
     
+    .sabi-button-gray {
+        background-color: rgba(57, 59, 59, 0.719);
+        width: 160px;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: small;
+        color: white;
+        cursor: pointer;
+        transition: all 0.5s ease;
+        border-radius: 6px;
+    }
+    
     .sabi-button-lg-green {
         background-color: rgba(19, 138, 112, 0.719);
         width: 210px;

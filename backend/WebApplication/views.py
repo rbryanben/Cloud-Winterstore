@@ -3,7 +3,7 @@ from django.http import request
 from django.http.response import HttpResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate , login
 from django.core import exceptions
@@ -11,7 +11,7 @@ import smtplib, ssl
 from email.mime.text import MIMEText
 import json
 import uuid
-from .models import UnverifiedUser
+from .models import UnverifiedUser ,RecoveryObject
 
 
 #Clicking verification link may not work is I am using SSL
@@ -29,6 +29,70 @@ def signUpPage(request):
 
 
 #
+#recovery page     
+@require_http_methods(["GET","POST"])
+@csrf_exempt
+def recovery(request):
+    if (request.method == "POST"):
+        try:
+            receivedJSON = json.loads(request.body)
+            userToRecover = User.objects.get(email=receivedJSON["email"])
+            #delete all previous recovery object
+            try:
+                RecoveryObject.objects.filter(user=userToRecover).delete()
+            except:
+                pass
+            #create a recovery object 
+            newRecoveryObject = RecoveryObject()
+            newRecoveryObject.create(userToRecover,random_with_N_digits(6),my_random_string())
+
+            #send recovery code
+            sendEmailCustomEmail(userToRecover.email,"Your recovery code is "+str(newRecoveryObject.code))
+            
+            return HttpResponse(newRecoveryObject.slug)
+        except:
+            return HttpResponse("500")
+
+    #get method
+    return render(request,"WebApplication/Recovery/recovery.html")
+
+#
+#recovery page reset
+# 
+@require_http_methods(["GET","POST"])
+@csrf_exempt
+def recoveryReset(request,slug):
+    try:
+        accountToRecover = RecoveryObject.objects.get(slug=slug)
+    except:
+        return HttpResponse("This is an invalid link") 
+    
+    #post method
+    if (request.method == "POST"):
+        receivedJSON = json.loads(request.body)
+        accountToRecover = RecoveryObject.objects.get(slug=slug)
+        #check if codes match 
+        if (accountToRecover.code != receivedJSON["code"]):
+            accountToRecover.failedAttempMade()
+            return HttpResponse("500")
+        
+        #change password cause codes matched 
+        userAccountToChangePassword = accountToRecover.user
+        userAccountToChangePassword.set_password(receivedJSON["password"])
+        userAccountToChangePassword.save()
+
+        #delete recovery object
+        accountToRecover.delete()
+        
+        return HttpResponse("200")
+    #get method 
+    context ={
+        "slug" : slug
+    }
+    return render(request,"WebApplication/Recovery/reset.html",context)
+    
+
+#
 #function to verify signed up user
 #
 @require_http_methods(["GET","POST"])
@@ -40,7 +104,6 @@ def verifyUser(request,link):
             receivedJSON = json.loads(request.body)
             receivedUser = UnverifiedUser.objects.get(verificationLink=receivedJSON["link"])
             #if codes dont match return 
-            print(receivedJSON["code"])
             if (receivedUser.verificationCode != receivedJSON["code"]):
                 return HttpResponse("500")
             #create a new user account
@@ -105,6 +168,7 @@ def checkUsername(request):
     except exceptions.ObjectDoesNotExist:
         return HttpResponse("200")
 
+
 @csrf_exempt 
 @require_http_methods(["POST"])
 def checkEmail(request):
@@ -141,6 +205,18 @@ def NewFreeUserAccount(request):
 
 def sendEmail(email,code):
     body_of_email =   "Your verification code is " + str(code)
+    sender = 'cloudwinterstore@gmail.com'
+    receivers = [email]
+    msg = MIMEText(body_of_email, 'html')
+    msg['Subject'] = "Winterstore Verification"
+    msg['From'] = sender
+    msg['To'] = ','.join(receivers)
+    s = smtplib.SMTP_SSL(host = 'smtp.gmail.com', port = 465)
+    s.login(user = 'cloudwinterstore@gmail.com', password = 'mayday2018')
+    s.sendmail(sender, receivers, msg.as_string())
+    s.quit()
+
+def sendEmailCustomEmail(email,body_of_email):
     sender = 'cloudwinterstore@gmail.com'
     receivers = [email]
     msg = MIMEText(body_of_email, 'html')

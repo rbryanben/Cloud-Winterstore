@@ -1,0 +1,98 @@
+{% extends "base.html" %}{% load static %}
+<!-- title -->
+{% block title %} Winterstore | Recovery {% endblock %}
+
+<!-- imports -->
+{% block imports %} {% endblock %}
+
+<!-- direct style-->
+{% block style %}
+<style>
+    body {
+        background-image: url("{% static 'png/signup_wallpaper.png' %}");
+    }
+    
+    .recovery-body {
+        margin-left: 12%;
+        margin-right: 12%;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        border-radius: 6px;
+        background-color: white;
+        padding: 20px;
+        color: gray;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+    
+    .recovery-body-header {
+        font-size: medium;
+    }
+    
+    .recovery-body-subtext {
+        font-size: small;
+    }
+    
+    .winter-text {
+        color: rgb(144, 238, 238);
+        font-size: small;
+    }
+    
+    @media only screen and (max-width: 600px) {
+        .recovery-body {
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+    }
+</style>
+{% endblock %}
+
+<!-- body  comes here -->
+{% block body %}
+
+<!-- logo -->
+<img src="{% static 'png/logo_full.png' %}" class="body-logo">
+
+<!-- body -->
+<div class="recovery-body">
+    <div class="recovery-body-subtext">
+        Enter the email you want to recover
+    </div>
+    <input name="email" type="email" id="email" placeholder="Email" class="Protea-input-box">
+    <div style="margin-top: 20px;" class="sabi-button-gray " onclick="recover()">Recover Account</div>
+    <div class="recovery-body-subtext" style="margin-top: 20px;">
+        If you dont wish to recover your Account, simply
+    </div>
+    <div class="recovery-body-subtext">
+        press back
+    </div>
+
+    <div class="recovery-body-subtext" style="margin-top: 20px;">
+        Cheers.
+    </div>
+    <div class="winter-text" style="margin-top: 10px;">
+        Winterstore.
+    </div>
+
+</div>
+<script>
+    function recover() {
+        showLoading();
+        data = {
+            "email": document.getElementById("email").value
+        }
+        postToServer("/recovery", data, function(responce) {
+            hideLoading()
+            setTimeout(function() {
+                if (responce != "500")
+                    window.location.replace("/recovery/reset/" + responce)
+            }, 2000)
+            if (responce != "500") {
+                ShowSuccess("Recovery Code Sent")
+            } else {
+                ShowWarning("Recovery Failed")
+            }
+        })
+    }
+</script>
+
+
+{% endblock %}
