@@ -9,6 +9,51 @@
         cursor: pointer;
     }
     
+    #termsModal {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        background-color: white;
+        z-index: 101;
+        width: 50%;
+        min-height: 300px;
+        padding: 20px;
+        transform: translate(-50%, -50%);
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        border-radius: 6px;
+        transition: all 0.2s ease-in;
+        transform: scale(0.1);
+        opacity: 0;
+        visibility: hidden;
+    }
+    
+    #termsModal.show {
+        transform: scale(1);
+        opacity: 1;
+        visibility: visible !important;
+        transform: translate(-50%, -50%);
+    }
+    
+    .termsModalClose {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        cursor: pointer;
+        color: gray;
+    }
+    
+    .termsModalHeader {
+        font-size: medium;
+        margin-top: 40px;
+    }
+    
+    .termsModalBody {
+        margin-top: 20px;
+        color: gray;
+        font-size: small;
+        padding-right: 20px;
+    }
+    
     .footer-item-header {
         color: rgb(51, 51, 51);
         font-size: larger;
@@ -56,35 +101,35 @@
 <body>
     <div class="footer">
         <div class="footer-item">
-            <div class="footer-item-header">
+            <div class="footer-item-header" onclick="goto('/documentation')">
                 Documentation
             </div>
-            <div class="footer-item-link">
+            <div class="footer-item-link" onclick="goto('/documentation/android')">
                 Android (Java) Documentation
             </div>
-            <div class="footer-item-link">
+            <div class="footer-item-link" onclick="goto('/documentation/dotnet')">
                 .NET Core (C#) Documentation
             </div>
-            <div class="footer-item-link">
+            <div class="footer-item-link" onclick="goto('/documentation/rest-api')">
                 RestAPI Documentation
             </div>
-            <div class="footer-item-link">
+            <div class="footer-item-link" onclick="goto('//github.com/rbryanben/Cloud-Winterstore/tree/main/resources/docs')">
                 Project Documentation
             </div>
         </div>
 
 
         <div class="footer-item">
-            <div class="footer-item-header">
+            <div class="footer-item-header" onclick="goto('//github.com/rbryanben/Cloud-Winterstore')">
                 Support
             </div>
-            <div class="footer-item-link">
+            <div class="footer-item-link" onclick="goto('/documentation')">
                 Get Started
             </div>
-            <div class="footer-item-link">
+            <div class="footer-item-link" onclick="goto('//github.com/rbryanben/Cloud-Winterstore/issues')">
                 Open Issue
             </div>
-            <div class="footer-item-link">
+            <div class="footer-item-link" onclick="goto('mailto:rbryanben@gmail.com?subject=Cloud%20Winterstore&body=Hey%20nerd....')">
                 Contact Engineer
             </div>
             <div class="footer-item-link">
@@ -97,16 +142,16 @@
             <div class="footer-item-header">
                 Company
             </div>
-            <div class="footer-item-link">
+            <div class="footer-item-link" onclick="goto('/about-us')">
                 About Us
             </div>
-            <div class="footer-item-link">
+            <div class="footer-item-link" onclick="goto('mailto:rbryanben@gmail.com?subject=Cloud%20Winterstore&body=Hey%20nerd....')">
                 Contact us
             </div>
-            <div class="footer-item-link">
+            <div class="footer-item-link" onclick="showTermsModal()">
                 Privacy Policy
             </div>
-            <div class="footer-item-link">
+            <div class="footer-item-link" onclick="showTermsModal()">
                 Security Policy
             </div>
         </div>
@@ -129,4 +174,33 @@
         <hr class="footer-devider">
         <div class="footer-bottom">2021 Winterstore, Inc. No Rights Reserved</div>
     </div>
+
+    <div id="termsModal" class="modal-terms-and-policy">
+        <div class="termsModalClose">
+            <i class="fas fa-times" onclick="hideTermsModal()"></i>
+        </div>
+        <div class="termsModalHeader">
+            Terms and Conditions
+        </div>
+        <div class="termsModalBody">
+            Terms of service are the legal agreements between a service provider and a person who wants to use that service. The person must agree to abide by the terms of service in order to use the offered service. Terms of service can also be merely a disclaimer,
+            especially regarding the use of websites. Your company must make sure that it's handling its users' personal data appropriately and protecting itself against any potential legal problems. This can be achieved with a comprehensive Privacy Policy
+            and a robust set of Terms & Conditions. But what's the difference between the two? A Privacy Policy explains to your users how you'll be using their personal data, what steps you've taken to keep it safe, and how they can exercise their rights
+            over their personal data. Terms & Conditions set out what's expected from both you and your users. The agreement can be used to manage your users' activity and expectations, and to protect your company from legal issues.
+        </div>
+    </div>
+
+    <script>
+        var termsModal = document.getElementById("termsModal")
+
+        function showTermsModal() {
+            if (!termsModal.classList.contains("show")) {
+                termsModal.classList.add("show")
+            }
+        }
+
+        function hideTermsModal() {
+            termsModal.classList.remove("show")
+        }
+    </script>
 </body>
