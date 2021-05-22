@@ -91,6 +91,8 @@
             }, 2000)
             if (responce == "200") {
                 ShowSuccess("Reset Successful")
+            } else if (responce == "700") {
+                ShowWarning("Weak Password")
             } else {
                 ShowWarning("Reset Failed")
             }

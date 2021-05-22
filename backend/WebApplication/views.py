@@ -1,11 +1,13 @@
+from datetime import datetime
 from random import randint
 from django.http import request
 from django.http.response import HttpResponse
 from django.shortcuts import render
+from django.views.decorators import http
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate , login
+from django.contrib.auth import authenticate , login , logout
 from django.core import exceptions
 import smtplib, ssl
 from email.mime.text import MIMEText
@@ -67,25 +69,41 @@ def recoveryReset(request,slug):
     except:
         return HttpResponse("This is an invalid link") 
     
+    #recovery object
+    accountToRecover = RecoveryObject.objects.get(slug=slug)
+
     #post method
     if (request.method == "POST"):
         receivedJSON = json.loads(request.body)
-        accountToRecover = RecoveryObject.objects.get(slug=slug)
         #check if codes match 
         if (accountToRecover.code != receivedJSON["code"]):
             accountToRecover.failedAttempMade()
             return HttpResponse("500")
         
+        #check if password is strong
+        if (strongPasswordChecker(receivedJSON["password"]) != 0):
+            return HttpResponse("700")
+
         #change password cause codes matched 
         userAccountToChangePassword = accountToRecover.user
+
         userAccountToChangePassword.set_password(receivedJSON["password"])
         userAccountToChangePassword.save()
 
         #delete recovery object
         accountToRecover.delete()
+
+        #logout user
+        logout(request)
         
         return HttpResponse("200")
-    #get method 
+
+  
+    #get method
+    # 
+    #check if object has not expired
+    if (accountToRecover.expired()):
+        return HttpResponse("This link has expired") 
     context ={
         "slug" : slug
     }
@@ -118,8 +136,16 @@ def verifyUser(request,link):
             return HttpResponse("200")
         except:
             return HttpResponse("500")
-       
-
+    
+    #check if link exists 
+    try:
+        receivedUser = UnverifiedUser.objects.get(verificationLink=link)
+    except:
+        return HttpResponse("This is an invalid link")
+    #check expiry
+    receivedUser = UnverifiedUser.objects.get(verificationLink=link)
+    if (receivedUser.expired()):
+        return HttpResponse("This link has expired")
     #request is GET  
     try:
         context = {
@@ -169,7 +195,7 @@ def checkUsername(request):
         return HttpResponse("200")
 
 
-@csrf_exempt 
+@csrf_exempt
 @require_http_methods(["POST"])
 def checkEmail(request):
     try:
@@ -183,7 +209,6 @@ def checkEmail(request):
     except exceptions.ObjectDoesNotExist:
         return HttpResponse("200")
 
-from django.contrib.sites.shortcuts import get_current_site
 
 @csrf_exempt
 @require_http_methods(["POST"])
@@ -192,6 +217,24 @@ def NewFreeUserAccount(request):
         receivedJSON = json.loads(request.body)
     except:
         return HttpResponse("did not supply json data")
+    
+    #check for injections
+    usernameToCheck = receivedJSON["username"]
+    email = receivedJSON["email"]
+    password = receivedJSON["password"]
+
+    #check username meets standard
+    if (not checkUsernameValidation(usernameToCheck)):
+        return HttpResponse("500")
+
+    #check password meets standard 
+    if (strongPasswordChecker(password) != 0):
+        return HttpResponse("500")
+    
+    #check email 
+    if (not checkEmailValid(email)):
+        return HttpResponse("500")
+
     #add to unverified users 
     try:
         newUnverifiedUser = UnverifiedUser()
@@ -238,3 +281,60 @@ def my_random_string(string_length=128):
     random = str(uuid.uuid4()) # Convert UUID format to a Python string.
     random = random.replace("-","") # Remove the UUID '-'.
     return random[0:string_length] # Return the random string.
+
+
+def strongPasswordChecker(s):
+      missing_type = 3
+      if any('a' <= c <= 'z' for c in s): missing_type -= 1
+      if any('A' <= c <= 'Z' for c in s): missing_type -= 1
+      if any(c.isdigit() for c in s): missing_type -= 1
+      change = 0
+      one = two = 0
+      p = 2
+      while p < len(s):
+         if s[p] == s[p-1] == s[p-2]:
+            length = 2
+            while p < len(s) and s[p] == s[p-1]:
+               length += 1
+               p += 1
+            change += length / 3
+            if length % 3 == 0: one += 1
+            elif length % 3 == 1: two += 1
+         else:
+            p += 1
+      if len(s) < 6:
+         return max(missing_type, 6 - len(s))
+      elif len(s) <= 20:
+         return max(missing_type, change)
+      else:
+         delete = len(s) - 20
+         change -= min(delete, one)
+         change -= min(max(delete - one, 0), two * 2) / 2
+         change -= max(delete - one - 2 * two, 0) / 3
+         return delete + max(missing_type, change)
+
+def checkUsernameValidation(username):
+    #check length
+    if (len(username) < 6):
+        return False
+    #check existance
+    try:
+        User.objects.get(username=username)
+        return False
+    except:
+        pass
+    
+    #check space 
+    if (" " in username):
+        return False
+
+    #return true if it passes
+    return True
+
+
+def checkEmailValid(email):
+    try:
+        User.objects.get(email=email)
+        return False
+    except:
+        return True

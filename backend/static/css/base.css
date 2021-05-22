@@ -53,9 +53,14 @@ body {
 .notification-block {
     left: 10px;
     bottom: 0px;
+    visibility: hidden;
     position: fixed;
     height: 80px;
     width: 300px;
+}
+
+.notification-block.active {
+    visibility: visible;
 }
 
 @media only screen and (max-width: 1055px) {}

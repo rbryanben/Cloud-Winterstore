@@ -100,6 +100,7 @@ function goto(url) {
 ///
 ///function to show loader 
 function showLoading() {
+    //make notification block visible 
     var loader = document.getElementById("loader")
     if (!loader.classList.contains("show")) {
         loader.classList.add("show")

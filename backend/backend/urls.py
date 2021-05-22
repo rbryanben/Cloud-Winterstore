@@ -24,5 +24,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/',include("RestAPI.urls")), #include all urls from RestAPI 
     path('',include("WebApplication.urls")), #include all urls for the webapp
+    path('console',include("Console.urls")), #include all urls for the console
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
