@@ -10,6 +10,7 @@ urlpatterns = [
     path("verify/<str:link>",views.verifyUser), #to handle verification links
     path("recovery",views.recovery), #for recovering password
     path("recovery/reset/<str:slug>",views.recoveryReset), #for resetting 
+    path("documentation",views.documentation),  
  
     ##############
     ############## API's

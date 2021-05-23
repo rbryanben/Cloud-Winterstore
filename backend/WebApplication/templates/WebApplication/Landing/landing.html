@@ -30,7 +30,7 @@
             </div>
             <div class="summary-block-rupee-button-block">
 
-                <div class="martial-button-white">
+                <div class="martial-button-white" onclick="goto('/documentation#getting-started')">
                     GET STARTED
                 </div>
                 <div class="osprey-button-white">
@@ -56,7 +56,7 @@
         <div class="century-block-subtext">
             We know some engineers that could do everything for you at a relatively low price, we really want you to be part of us
         </div>
-        <div style="margin-top: 20px;" class="sabi-button-lg-green center-button">Make the switch</div>
+        <div style="margin-top: 20px;" class="sabi-button-lg-green center-button" onclick="goto('/documentation#getting-started')">Make the switch</div>
     </div>
 </div>
 
@@ -70,7 +70,7 @@
         <div class="marxwell-body-subtext">
             Our Storage solution aims to be on all platforms, we have done a few but we are not yet there
         </div>
-        <div style="margin-top: 40px;" class="sabi-button-sm-blue center-button">Learn More</div>
+        <div style="margin-top: 40px;" class="sabi-button-sm-blue center-button" onclick="goto('/documentation#background')">Learn More</div>
     </div>
 </div>
 
@@ -79,7 +79,7 @@
 
 
     <div class="div-flex-center">
-        <div class="window-shoper-item">
+        <div class="window-shoper-item" onclick="goto('/documentation#android')">
             <div class="window-shoper-item-image">
                 <img class=" window-shoper-item-image-img" src="{% static 'png/android_studio.png' %}">
             </div>
@@ -99,7 +99,7 @@
     </div>
 
     <div class="div-flex-center">
-        <div class="window-shoper-item">
+        <div class="window-shoper-item" onclick="goto('/documentation#dotnet')">
             <div class="window-shoper-item-image">
                 <img class=" window-shoper-item-image-img" src="{% static 'png/NET_Core_Logo.svg.png' %}">
             </div>
@@ -120,7 +120,7 @@
     </div>
 
     <div class="div-flex-center">
-        <div class="window-shoper-item">
+        <div class="window-shoper-item" onclick="goto('/documentation#rest-api')">
             <div class="window-shoper-item-image">
                 <img class=" window-shoper-item-image-img" src="{% static 'png/rest.png' %}">
             </div>
@@ -163,7 +163,7 @@
             <i class="fas fa-user fa-6x" style="margin-left: auto; margin-right: auto;"></i>
         </div>
         <div class="himatachi-item-text">
-            4 Accounts
+            {{accounts}} Accounts
         </div>
     </div>
     <!-- data stored -->
@@ -196,12 +196,12 @@
         <div class="japan-block-subtext">
             New accounts get 15gb free valid for 3 months, just to get you started
         </div>
-        <div style="margin-top: 20px;" class="sabi-button-lg-green ">Create Account</div>
+        <div style="margin-top: 20px;" class="sabi-button-lg-green " onclick="goto('/sign-up')">Create Account</div>
     </div>
 </div>
 </div>
 
 
 
-<!-- navbar -->
+<!-- footer  -->
 {% include 'WebApplication/Components/footer.html' %} {% endblock %}

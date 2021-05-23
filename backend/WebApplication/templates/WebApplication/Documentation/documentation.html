@@ -1,0 +1,340 @@
+{% extends "base.html" %}
+<!-- title -->
+{% block title %} Winterstore | Documentation {% endblock %}
+
+<!-- imports -->
+{% block imports %} {% endblock %}
+
+<!-- direct style-->
+{% block style %}
+<style>
+    body {
+        background-color: #F7F7F7;
+        font-size: 110%;
+        font-family: Helvetica;
+    }
+    
+    #navbar {
+        background-color: #ECEBEB;
+        position: fixed;
+        height: 100%;
+        width: 22vw;
+        top: 0;
+        left: 0;
+        z-index: 1;
+        padding: 20px;
+        overflow-x: hidden;
+        border-right: 3px solid black;
+    }
+    
+    @media (max-width: 800px) {
+        #navbar {
+            position: relative;
+            width: 100%;
+            max-height: 200px;
+            top: 0;
+            padding: 0;
+            margin: 0;
+            border-right: none;
+            border-bottom: 3px solid black;
+        }
+    }
+    
+    #navbar header {
+        position: absolute;
+        text-align: center;
+        width: 100%;
+        top: 0;
+        left: 0;
+        margin: 0;
+    }
+    
+    @media (max-width: 800px) {
+        #navbar header {
+            position: relative;
+        }
+    }
+    
+    #navbar ul {
+        list-style-type: none;
+        position: relative;
+        top: 15%;
+    }
+    
+    @media (max-width: 800px) {
+        #navbar ul {
+            right: 0;
+        }
+    }
+    
+    #navbar li {
+        padding: 20px;
+    }
+    
+    .nav-link {
+        text-decoration: none;
+    }
+    
+    .nav-link:link {
+        color: #1D0BA9;
+    }
+    
+    .nav-link:hover {
+        color: #000000;
+    }
+    
+    .nav-link:visited {
+        color: #120765;
+    }
+    
+    #main-doc {
+        position: absolute;
+        padding: 10px;
+        margin-left: 25vw;
+        overflow: hidden;
+    }
+    
+    @media (max-width: 800px) {
+        #main-doc {
+            position: relative;
+            margin: 0px;
+        }
+    }
+    
+    .main-section {
+        padding: 20px;
+    }
+    
+    header {
+        color: #914DD0;
+        background-color: #C5C2C2;
+        font-size: 200%;
+        padding: 10px;
+    }
+    
+    h2 {
+        color: #1D0BA9;
+    }
+    
+    h3 {
+        color: #120765;
+    }
+    
+    #basic-elements li {
+        font-size: 110%;
+        font-weight: bold;
+    }
+    
+    #basic-ex,
+    #table-ex,
+    .para-ex,
+    .lists-ex {
+        text-align: center;
+    }
+    
+    @media (max-width: 800px) {
+        .para-ex {
+            position: relative;
+            right: 15%;
+        }
+    }
+    
+    #headings-list,
+    #links-list {
+        position: relative;
+        left: 30%;
+        list-style-position: inside;
+    }
+    
+    @media (max-width: 600px) {
+        #headings-list,
+        #links-list {
+            left: 10%;
+        }
+    }
+    
+    @media (max-width: 800px) {
+        #hp_header {
+            font-size: 180%;
+        }
+    }
+    
+    header {
+        color: rgb(25, 124, 128);
+    }
+</style>
+{% endblock %}
+
+<!-- body  comes here -->
+{% block body %}
+
+<!-- navbar -->
+{% include 'WebApplication/Components/navbar.html' %}
+
+
+
+<nav id="navbar" style="height: 500px; margin-top: 40px;">
+    <header>Winterstore Documentation</header>
+    <ul>
+        <li><a class="nav-link" href="#Introduction">Introduction</a></li>
+        <li><a class="nav-link" href="#background">Background</a></li>
+        <li><a class="nav-link" href="#getting-started">Getting Started</a></li>
+        <li><a class="nav-link" href="#dotnet">Visual Studio (C#)</a></li>
+        <li><a class="nav-link" href="#android">Android Studio (Java)</a></li>
+        <li><a class="nav-link" href="#rest-api">Rest API (HTTP)</a></li>
+    </ul>
+</nav>
+<main id="main-doc">
+    <!-- introduction -->
+    <section class="main-section" id="Introduction">
+        <header>Introduction</header>
+        <p>Cloud Winterstore is to let software developers keep their clients’ data more secure than ever, by bringing more robust access control to cloud storage. Instead of securing files by naming them with an n long character string which makes it harder
+            to guess the name of the file, Cloud Winterstore will allow a client to set the access control measures for a file upon upload. For a person to view this file they will have to be either authenticated as the owner of the file, or the key to
+            that file exists in the current authenticated user’s key set. </p>
+        <p>
+            This will reduce the possibility of a person gaining access to that file, cause all a person had to do previously was obtain the URL of a file, which would give them access to that file. Removing the long string naming conventions for files will make
+            it easier for a developer to manage their storage, cause now they can make use of names that make sense.
+
+        </p>
+    </section>
+    <hr>
+
+    <!-- introduction -->
+    <section class="main-section" id="background">
+        <header>Background</header>
+        <p>One thing to note is that I am a very big fan of google firebase (https://firebase.google.com/), my favorite part being the fact that it is free to use:) However there are other factors like it is very easy to use, hence you do not need to know
+            a lot about backend to build an entire application. Which I have done so by building 2 of my applications on it, Solve it (https://github.com/rbryanben/Solve-It) and ChatSock (https://github.com/rbryanben/ChatSock-v1.0.2). Bad choice to use
+            Firebase with a C# application by the way! </p>
+        <p>
+            I mostly use Firebase Authentication, RTD and Storage for my applications, and one thing I have noticed is that they offer the least security possible when it comes to files. Files are created with a n char long string so that a person may not easily
+            guess the path of the file, but if the person is authenticated, they can view any file they want, they just have to obtain the URL of that file. No checks are done to verify if the person can access the files.
+        </p>
+        <p>
+            This problem I came to realize when I figured that Midlands State University keeps their student’s e-learning profile pictures in 1 folder, which is hosted by NGINX. The person who created the system did try to restrict access to these profile pictures
+            by restricting access to the folder as whole. But injecting a student’s registration number to the end of the absolute URL of the images folder will allow you to view the person’s profile image. This gets way worse when you take note that
+            all students emails can be synced to your android device, because MSU uses Google Mail for their students. Hence it allows us to get data on every student that is on campus, cause we already now all registration numbers.
+        </p>
+    </section>
+    <hr>
+
+    <!-- introduction -->
+    <section class="main-section" id="getting-started">
+        <header>Getting Started</header>
+        <p>We Assume that you have decided on what you want to build with us, so lets get started. First of all we need to create your Account, this is needed before everything else. Create an account
+            <a href='/sign-up'>here</a>
+        </p>
+
+    </section>
+    <hr>
+
+    <!-- dotnet -->
+    <section class="main-section" id="dotnet">
+        <header>.NET CORE (C#) </header>
+        <ul id="basic-elements">
+            <li><code>&lt;!DOCTYPE html&gt;</code></li>
+            <p>The first element in HTML document is the &lt;!DOCTYPE&gt;, which is required for browsers to display webpages correctly. It is an example of an empty element, an element that does not need a closing tag.</p>
+            <li><code>&lt;html&gt;</code></li>
+            <p>The next element is the <code>&lt;html&gt;</code> element, the root element. It contains a start and end tag that concludes the document.</p>
+            <li><code>&lt;head&gt;</code></li>
+            <p>After the <code>&lt;html&gt;</code> element, the <code>&lt;head&gt;</code> element follows with a start and end tag. This element contains meta information about the document, such as the <code>&lt;title&gt;</code> element that defines the
+                document’s title. </p>
+            <li><code>&lt;body&gt;</code></li>
+            <p>The last basic document structure is the <code>&lt;body></code> element. The visible page content is contained within this element.</p>
+        </ul>
+        <h3>Example:</h3>
+        <div id="basic-ex">
+            <p><code>&lt;!DOCTYPE html&gt;</code></p>
+            <p><code>&lt;html&gt;</code></p>
+            <p><code>&lt;head&gt;</code></p>
+            <p><code>&lt;title&gt;Webpage Title&lt;/title&gt;</code></p>
+            <p><code>&lt;/head&gt;</code></p>
+            <p><code>&lt;body&gt;</code></p>
+            <p><code>&lt;h1&gt;Hello World!&lt;/h1&gt;</code></p>
+            <p><code>&lt;/body&gt;</code></p>
+            <p><code>&lt;/html&gt;</code></p>
+        </div>
+    </section>
+    <hr>
+    <section class="main-section" id="android">
+        <header id="hp_header">Android Studio (Java)</header>
+        <h2>Headings</h2>
+        <p>Headings help to define a documents structure and make it easier to read. They are used by search engines to catalog the structure and content of a web page. Heading tags run from the most important <code>&lt;h1&gt;</code> to the least <code>&lt;h6&gt;</code>            and include a start and end tag.</p>
+        <h3>Heading Examples:</h3>
+        <ul id="headings-list">
+            <li><code>&lt;h1&gt;Heading 1&lt;/h1&gt;</code></li>
+            <li><code>&lt;h2&gt;Heading 2&lt;/h2&gt;</code></li>
+            <li><code>&lt;h3&gt;Heading 3&lt;/h3&gt;</code></li>
+            <li><code>&lt;h4&gt;Heading 4&lt;/h4&gt;</code></li>
+            <li><code>&lt;h5&gt;Heading 5&lt;/h5&gt;</code></li>
+            <li><code>&lt;h6&gt;Heading 6&lt;/h6&gt;</code></li>
+        </ul>
+        <h2>Paragraphs</h2>
+        <p>The element that defines a paragraph in HTML is the <code>&lt;p&gt;</code> element. The display of a paragraph can be unpredictable. Adding extra spaces will not changes the results displayed, the browser removes any extra spaces or lines. In
+            order to preserve spaces and lines, the <code>&lt;pre&gt;</code> element is used.</p>
+        <h3>Paragraph Example:</h3>
+        <ul>
+            <li>Code:</li>
+            <div class="para-ex">
+                <p><code>&lt;p&gt;This is an example paragraph.</code></p>
+                <p><code>An example paragraph is this.</code></p>
+                <p><code>A paragraph as an example.&lt;/p&gt;</code></p>
+            </div>
+            <li>Display:</li>
+            <div class="para-ex">
+                <p>This is an example paragraph. An example paragraph is this. A paragraph as an example.</p>
+            </div>
+        </ul>
+        <h3>Preserve Paragraph Example:</h3>
+        <ul>
+            <li>Code:</li>
+            <div class="para-ex">
+                <p><code>&lt;pre&gt;This is a preserved example paragraph.</code></p>
+                <p><code>A preserved paragraph example.</code></p>
+                <p><code>Paragraph with spaces and lines preserved.&lt;/pre&gt;</code></p>
+            </div>
+            <li>Display:</li>
+            <div class="para-ex">
+                <pre>This is a preserved example paragraph.
+A preserved paragraph example.
+Paragraph with spaces and lines preserved.</pre>
+            </div>
+        </ul>
+    </section>
+    <hr>
+
+    <hr>
+    <section class="main-section" id="rest-api">
+        <header>Rest API</header>
+        <p>HTML provides the option to create ordered or unordered lists. </p>
+        <h2>Unordered lists</h2>
+        <ul>
+            <li>Unordered lists start and end with the <code>&lt;ul&gt;</code> tag.</li>
+            <li>Each list item starts and ends with the <code>&lt;li&gt;</code> tag.</li>
+            <li>Items by default will be marked with bullets or discs. Use list-style-type to define the style of the list item markers, such as circles or no markers. </li>
+            <li><b>Example:</b></li>
+            <div class="lists-ex">
+                <p><code>&lt;ul style=”list-style-type:square;”&gt;</p>
+			<p>&lt;li&gt;Item 1&lt;/li&gt;</p>
+			<p>&lt;li&gt;Item 2&lt;/li&gt;</p>
+			<p>&lt;li&gt;Item 3&lt;/li&gt;&lt;/ul&gt;</p></code>
+            </div>
+        </ul>
+        <h2>Ordered lists</h2>
+        <ul>
+            <li>Ordered lists start and end with the <code>&lt;ol&gt;</code> tag.</li>
+            <li>Each list item starts and ends with the <code>&lt;li&gt;</code> tag.</li>
+            <li>Items by default with be marked with numbers. Use the type attribute to define the type of list item marker, such as letters or roman numerals.</li>
+            <li><b>Example:</b></li>
+            <div class="lists-ex">
+                <p><code>&lt;ol type=”A”&gt;</p>
+			<p>&lt;li&gt;Item 1&lt;/li&gt;</p>
+			<p>&lt;li&gt;Item 2&lt;/li&gt;</p>
+			<p>&lt;li&gt;Item 3&lt;/li&gt;&lt;/ol&gt;</code></p>
+            </div>
+        </ul>
+    </section>
+    <hr>
+
+</main>
+
+{% endblock %}

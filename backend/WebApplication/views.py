@@ -22,7 +22,10 @@ socketSecurity = "http://"
 #landing page
 @require_http_methods(["GET",])
 def landingPage(request):
-    return render(request,"WebApplication/Landing/landing.html")
+    context = {
+        "accounts" : len(User.objects.all())
+    }
+    return render(request,"WebApplication/Landing/landing.html",context)
 
 #Signup page     
 @require_http_methods(["GET",])
@@ -30,6 +33,10 @@ def signUpPage(request):
     return render(request,"WebApplication/Signup/signup.html")
 
 
+#
+#documentation page 
+def documentation(request):
+    return render(request,"WebApplication/Documentation/documentation.html")
 #
 #recovery page     
 @require_http_methods(["GET","POST"])
