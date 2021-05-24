@@ -70,6 +70,11 @@ def recovery(request):
     return render(request,"WebApplication/Recovery/recovery.html")
 
 #
+# enhanced page
+def enhanced(request):
+    return render(request,"WebApplication/Signup/enhanced.html")
+
+#
 #recovery page reset
 # 
 @require_http_methods(["GET","POST"])

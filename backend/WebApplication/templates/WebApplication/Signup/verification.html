@@ -89,8 +89,15 @@
         postToServer("/verify/{{data.verificationLink}}", data, function(responce) {
             hideLoading()
             setTimeout(function() {
-                if (responce == "200")
+                if (responce == "200") {
+                    if (localStorage.getItem("enhanced")) { //redirect to enhanced if 
+                        localStorage.setItem("enhanced-account", "{{data.email}}")
+                        localStorage.removeItem("enhanced")
+                        window.location.replace("/sign-up/enhanced")
+                        return
+                    }
                     window.location.replace("/console")
+                }
             }, 2000)
             if (responce == "200") {
                 ShowSuccess("Verification Successful")

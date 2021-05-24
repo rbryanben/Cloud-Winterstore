@@ -12,6 +12,7 @@ urlpatterns = [
     path("recovery/reset/<str:slug>",views.recoveryReset), #for resetting 
     path("documentation",views.documentation), #documentation page 
     path("about",views.aboutPage), #about page
+    path("sign-up/enhanced",views.enhanced), #enhanced 
  
     ##############
     ############## API's

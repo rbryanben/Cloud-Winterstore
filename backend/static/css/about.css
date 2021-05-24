@@ -1,0 +1,160 @@
+.about-ad {
+    height: 350px;
+    background-size: cover;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    text-align: center;
+    color: white;
+}
+
+.about-ad-subtext {
+    margin-left: 15%;
+    margin-right: 15%;
+    margin-top: 20px;
+}
+
+.about-ad-header {
+    font-size: xx-large;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+
+/* about section */
+
+#about-winterstore {
+    background-color: rgba(243, 243, 243, 0.555);
+    padding: 40px;
+    display: grid;
+    gap: 10px;
+    grid-template-columns: 1fr 1fr;
+}
+
+.about-winterstore-left-about {
+    font-size: small;
+    color: gray;
+}
+
+.about-winterstore-left-header {
+    margin-top: 20px;
+    font-size: larger;
+}
+
+.about-winterstore-left-body {
+    font-size: small;
+    margin-top: 20px;
+    color: rgb(66, 66, 66);
+}
+
+.about-winterstore-right {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.about-winterstore-right>img {
+    max-height: 150px;
+    margin-left: 20px;
+}
+
+
+/* stats section */
+
+#stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    padding: 40px 0px;
+    border-top: solid rgba(235, 235, 235, 0.651) 0.5px;
+    border-bottom: solid rgba(235, 235, 235, 0.651) 0.5px;
+}
+
+.stat-item {
+    padding: 40px;
+    padding-right: 10px;
+}
+
+.stat-item-header {
+    font-size: x-large;
+}
+
+.stat-item-subtext {
+    font-size: small;
+    margin-top: 20px;
+}
+
+
+/* ceo section */
+
+#ceo {
+    padding: 40px;
+    border-bottom: solid rgba(235, 235, 235, 0.651) 0.5px;
+    background-color: rgba(243, 243, 243, 0.555);
+}
+
+.ceo-profile {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.ceo-profile>img {
+    border-radius: 50%;
+    height: 180px;
+}
+
+.ceo-caption {
+    font-size: xx-large;
+    margin-top: 40px;
+    text-align: center;
+    color: gray;
+    padding-left: 5%;
+    padding-right: 5%;
+}
+
+.ceo-footer {
+    margin-top: 40px;
+    font-size: small;
+    color: teal;
+    text-align: center;
+}
+
+
+/* intresting */
+
+#intresting {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+
+/* adaptivenes */
+
+@media only screen and (max-width: 1055px) {}
+
+@media only screen and (max-width: 800px) {}
+
+@media only screen and (max-width: 700px) {}
+
+@media only screen and (max-width: 600px) {
+    .about-winterstore-right {
+        display: none;
+    }
+    #about-winterstore {
+        grid-template-columns: 1fr;
+    }
+    #stats {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+    #intresting {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media only screen and (max-width: 500px) {}
+
+@media only screen and (max-width: 400px) {}
+
+@media only screen and (max-width: 340px) {}

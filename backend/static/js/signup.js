@@ -197,3 +197,56 @@ function signupFreeClient() {
         }
     }
 }
+
+
+//signup 
+function signupEnhancedClient() {
+    var usernameInput = document.getElementById("signupUsernameInput")
+    var emailInput = document.getElementById("signupEmailInput")
+    var passwordBox = document.getElementById("signupPasswordInput");
+
+    if (usernamePass && passwordPass && termsPass && emailPass) {
+        showLoading();
+
+        //data to be posted
+        //dont worry I am checking on the server side too
+        data = {
+            "username": usernameInput.value,
+            "email": emailInput.value,
+            "password": passwordBox.value,
+        }
+        postToServer("/new-free-user", data, function(responce) {
+            if (responce != "500") {
+                hideLoading()
+                ShowSuccess("Verification Link Sent")
+                setTimeout(function() {
+                    localStorage.setItem("enhanced", true) //store that this is enhanced
+                    window.location.replace("/verify/" + responce)
+                }, 2000)
+
+            } else {
+                hideLoading()
+                ShowWarning("Failed to Send Verification Link")
+            }
+        })
+
+    } else {
+        //alert user where problem is 
+        if (!usernamePass) {
+            ShowWarning("Check Username")
+            return
+        }
+        if (!passwordPass) {
+            ShowWarning('Check Password')
+            return
+        }
+        if (!termsPass) {
+            ShowWarning('Please Agree to Terms')
+            return
+        }
+        if (!emailPass) {
+            ShowWarning('Check Email')
+            return;
+        }
+    }
+}
