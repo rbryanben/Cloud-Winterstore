@@ -36,6 +36,7 @@
         display: flex;
         padding-left: 20px;
         align-items: center;
+        cursor: pointer;
     }
     
     .mobile {
@@ -108,12 +109,12 @@
     <!-- add navbar -->
     <div class="navbar">
         <!-- logo-->
-        <div class="navbar-logo">
+        <div class="navbar-logo" onclick="goto('/')">
             Secure <span style="color: rgb(86, 226, 219); margin-left: 5px; margin-right: 5px;">Cloud</span> Storage
         </div>
 
         <!-- about-->
-        <div class="navbar-item hide-for-mobile">
+        <div class="navbar-item hide-for-mobile" onclick="goto('/about')">
             About
         </div>
 
@@ -144,11 +145,11 @@
     </div>
     <!-- menu items -->
     <div id="mobileMenu" class="mobile-menu mobile">
-        <div class="mobile-menu-item ">
+        <div class="mobile-menu-item " onclick="goto('/about')">
             About <i class="fas fa-chevron-right"></i>
         </div>
-        <div class="mobile-menu-item " onclick="goto('/eagle-pack')">
-            Eaglepack <i class="fas fa-chevron-right"></i>
+        <div class="mobile-menu-item " onclick="goto('/documentation')">
+            Documentation <i class="fas fa-chevron-right"></i>
         </div>
         <div class="mobile-menu-item " onclick="goto('//github.com/rbryanben/Cloud-Winterstore')">
             Contribute
@@ -185,7 +186,6 @@
 
         //hide menu if the user resizes 
         window.addEventListener("resize", (event) => {
-            console.warn(window.innerWidth);
             if (window.innerWidth >= 601) {
                 document.getElementById("mobileMenu").classList.remove("show")
             }

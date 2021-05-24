@@ -32,6 +32,10 @@ def landingPage(request):
 def signUpPage(request):
     return render(request,"WebApplication/Signup/signup.html")
 
+#
+# Abdout page 
+def aboutPage(request):
+    return render(request,"WebApplication/About/about.html")
 
 #
 #documentation page 

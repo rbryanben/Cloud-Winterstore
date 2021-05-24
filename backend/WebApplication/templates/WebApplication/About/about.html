@@ -1,0 +1,269 @@
+{% extends "base.html" %}{% load static %}
+<!-- title -->
+{% block title %} Winterstore | About {% endblock %}
+
+<!-- imports -->
+{% block imports %} {% endblock %}
+
+<!-- direct style-->
+{% block style %}
+<style>
+    .about-ad {
+        height: 350px;
+        background-image: url('{% static "jpg/1440x810_cmsv2_371acacd-a248-570b-8e4a-a28481ce9f55-4459998.jpg" %}');
+        background-size: cover;
+        display: flex;
+        justify-content: start;
+        align-items: center;
+        text-align: center;
+        color: white;
+    }
+    
+    .about-ad-subtext {
+        margin-left: 15%;
+        margin-right: 15%;
+        margin-top: 20px;
+    }
+    
+    .about-ad-header {
+        font-size: xx-large;
+        margin-left: 10%;
+        margin-right: 10%;
+    }
+    /* about section */
+    
+    #about-winterstore {
+        background-color: rgba(243, 243, 243, 0.555);
+        padding: 40px;
+        display: grid;
+        gap: 10px;
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .about-winterstore-left-about {
+        font-size: small;
+        color: gray;
+    }
+    
+    .about-winterstore-left-header {
+        margin-top: 20px;
+        font-size: larger;
+    }
+    
+    .about-winterstore-left-body {
+        font-size: small;
+        margin-top: 20px;
+        color: rgb(66, 66, 66);
+    }
+    
+    .about-winterstore-right {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .about-winterstore-right>img {
+        max-height: 150px;
+        margin-left: 20px;
+    }
+    /* stats section */
+    
+    #stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        padding: 40px 0px;
+        border-top: solid rgba(235, 235, 235, 0.651) 0.5px;
+        border-bottom: solid rgba(235, 235, 235, 0.651) 0.5px;
+    }
+    
+    .stat-item {
+        padding: 40px;
+        padding-right: 10px;
+    }
+    
+    .stat-item-header {
+        font-size: x-large;
+    }
+    
+    .stat-item-subtext {
+        font-size: small;
+        margin-top: 20px;
+    }
+    /* ceo section */
+    
+    #ceo {
+        padding: 40px;
+        border-bottom: solid rgba(235, 235, 235, 0.651) 0.5px;
+        background-color: rgba(243, 243, 243, 0.555);
+    }
+    
+    .ceo-profile {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+    }
+    
+    .ceo-profile>img {
+        border-radius: 50%;
+        height: 180px;
+    }
+    
+    .ceo-caption {
+        font-size: xx-large;
+        margin-top: 40px;
+        text-align: center;
+        color: gray;
+        padding-left: 5%;
+        padding-right: 5%;
+    }
+    
+    .ceo-footer {
+        margin-top: 40px;
+        font-size: small;
+        color: teal;
+        text-align: center;
+    }
+    /* intresting */
+    
+    #intresting {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+    /* adaptivenes */
+    
+    @media only screen and (max-width: 1055px) {}
+    
+    @media only screen and (max-width: 800px) {}
+    
+    @media only screen and (max-width: 700px) {}
+    
+    @media only screen and (max-width: 600px) {
+        .about-winterstore-right {
+            display: none;
+        }
+        #about-winterstore {
+            grid-template-columns: 1fr;
+        }
+        #stats {
+            grid-template-columns: 1fr;
+            text-align: center;
+        }
+        #intresting {
+            grid-template-columns: 1fr;
+        }
+    }
+    
+    @media only screen and (max-width: 500px) {}
+    
+    @media only screen and (max-width: 400px) {}
+    
+    @media only screen and (max-width: 340px) {}
+</style>
+{% endblock %}
+
+<!-- body  comes here -->
+{% block body %}
+<!-- navbar -->
+{% include 'WebApplication/Components/navbar.html' %}
+
+<!-- advertimage -->
+<section id="intro">
+    <div class="about-ad">
+        <div class="">
+            <div class="about-ad-header">
+                At the end of the day, the goals are simple: safety and security
+            </div>
+            <div class="about-ad-subtext">
+                By focusing our efforts on engineering and staying at the forefront of technology, we strive to create reliable services that delight and surprise our customers.
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="about-winterstore">
+    <div class="about-winterstore-left">
+        <div class="about-winterstore-left-about"> About Winterstore</div>
+        <div class="about-winterstore-left-header"> We keep it all Secure more than anyone else</div>
+        <div class="about-winterstore-left-body"> Winterstore's mission is is to let software developers keep their clients’ data more secure than ever, by bringing more robust access control to cloud storage. Instead of securing files by naming them with an n long character string which makes
+            it harder to guess the name of the file, Cloud Winterstore will allow a client to set the access control measures for a file upon upload. For a person to view this file they will have to be either authenticated as the owner of the file, or
+            the key to that file exists in the current authenticated user’s key set. </div>
+    </div>
+    <div class="about-winterstore-right">
+        <img src="{% static 'svg/undraw_Security_on_re_e491.svg' %}">
+    </div>
+
+</section>
+
+<section id="stats">
+    <div class="stat-item">
+        <div class="stat-item-header">2020</div>
+        <div class="stat-item-subtext">
+            Winterstore was started in <span style="font-weight: 600;">2021</span> in Ryan's room as a project for his level 2.2 Dissertation.
+        </div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-item-header">2000mb data</div>
+        <div class="stat-item-subtext">
+            Over <span style="font-weight: 600;">2 Gigabytes</span> of data is stored to us securely, each file havng its own access control object that prevents un authorized users from accessing the file. No one does it better than us.
+        </div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-item-header">20+ accounts</div>
+        <div class="stat-item-subtext">
+            We deliver our service to over <span style="font-weight: 600;">20 accounts</span> on 3 platforms, web, desktop and mobile. Providing engineering for each and every account. Retriving files fast and efficient.
+        </div>
+    </div>
+</section>
+
+
+<section id="ceo">
+    <div class="ceo-profile">
+        <img src="{% static 'png/rben.png' %}">
+    </div>
+    <div class="ceo-caption">
+        “Don’t take too much advice. Most people who have a lot of advice to give — with a few exceptions — generalize whatever they did. Don’t over-analyze everything. I myself have been guilty of over-thinking problems. Just build things and find out if they
+        work.”
+    </div>
+    <div class="ceo-footer">
+        Ryan Ben - Founder & CEO
+    </div>
+</section>
+
+
+<section id="intresting">
+    <div class="stat-item">
+        <div class="stat-item-header">What We Expect</div>
+        <div class="stat-item-subtext">
+            The expected result is a service that allows a developer to register and subscribe to a package and setup their storage. Which they will be able to build applications using the storage service. A client being able to upload a file, and add access control
+            to the file, hence keeping it secure.The significance of the project is to provide security for developer client’s data, cause in this era their data is very valuable.
+        </div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-item-header">What We Saw</div>
+        <div class="stat-item-subtext">
+            This problem I came to realize when I figured that Midlands State University keeps their student’s e-learning profile pictures in 1 folder, which is hosted by NGINX. The person who created the system did try to restrict access to these profile pictures
+            by restricting access to the folder as whole. But injecting a student’s registration number to the end of the absolute URL of the images folder will allow you to view the person’s profile image. This gets way worse when you take note that
+            all students emails can be synced to your android device, because MSU uses Google Mail for their students. Hence it allows us to get data on every student that is on campus, cause we already now all registration numbers.
+        </div>
+    </div>
+</section>
+
+
+<!-- get free storage -->
+<div class="japan-block div-flex-center">
+    <div class="japan-block-wrapper">
+        <div class="japan-block-header">
+            Are you ready to secure your clients files?
+        </div>
+        <div class="japan-block-subtext">
+            New accounts get 15gb free valid for 3 months, just to get you started
+        </div>
+        <div style="margin-top: 20px;" class="sabi-button-lg-green " onclick="goto('/sign-up')">Create Account</div>
+    </div>
+</div>
+</div>
+
+
+<!-- footer  -->
+{% include 'WebApplication/Components/footer.html' %} {% endblock %}
