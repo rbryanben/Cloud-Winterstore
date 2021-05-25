@@ -4,6 +4,7 @@ import datetime
 from django.utils import timezone
 import pytz
 from django.db.models.base import Model
+from dateutil.relativedelta import relativedelta
 
 #
 # function to check if a datetime has been reached
@@ -15,6 +16,27 @@ def dateTimeReached(datetimeNative):
     if (now > then):
         return True
     return False
+
+#
+# suscriptions 
+class EnhancedSubscription(models.Model):
+    user = models.OneToOneField(User,on_delete=models.CASCADE,primary_key=True)
+    expiryDate = models.DateTimeField(null=False)
+
+    def create(self,user):
+        self.user = user
+        self.expiryDate = datetime.datetime.now()
+        self.save()
+    
+    def addMonths(self,n):
+        if datetime.datetime.now() > self.expiryDate:
+            self.expiryDate = datetime.datetime.now()
+            self.save()
+        print(self.expiryDate)
+        self.expiryDate = self.expiryDate + relativedelta(months=+n)
+        self.save()
+
+        
 
 
 # unverified users

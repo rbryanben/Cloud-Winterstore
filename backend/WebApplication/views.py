@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, time
 from random import randint
 from django.http import request
 from django.http.response import HttpResponse
@@ -13,7 +13,7 @@ import smtplib, ssl
 from email.mime.text import MIMEText
 import json
 import uuid
-from .models import UnverifiedUser ,RecoveryObject
+from .models import UnverifiedUser ,RecoveryObject , EnhancedSubscription
 
 
 #Clicking verification link may not work is I am using SSL
@@ -71,7 +71,24 @@ def recovery(request):
 
 #
 # enhanced page
+@csrf_exempt
 def enhanced(request):
+    if (request.method == "POST"):
+        try:
+            receivedJSON = json.loads(request.body)
+            email = receivedJSON['email']
+
+            #create subscription
+            newSub = EnhancedSubscription()
+            try:
+                newSub.create(User.objects.get(email=email))
+                newSub.addMonths(1)
+            except:
+                return HttpResponse("500")
+
+            return HttpResponse("200")
+        except:
+            print("Json not supplied")
     return render(request,"WebApplication/Signup/enhanced.html")
 
 #
@@ -125,7 +142,6 @@ def recoveryReset(request,slug):
     }
     return render(request,"WebApplication/Recovery/reset.html",context)
     
-
 #
 #function to verify signed up user
 #
@@ -171,7 +187,6 @@ def verifyUser(request,link):
     except:
         return HttpResponse("This is an invalid link")
 
-
 #
 #Function to authanticate user 
 #
@@ -190,9 +205,6 @@ def loginAPI(request):
     except:
         return HttpResponse("500")
 
-
-
-
 #
 #Function to check if username exists
 #
@@ -210,7 +222,6 @@ def checkUsername(request):
     except exceptions.ObjectDoesNotExist:
         return HttpResponse("200")
 
-
 @csrf_exempt
 @require_http_methods(["POST"])
 def checkEmail(request):
@@ -224,7 +235,6 @@ def checkEmail(request):
         return HttpResponse("500")
     except exceptions.ObjectDoesNotExist:
         return HttpResponse("200")
-
 
 @csrf_exempt
 @require_http_methods(["POST"])
@@ -259,8 +269,6 @@ def NewFreeUserAccount(request):
         return HttpResponse(newUnverifiedUser.verificationLink)
     except:
         return HttpResponse("500")
-
-
 
 def sendEmail(email,code):
     body_of_email =   "Your verification code is " + str(code)

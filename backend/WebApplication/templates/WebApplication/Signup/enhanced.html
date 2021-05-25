@@ -10,6 +10,7 @@
 <style>
     body {
         background-image: url('{% static "png/signup_wallpaper.png" %}');
+        overflow-x: hidden;
     }
     
     .payment-frame {
@@ -128,6 +129,44 @@
         margin-top: 20px;
         font-size: x-small;
     }
+    /* adaptivenes */
+    
+    @media only screen and (max-width: 1055px) {}
+    
+    @media only screen and (max-width: 800px) {}
+    
+    @media only screen and (max-width: 700px) {}
+    
+    @media only screen and (max-width: 600px) {
+        .payment-frame {
+            width: auto;
+            box-shadow: none;
+            top: 20%;
+            left: 0%;
+            transform: translate(0, 20%);
+        }
+        .payment-summary {
+            padding-left: 20px;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        .payment-summary>div {
+            text-align: center;
+            justify-content: center;
+        }
+        .payment-box {
+            margin-left: 20px;
+        }
+        .cancel-link {
+            margin-left: 20px;
+        }
+    }
+    
+    @media only screen and (max-width: 500px) {}
+    
+    @media only screen and (max-width: 400px) {}
+    
+    @media only screen and (max-width: 340px) {}
 </style>
 {% endblock %}
 
@@ -139,7 +178,7 @@
             <div class="" style="text-align: center;">
                 <div class="payment-method-checkbox div-flex-center" style="margin-bottom: 10px; margin-right: 10px;">
                     <div class="round">
-                        <input type="checkbox" id="checkbox" value="checked" checked/>
+                        <input class="checkboxes" type="checkbox" id="checkbox" value="checked" checked/>
                         <label for="checkbox"></label>
                     </div>
                 </div>
@@ -150,7 +189,7 @@
             <div class="" style="text-align: center;">
                 <div class="payment-method-checkbox div-flex-center" style="margin-bottom: 10px; margin-right: 10px;">
                     <div class="round">
-                        <input type="checkbox" id="checkbox" />
+                        <input class="checkboxes" type="checkbox" id="checkboxOneWallet" onclick="setOneWallet()" />
                         <label for="checkbox"></label>
                     </div>
                 </div>
@@ -161,7 +200,7 @@
             <div class="" style="text-align: center;">
                 <div class="payment-method-checkbox div-flex-center" style="margin-bottom: 10px; margin-right: 10px;">
                     <div class="round">
-                        <input type="checkbox" id="checkbox" />
+                        <input class="checkboxes" type="checkbox" id="checkboxTelecash" />
                         <label for="checkbox"></label>
                     </div>
                 </div>
@@ -184,11 +223,46 @@
         <!-- payment details -->
         <input name="" id="userEmail" placeholder="Email" type="email" class="Protea-input-box payment-box">
         <!-- payment details -->
-        <input name="" id="userEmail" placeholder="Payment Number" type="text" class="Protea-input-box payment-box">
+        <input name="" id="userNumber" placeholder="Payment Number" type="text" class="Protea-input-box payment-box">
         <!-- initiate payment-->
-        <div style="margin-top: 20px;" class="sabi-button-lg-green payment-box" onclick="goto('/sign-up')">Make Payment</div>
+        <div style="margin-top: 20px;" class="sabi-button-lg-green payment-box" onclick="makePayment()">Make Payment</div>
         <!--cancel payment -->
         <div class="cancel-link">Cancel payment and proceed with <span style="color: rgb(88, 115, 189);" onclick="goto('/console')">free account</span></div>
     </div>
 </div>
+
+<script>
+    //set the email of the client
+    var emailBox = document.getElementById("userEmail")
+    emailBox.value = localStorage.getItem("enhanced-account")
+
+    function clearAllChecked() {
+        Items = document.querySelectorAll(".checkboxes")
+        alert("hie")
+    }
+
+
+    function makePayment() {
+        showLoading()
+        credentials = {
+            "email": emailBox.value
+        }
+        postToServer("/sign-up/enhanced", credentials, function(responce) {
+            if (responce == "200") {
+                hideLoading()
+                setTimeout(function() {
+                    window.location.replace("/console")
+                }, 2000)
+                localStorage.removeItem("enhanced-account")
+                ShowSuccess("Purchase Successful")
+            } else {
+                ShowWarning("Purchase Failed")
+            }
+        })
+    }
+
+    function setOneWallet() {
+        clearAllChecked()
+    }
+</script>
 {% endblock %}

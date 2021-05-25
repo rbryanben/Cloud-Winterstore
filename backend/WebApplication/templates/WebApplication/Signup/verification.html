@@ -90,6 +90,7 @@
             hideLoading()
             setTimeout(function() {
                 if (responce == "200") {
+                    localStorage.setItem("new-account", true)
                     if (localStorage.getItem("enhanced")) { //redirect to enhanced if 
                         localStorage.setItem("enhanced-account", "{{data.email}}")
                         localStorage.removeItem("enhanced")
