@@ -19,6 +19,7 @@ function showLoginModal() {
 
     if (isAuthenticated) {
         goto("/console")
+        return
     }
 
 
