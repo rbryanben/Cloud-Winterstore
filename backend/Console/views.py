@@ -3,4 +3,4 @@ from django.shortcuts import render
 
 # Create your views here.
 def console(request):
-    return HttpResponse("Console")
+    return render(request,"Console/console.html")

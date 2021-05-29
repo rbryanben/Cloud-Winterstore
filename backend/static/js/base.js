@@ -54,6 +54,9 @@ function login() {
         //attempt login
     postToServer("/login", credentials, function(responce) {
         if (responce == "200") {
+            setTimeout(() => {
+                goto("/console")
+            }, 2000)
             ShowSuccess("Login Successful")
         } else {
             ShowWarning("Login Failed")
