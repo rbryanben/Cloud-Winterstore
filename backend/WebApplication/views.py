@@ -69,6 +69,8 @@ def recovery(request):
     #get method
     return render(request,"WebApplication/Recovery/recovery.html")
 
+
+
 #
 # enhanced page
 @csrf_exempt
@@ -90,6 +92,15 @@ def enhanced(request):
         except:
             print("Json not supplied")
     return render(request,"WebApplication/Signup/enhanced.html")
+
+
+@require_http_methods(["POST"])
+@csrf_exempt
+def checkAuthentication(request):
+    if request.user.is_authenticated:
+        return HttpResponse("200")
+    
+    return HttpResponse("500")
 
 #
 #recovery page reset

@@ -13,7 +13,33 @@ function unDimPager() {
 }
 
 
+//check authentication
+let isAuthenticated = false;
+
+postToServer("/checkAuthentication", null, function(responce) {
+    if (responce == "200") {
+        isAuthenticated = true
+    } else {
+        isAuthenticated = false
+    }
+})
+
+
 function showLoginModal() {
+    //check authentication
+    if (!isAuthenticated) {
+        postToServer("/checkAuthentication", null, function(responce) {
+            if (responce == "200") {
+                goto("/console")
+            }
+        })
+    }
+
+    if (isAuthenticated) {
+        goto("/console")
+    }
+
+
     var loginModal = document.getElementById("loginModal")
         //show modal 
     if (!loginModal.classList.contains("show")) {

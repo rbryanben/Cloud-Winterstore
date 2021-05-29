@@ -13,9 +13,11 @@ urlpatterns = [
     path("documentation",views.documentation), #documentation page 
     path("about",views.aboutPage), #about page
     path("sign-up/enhanced",views.enhanced), #enhanced 
+    
  
     ##############
     ############## API's
+    path("checkAuthentication",views.checkAuthentication), #checksauthentication
     path("login",views.loginAPI), #login
     path("hjkdjNHjnudellphgy",views.checkUsername), #checks username
     path("hudiueiewfefrefrde",views.checkEmail), #checks email
