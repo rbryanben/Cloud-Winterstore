@@ -1,30 +1,12 @@
-function dimPager() {
-    var pagerBody = document.getElementById("pagerBody")
-    if (!pagerBody.classList.contains("dim")) {
-        pagerBody.classList.add("dim")
-    }
-}
-
-function unDimPager() {
-    var pagerBody = document.getElementById("pagerBody")
-    if (pagerBody.classList.contains("dim")) {
-        pagerBody.classList.remove("dim")
-    }
-}
-
-
-//check authentication
-let isAuthenticated = false;
-
-postToServer("/checkAuthentication", null, function(responce) {
-    if (responce == "200") {
-        isAuthenticated = true
-    } else {
-        isAuthenticated = false
-    }
+//start
+'{% load static %}'
+window.addEventListener('DOMContentLoaded', () => {
+    preloadImages([serverURL + "/static/png/delivery.png", serverURL + '/static/png/signup_wallpaper.png']); //preload loading image and background
 })
 
 
+//
+//modals
 function showLoginModal() {
     //check authentication
     if (!isAuthenticated) {
@@ -58,6 +40,8 @@ function hideLoginModal() {
     }
 }
 
+//
+//document
 function disableScrolling() {
     var x = window.scrollX;
     var y = window.scrollY;
@@ -68,7 +52,22 @@ function enableScrolling() {
     window.onscroll = function() {};
 }
 
-//function to call login 
+function dimPager() {
+    var pagerBody = document.getElementById("pagerBody")
+    if (!pagerBody.classList.contains("dim")) {
+        pagerBody.classList.add("dim")
+    }
+}
+
+function unDimPager() {
+    var pagerBody = document.getElementById("pagerBody")
+    if (pagerBody.classList.contains("dim")) {
+        pagerBody.classList.remove("dim")
+    }
+}
+
+
+//authentication
 function login() {
     username = document.getElementById("loginUsername").value
     password = document.getElementById("loginPassword").value
@@ -91,7 +90,18 @@ function login() {
 
 }
 
-//sha 256
+let isAuthenticated = false;
+
+postToServer("/checkAuthentication", null, function(responce) {
+    if (responce == "200") {
+        isAuthenticated = true
+    } else {
+        isAuthenticated = false
+    }
+})
+
+//
+// Encryption
 function SHA256(s) {
     var chrsz = 8;
     var hexcase = 0;
@@ -203,9 +213,8 @@ function SHA256(s) {
 }
 
 
-//notification functions 
-window.addEventListener('DOMContentLoaded', (event) => {});
-
+//
+// alerts
 
 function ShowWarning(text) {
     var waringNotification = `
@@ -232,13 +241,13 @@ function ShowSuccess(text) {
 }
 
 ////
-//// This function goes to a page
+//// relocation
 function goto(url) {
     window.location.href = (url)
 }
 
 ///
-///function to show loader 
+/// loader
 function showLoading() {
     //make notification block visible 
     var loader = document.getElementById("loader")
@@ -252,4 +261,45 @@ function hideLoading() {
     document.getElementById("loader").style.visibility = "hidden"
     loader.classList.remove("show")
     enableScrolling()
+}
+
+
+
+//
+//communication
+function postToServer(url, data, callback) {
+    var serverURL = window.location.origin;
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            callback(xmlhttp.response);
+        }
+    }
+
+    xmlhttp.open("POST", serverURL + url)
+    xmlhttp.setRequestHeader('Content-Type', 'application/json');
+    xmlhttp.send(JSON.stringify(data));
+
+}
+
+//
+//cache
+function preloadImages(array) {
+    if (!preloadImages.list) {
+        preloadImages.list = [];
+    }
+    var list = preloadImages.list;
+    for (var i = 0; i < array.length; i++) {
+        var img = new Image();
+        img.onload = function() {
+            var index = list.indexOf(this);
+            if (index !== -1) {
+                // remove image from the array once it's loaded
+                // for memory consumption reasons
+                list.splice(index, 1);
+            }
+        }
+        list.push(img);
+        img.src = array[i];
+    }
 }
