@@ -12,7 +12,6 @@ window.addEventListener('DOMContentLoaded', function() {
 
             skewX = mouseXPercent * 45
             skewY = mouseYPercentage * 45
-            console.warn(skewX)
 
             modal.style.transform = "rotateY(" + skewX + "deg)"
             modal.style.transform = "rotateX(" + skewY + "deg)"
