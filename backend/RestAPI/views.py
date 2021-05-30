@@ -3,6 +3,7 @@ from django.http.response import JsonResponse
 from django.shortcuts import render
 from datetime import datetime
 
+
 #
 # Gateway to chech if the server is online 
 #
@@ -12,8 +13,8 @@ def gateway(request):
     
     #resopnce JSON 
     response = {
-        "Server-Time" : datetime.now(),
-        "Operating-System" : platform.system(),
+        "Server_Time" : datetime.now(),
+        "Operating_System" : platform.system(),
         "Release" : platform.release()
     }
 
