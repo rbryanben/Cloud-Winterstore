@@ -62,7 +62,9 @@
     <div class="verification-body-subtext">
         {{data.email}}.
     </div>
-    <input name="code" id="code" placeholder="Code" class="Protea-input-box">
+    <form autocomplete="off">
+        <input name="code" id="code" placeholder="Code" class="Protea-input-box">
+    </form>
     <div style="margin-top: 20px;" class="sabi-button-green " onclick="verify()">Verify Your Email</div>
     <div class="verification-body-subtext" style="margin-top: 20px;">
         If you did'nt wish to verify your email address with Winterstore, please

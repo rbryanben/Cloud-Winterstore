@@ -8,6 +8,7 @@ from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate , login , logout
+from django.contrib.auth import authenticate  as xyz 
 from django.core import exceptions
 import smtplib, ssl
 from email.mime.text import MIMEText
@@ -175,10 +176,18 @@ def verifyUser(request,link):
             newUser.save()
             #delete unverified user account
             UnverifiedUser.delete(receivedUser)
-            #return successfull
-            return HttpResponse("200")
+            #login user
+            print(newUser.username,receivedUser.password)
+            user = authenticate(username=newUser.username,password=receivedUser.password)
+            if user is not None:
+                login(request, user)
+                return HttpResponse("200") 
+            else:
+                return HttpResponse("500")
+        
         except:
             return HttpResponse("500")
+            
     
     #check if link exists 
     try:
