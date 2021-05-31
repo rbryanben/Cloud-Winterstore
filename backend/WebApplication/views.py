@@ -291,6 +291,7 @@ def NewFreeUserAccount(request):
         return HttpResponse("500")
 
 def sendEmail(email,code):
+    print("send email ", email)
     body_of_email =   "Your verification code is " + str(code)
     sender = 'cloudwinterstore@gmail.com'
     receivers = [email]
