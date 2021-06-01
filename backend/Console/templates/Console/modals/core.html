@@ -1,0 +1,249 @@
+<style>
+    /* notification box */
+
+.notification {
+    padding: 15px;
+    background-color: rgb(20, 24, 26);
+    color: white;
+    display: inline-block;
+    border-radius: 5px;
+    min-width: 150px;
+    margin-top: 10px;
+    visibility: hidden;
+    animation: notificationAnime 5s ease;
+}
+
+@keyframes notificationAnime {
+    0% {
+        margin-top: 100%;
+        visibility: visible;
+    }
+    20% {
+        margin-top: 10px;
+    }
+    70% {
+        margin-top: 10px;
+    }
+    95% {
+        opacity: 1;
+    }
+    100% {
+        margin-top: 100%;
+        visibility: hidden;
+    }
+}
+
+.notification-block {
+    left: 10px;
+    bottom: 0px;
+    visibility: hidden;
+    position: fixed;
+    height: 80px;
+    width: 300px;
+}
+
+.notification-block.active {
+    visibility: visible;
+}
+    /* loading box */
+
+.loading-panel {
+    position: fixed;
+    z-index: 102;
+    background: rgba(78, 78, 78, 0.548);
+    width: 190px;
+    border-radius: 5px;
+    height: 120px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.1);
+    transition: all 0.5s ease;
+}
+
+.loading-panel.show {
+    opacity: 1;
+    visibility: visible !important;
+    transform: scale(1);
+    transform: translate(-50%, -50%);
+}
+
+.lds-spinner {
+    color: official;
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+    transform: scale(0.4);
+}
+
+.lds-spinner div {
+    transform-origin: 40px 40px;
+    animation: lds-spinner 1.2s linear infinite;
+}
+
+.lds-spinner div:after {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 3px;
+    left: 37px;
+    width: 6px;
+    height: 18px;
+    border-radius: 20%;
+    background: #fff;
+}
+
+.lds-spinner div:nth-child(1) {
+    transform: rotate(0deg);
+    animation-delay: -1.1s;
+}
+
+.lds-spinner div:nth-child(2) {
+    transform: rotate(30deg);
+    animation-delay: -1s;
+}
+
+.lds-spinner div:nth-child(3) {
+    transform: rotate(60deg);
+    animation-delay: -0.9s;
+}
+
+.lds-spinner div:nth-child(4) {
+    transform: rotate(90deg);
+    animation-delay: -0.8s;
+}
+
+.lds-spinner div:nth-child(5) {
+    transform: rotate(120deg);
+    animation-delay: -0.7s;
+}
+
+.lds-spinner div:nth-child(6) {
+    transform: rotate(150deg);
+    animation-delay: -0.6s;
+}
+
+.lds-spinner div:nth-child(7) {
+    transform: rotate(180deg);
+    animation-delay: -0.5s;
+}
+
+.lds-spinner div:nth-child(8) {
+    transform: rotate(210deg);
+    animation-delay: -0.4s;
+}
+
+.lds-spinner div:nth-child(9) {
+    transform: rotate(240deg);
+    animation-delay: -0.3s;
+}
+
+.lds-spinner div:nth-child(10) {
+    transform: rotate(270deg);
+    animation-delay: -0.2s;
+}
+
+.lds-spinner div:nth-child(11) {
+    transform: rotate(300deg);
+    animation-delay: -0.1s;
+}
+
+.lds-spinner div:nth-child(12) {
+    transform: rotate(330deg);
+    animation-delay: 0s;
+}
+
+@keyframes lds-spinner {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+
+
+</style>
+<!-- notification box -->
+<div id="notificationContainer" class="notification-block">
+
+</div>
+
+<!-- loading panel -->
+<div id="loader" class="loading-panel">
+    <div class="loading-panel-body">
+        <div class="lds-spinner">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <div class="" style="text-align: center; margin-top: -10px;color: rgb(235, 235, 235);font-size: small;">
+            Working
+        </div>
+    </div>
+
+</div>
+
+<script>
+    ///
+    /// loader
+    function showLoading() {
+        //make notification block visible 
+        var loader = document.getElementById("loader")
+        if (!loader.classList.contains("show")) {
+            loader.classList.add("show")
+        }
+        disableScrolling()
+    }
+
+    function hideLoading() {
+        document.getElementById("loader").style.visibility = "hidden"
+        loader.classList.remove("show")
+        enableScrolling()
+    }
+
+
+    //
+    // alerts
+
+    function ShowWarning(text) {
+        var waringNotification = `
+        <div class="notification">
+            <div class="notification-icon">
+                <i class="fas fa-exclamation-triangle" style="color: yellow; margin-right: 10px;"></i>` + text + `
+            </div>
+        </div>
+        `;
+
+        document.getElementById("notificationContainer").innerHTML = waringNotification;
+    }
+
+    function ShowSuccess(text) {
+        var waringNotification = `
+        <div class="notification">
+            <div class="notification-icon">
+            <i class="fas fa-check" style="color: rgb(77, 179, 63); margin-right: 10px;"></i>` + text + `
+            </div>
+        </div>
+        `;
+
+        document.getElementById("notificationContainer").innerHTML = waringNotification;
+    }
+
+</script>

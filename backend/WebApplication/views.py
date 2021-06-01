@@ -15,6 +15,7 @@ from email.mime.text import MIMEText
 import json
 import uuid
 from .models import UnverifiedUser ,RecoveryObject , EnhancedSubscription
+from SharedApp.models import Developer, Project
 
 
 #Clicking verification link may not work is I am using SSL
@@ -165,17 +166,28 @@ def verifyUser(request,link):
         try:
             receivedJSON = json.loads(request.body)
             receivedUser = UnverifiedUser.objects.get(verificationLink=receivedJSON["link"])
+
             #if codes dont match return 
             if (receivedUser.verificationCode != receivedJSON["code"]):
                 return HttpResponse("500")
+
             #create a new user account
             newUser = User()
             newUser.email = receivedUser.email
             newUser.set_password(receivedUser.password)
             newUser.username = receivedUser.username
             newUser.save()
+
             #delete unverified user account
             UnverifiedUser.delete(receivedUser)
+
+            #create a new developer Account
+            newDeveloper = Developer()
+            newDeveloper.create(newUser)
+
+            #New Account setup 
+            NewAccountProcedure(newUser)
+
             #login user
             print(newUser.username,receivedUser.password)
             user = authenticate(username=newUser.username,password=receivedUser.password)
@@ -378,8 +390,19 @@ def checkUsernameValidation(username):
 
 
 def checkEmailValid(email):
+
     try:
         User.objects.get(email=email)
         return False
     except:
         return True
+
+
+
+####
+#### Procedures
+
+def NewAccountProcedure(user):
+    #create demo project
+    demoProject = Project()
+    demoProject.create("Demo-Project",user)

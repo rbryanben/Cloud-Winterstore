@@ -1,0 +1,103 @@
+{% load static %}
+<style>
+    .projects-modal {
+        background: url("{% static 'png/signup_wallpaper.png' %}");
+        display: none;
+        display: flex;
+        height: 100%;
+        width: 100%;
+        background-color: lightgreen;
+        position: fixed;
+        background-size: cover;
+        
+    }
+
+    .projects-modal-body{
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        height: 330px;
+        border-radius: 6px;
+        padding: 20px;
+        width: 300px;
+        font-size: small;
+        background: white;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        transform: translate(-50%,-50%);
+    }
+
+    .copyright-text {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        font-size: xx-small;
+    }
+
+    .projects-modal-body-item {
+        height: 50px;
+        background-color: rgba(224, 224, 224, 0.788);
+        border-radius: 6px;
+        display: grid;
+        grid-template-columns: 20% 60% 20%;
+        margin-top: 10px;
+        transition: all 0.05s ease-in;
+        cursor: pointer;
+    }
+
+    .projects-modal-body-item-left>i{
+        color: rgb(143, 143, 143);
+    }
+
+    .add-project-button {
+        margin-top: 50%;
+        color: rgb(116, 115, 115);
+        cursor: pointer;
+        position: absolute;
+        bottom: 20px;
+        left: 160px;
+        transition: all 0.05s ease-in;
+    }
+    
+    /* animations */
+    .projects-modal-body-item:hover{
+        transform: scale(1.015);
+    }
+
+    .add-project-button:hover{
+        transform: scale(1.1);
+    }
+
+</style>
+
+<div class="projects-modal">
+    <div class="projects-modal-body">
+        <div class="" style="margin-bottom: 20px;">Your Winterstore projects</div>
+        
+        {% for project in projects %}
+        <!--projects-->
+        <div class="projects-modal-body-item">
+                <div class="projects-modal-body-item-left div-flex center">
+                    <i class="fas fa-cloud"></i>
+                </div>
+                <div class="projects-modal-body-item-right div-flex start">
+                    {{project.name}}
+                </div>
+                <!-- user is the owner of the project -->
+                <div class="div-flex center">
+                    <i class="fas fa-key" style="color: rgb(153, 153, 153);"></i>
+                </div>
+        </div>
+        {% endfor %}
+        
+
+        <!-- add button -->
+        <div class="add-project-button div-flex center">
+            <i class="fas fa-plus-circle fa-2x"></i>
+        </div>
+    </div>
+
+    <!-- copyright-->
+    <div class="copyright-text">
+        2021 Winterstore, Inc. No Rights Reserved
+    </div>
+</div>

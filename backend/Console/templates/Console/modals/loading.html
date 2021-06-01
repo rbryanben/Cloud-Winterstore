@@ -1,0 +1,120 @@
+  {% load static %}
+  <style>
+    .loading-modal {
+        background: url("{% static 'png/signup_wallpaper.png' %}");
+        background-size: cover;
+        cursor: pointer;
+        background-color: white;
+        position: fixed;
+        justify-content: center;
+        align-items: center;
+        z-index: 101;
+        top: 0;
+        background-size: cover;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        display: flex;
+    }
+
+    .loading-modal-body.show {
+        visibility: visible;
+        transform: scale(1);
+    }
+
+    .loading-modal-body {
+        width: 300px;
+        height: 300px;
+        background-color: white;
+        border-radius: 6px;
+        transition: all 0.2s ease-in;
+        transform: scale(0.9);
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+
+    .loading-modal-body-illustarion {
+        padding: 20px;
+    }
+
+    .loading-modal-body-illustarion>img {
+        height: 180px;
+    }
+
+    .div-flex-center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .loading-modal-body-subtext {
+        font-size: small;
+        text-align: center;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .loading-modal-body-bar {
+        width: 80%;
+        height: 7px;
+        margin-top: 10px;
+        border-radius: 6px;
+        background-color: rgba(173, 173, 173, 0.356);
+    }
+
+    .loading-modal-body-bar-inner {
+        width: 75%;
+        background-color: rgb(38, 129, 121);
+        height: inherit;
+        border-radius: inherit;
+        animation: bar-animation 3s;
+        transition: all 1s ease-in;
+    }
+
+    .loading-modal-body-bar-inner.error {
+        background-color: orange;
+    }
+
+    .loading-modal-body-bar-inner.finish {
+        width: 100%;
+    }
+
+    @keyframes bar-animation {
+        from {
+            width: 10%;
+        }
+        to {
+            width: 75%;
+        }
+    }
+</style>
+  <!-- loading modal -->
+  <div id="loadingModal" class="loading-modal">
+    <div class="loading-modal-body">
+        <div class="loading-modal-body-illustarion div-flex-center">
+            <img id="loading-image" src="{% static 'png/delivery.png' %}">
+        </div>
+        <div class="loading-modal-body-subtext">
+            working
+        </div>
+        <div class="div-flex-center" style="margin-top: 15px;">
+            <div class="loading-modal-body-bar">
+                <div id="loadingBar" class="loading-modal-body-bar-inner">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="copyright-text">
+        2021 Winterstore, Inc. No Rights Reserved
+    </div>
+</div>
+
+<!-- console -->
+<script>
+    //show modal when loading illustration has  loaded
+    document.getElementById("loading-image").onload = function() {
+        var modal = document.querySelector(".loading-modal-body")
+        modal.classList.add("show")
+    }
+</script>

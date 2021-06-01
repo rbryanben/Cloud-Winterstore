@@ -28,9 +28,18 @@ class Project(models.Model):
     dateCreated = models.DateTimeField(auto_now=True,null=False)
     name = models.CharField(max_length=20,null=False)
 
+    def create(self,name,owner):
+        self.name = name
+        self.owner = owner
+        self.save()
+
 
 class Developer(models.Model):
-    user = models.OneToOneField(User,null=False,on_delete=models.CASCADE)
+    user = models.OneToOneField(User,null=False,on_delete=models.CASCADE,primary_key=True)
+
+    def create(self,user):
+        self.user = user
+        self.save()
 
 
 
