@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'RestAPI', #register RestAPI package
     'WebApplication', #register WebApplication package
     'Console', #console package
+    'SharedApp', #Shared
 ]
 
 MIDDLEWARE = [
