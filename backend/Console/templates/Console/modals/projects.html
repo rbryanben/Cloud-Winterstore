@@ -16,7 +16,7 @@
         position: fixed;
         top: 50%;
         left: 50%;
-        height: 330px;
+        min-height: 330px;
         border-radius: 6px;
         padding: 20px;
         width: 300px;
@@ -24,6 +24,13 @@
         background: white;
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
         transform: translate(-50%,-50%);
+        transition: all 0.2s ease-in;
+    }
+
+    .projects-modal-body.hide {
+        transform: scale(0.1);
+        opacity: 0;
+        visibility: hidden;
     }
 
     .copyright-text {
@@ -44,19 +51,51 @@
         cursor: pointer;
     }
 
+    .plain-input {
+        width: 100%;
+        outline: none;
+        border: none;
+        padding-left: 20px;
+    }
+
     .projects-modal-body-item-left>i{
         color: rgb(143, 143, 143);
     }
 
     .add-project-button {
-        margin-top: 50%;
         color: rgb(116, 115, 115);
         cursor: pointer;
-        position: absolute;
-        bottom: 20px;
-        left: 160px;
+        margin-top: 20px;
         transition: all 0.05s ease-in;
     }
+
+    /* create projects */
+    .projects-create {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        border-radius: 6px;
+        padding: 20px;
+        width: 300px;
+        font-size: small;
+        transform: translate(-50%,-50%);
+        background-color: white;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        visibility: hidden;
+        opacity: 0;
+        transform: scale(0.1);
+        transition: all 0.2s ease-in;
+    }
+
+    .projects-create.show {
+        visibility: visible;
+        opacity: 1;
+        transform: scale(1);
+        transform: translate(-50%,-50%);
+    }
+
+ 
+
     
     /* animations */
     .projects-modal-body-item:hover{
@@ -67,11 +106,31 @@
         transform: scale(1.1);
     }
 
+    .no-anime:hover {
+        transform: none;
+    }
+
+    /* input frame */
+    .input-frame{
+        display: flex;
+        position: relative;
+    }
+
+    .input-frame> i {
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-25%);
+    }
+
+
 </style>
 
 <div class="projects-modal">
-    <div class="projects-modal-body">
-        <div class="" style="margin-bottom: 20px;">Your Winterstore projects</div>
+    <!--projects modal-->
+    <div id="projectsModal" class="projects-modal-body">
+        <div class="" >Your Winterstore projects</div>
+        <div class="" style="margin-bottom: 20px; margin-top: 10px; font-size: xx-small; padding-right: 40px;">Excluding Collaorating Projects, you can only create a maximum of 5 Projects.</div>
         
         {% for project in projects %}
         <!--projects-->
@@ -88,11 +147,42 @@
                 </div>
         </div>
         {% endfor %}
+
+        {% for project in collaboratingProjects %}
+            <!--projects-->
+            <div class="projects-modal-body-item">
+                <div class="projects-modal-body-item-left div-flex center">
+                    <i class="fas fa-cloud"></i>
+                </div>
+                <div class="projects-modal-body-item-right div-flex start">
+                    {{project.name}}
+                </div>
+            </div>
+        {% endfor %}
+
         
 
         <!-- add button -->
+        {% if not maxProjectsReached %}
         <div class="add-project-button div-flex center">
-            <i class="fas fa-plus-circle fa-2x"></i>
+            <i class="fas fa-plus-circle fa-2x" onclick="showCreateProjectModal()"></i>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- create project -->
+    <div id="createProjectModal" class="projects-create">
+        <i class="fas fa-times" style="position: absolute; right: 15px; top: 15px; color: gray; cursor: pointer;" onclick="hideCreateProjectModal()"></i>
+        <div class="">Enter New Project Name</div>
+        <div class="" style="margin-bottom: 20px; margin-top: 10px; font-size: xx-small; padding-right: 40px;">Your project name should be unique, 6 charectors long, and not contain any spaces.</div>
+        <div id="projectNameNew" class="input-frame" style="position: relative;">
+            <input id="createProjectModalProjectName" class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;">
+            <i id="error" class="fas fa-exclamation-triangle error" style="color: rgb(235, 192, 112);visibility: hidden;"></i>
+            <i id="pass" class="fas fa-check pass" style="color: rgb(97, 179, 97);visibility: hidden;"></i>
+        </div>
+        <!-- add button -->
+        <div class="add-project-button div-flex center">
+            <i class="fas fa-plus-circle fa-2x" onclick="createProject()"></i>
         </div>
     </div>
 
@@ -101,3 +191,109 @@
         2021 Winterstore, Inc. No Rights Reserved
     </div>
 </div>
+
+<script>
+    //local vars projects
+    let projectsModal;
+
+    //local vars create
+    let createProjectModal;
+    let createProjectModalProjectName;
+    let inputPasses = false
+
+    window.addEventListener("DOMContentLoaded",()=>{
+        //local variables
+        projectsModal = document.getElementById("projectsModal")
+        createProjectModal = document.getElementById("createProjectModal")
+        createProjectModalProjectName = document.getElementById("createProjectModalProjectName")
+
+
+        //listeners
+        createProjectModalProjectName.addEventListener("keyup",(event)=>{
+            var textInput = createProjectModalProjectName.value
+            var inputDiv = document.getElementById("projectNameNew")
+
+            //enter pressed, create project 
+            if (event.keyCode === 13){
+                createProject()
+            }
+            
+            //check standard
+            if(textInput.indexOf(" ") > -1 || textInput.length < 6 ){
+                MarkError(inputDiv)
+                inputPasses = false
+            }
+            else{
+                MarkPass(inputDiv)
+                inputPasses = true
+         
+            }
+        })
+
+
+    })
+
+    function showCreateProjectModal(){
+        if (!projectsModal.classList.contains("hide")){
+            projectsModal.classList.add("hide")
+        }
+        if (!createProjectModal.classList.contains("show")){
+            createProjectModal.classList.add("show")
+        } 
+    }
+
+    function hideCreateProjectModal(){
+        createProjectModal.classList.remove("show")
+        projectsModal.classList.remove("hide")
+    }
+
+
+    function createProject(){
+        if (inputPasses){
+            text = document.getElementById("createProjectModalProjectName").value
+            data = {
+                "name" : text
+            }
+
+            //send request
+            showLoading()
+            postToServer("/console/create-project",data, function(responce) {
+                if (responce != "500") {
+                    hideLoading()
+                    ShowSuccess("Project Created")
+                } else {
+                    hideLoading()
+                    ShowWarning("Failed to create project")
+                }
+            })
+        }
+    }
+
+    //input helper 
+    function MarkError(element){
+        element.getElementsByClassName("pass")[0].style.visibility = "hidden"
+        element.getElementsByClassName("error")[0].style.visibility = "visible"
+    }
+
+     //input helper 
+     function MarkPass(element){
+        element.getElementsByClassName("pass")[0].style.visibility = "visible"
+        element.getElementsByClassName("error")[0].style.visibility = "hidden"
+    }
+
+
+
+
+    //document 
+
+    function hideElement(elememt){
+        elememt.style.visibility = "hidden"
+    }
+
+    function showElement(elememt){
+        elememt.style.visibility = "hidden"
+    }
+
+
+
+</script>

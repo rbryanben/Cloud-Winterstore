@@ -57,6 +57,21 @@ class BarnedDeveloperClient(models.Model):
         self.client = client
 
 
+class TeamCollaboration(models.Model):
+    project = models.ForeignKey(Project,null=False,on_delete=models.CASCADE)
+    developer = models.ForeignKey(Developer,null=False,on_delete=models.CASCADE)
+
+    def create(self,project,developer):
+        try:
+            TeamCollaboration.objects.get(project=project,developer=developer)
+            return False
+        except:
+            self.project = project
+            self.developer = developer
+            self.save()
+
+
+
 #System classes 
 
 class Notification(models.Model):

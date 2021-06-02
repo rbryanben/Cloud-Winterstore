@@ -6,4 +6,9 @@ urlpatterns = [
     ##############
     ############## Pages
     path("",views.console,name="Console") , #Landing Page
+
+
+    ##############
+    ##############REST API
+    path("/create-project",views.createProject),
 ]

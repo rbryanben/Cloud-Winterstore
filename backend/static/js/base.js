@@ -1,6 +1,7 @@
 //start
 '{% load static %}'
 window.addEventListener('DOMContentLoaded', () => {
+    localStorage.clear()
     preloadImages([serverURL + "/static/png/delivery.png", serverURL + '/static/png/signup_wallpaper.png']); //preload loading image and background
 })
 
