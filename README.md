@@ -1,7 +1,7 @@
 # Winterstore
 Cloud-Hosted NoSQL Database For Storing Files Securely 
 
-<img src="resources/logos/logo.jpg" width="500px">
+<img src="resources/logos/logo.png" width="500px">
 
 # Why Winterstore 
 One thing to note is that I am a very big fan of google firebase (https://firebase.google.com/), my favorite part being the fact that it is 
