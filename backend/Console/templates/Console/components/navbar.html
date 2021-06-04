@@ -1,0 +1,227 @@
+{% load static %}
+<style>
+    .console-navbar {
+        cursor: pointer;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background-color: #539CA1;
+        height: 80px;
+        width: 100%;
+        padding: 10px;
+        display: grid;
+        grid-template-columns: 10fr repeat(3,6fr) 56fr repeat(3,5fr);
+    }
+
+    .mobile-menu {
+        display: none;
+    }
+
+    .console-navbar-logo >img{
+        height: 40px;
+        opacity: 0.7;
+    }
+
+    .navbar-icon {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        font-size: 16pt;
+        margin-top: 8px;
+        color: rgb(211, 211, 211);
+        transition: all 0.1s ease-in;
+    }
+
+    .navbar-icon:hover{
+        color: rgb(233, 233, 233);
+        transform: scale(1.05);
+    }
+
+
+
+    .navbar-icon.selected {
+        color: white;
+    }
+
+    .mobile-menu-content {
+        display: none;
+    }
+
+
+    /* adaptivenes */
+
+@media only screen and (max-width: 1055px) {
+    .console-navbar {
+        grid-template-columns: 10fr repeat(3,6fr) 56fr repeat(3,5fr);
+    }
+
+}
+
+@media only screen and (max-width: 800px) {
+    .console-navbar {
+        grid-template-columns: 10fr repeat(3,6fr) 20fr repeat(3,5fr);
+    }
+}
+
+@media only screen and (max-width: 700px) {}
+
+@media only screen and (max-width: 600px) {
+    .navbar-icon {
+        display: none;
+    }
+
+    .console-navbar {
+        grid-template-columns: 10% 0% 80% 10%;
+    }
+
+    .mobile-menu {
+        display: block;
+        margin-top: 8px;
+        color: rgb(233, 233, 233);
+    }
+
+    .mobile-menu.logo {
+        font-size: small;
+        display: flex;
+        margin-top: 12px;
+        color: rgb(216, 216, 216);
+        justify-content: center;
+    }
+
+    .mobile-menu-content {
+        position: fixed;
+        height: 100%;
+        width: 100%;
+        top: 0;
+        left: 0;
+        display: block;
+        background: url("{% static 'png/mobileback.png' %}");
+        background-size: cover;
+    }
+
+    .mobile-menu-close {
+        position: absolute;
+        top: 10px;
+        right: 20px;
+        font-size: x-large;
+        color: gray;
+    }
+}
+
+@media only screen and (max-width: 500px) {}
+
+@media only screen and (max-width: 400px) {}
+
+@media only screen and (max-width: 340px) {}
+
+</style>
+
+<!-- Navbar -->
+<div class="console-navbar">
+    <!-- logo -->
+    <div class="console-navbar-logo">
+        <img src="{% static 'png/logo_white.png' %}">
+    </div>
+
+    <div id="navFolders"   class="console-browser navbar-icon selected">
+        <i  class="fas fa-folder"></i>
+    </div>
+    <div id="navAccounts" class="console-browser navbar-icon">
+        <i class="fas fa-user"></i>
+    </div>
+    <div id="navCloud" class="console-browser navbar-icon">
+        <i class="fas fa-cloud-upload-alt"></i>
+    </div>
+    <div class=""></div>
+    <div class="console-browser navbar-icon">
+        <i class="fas fa-bell"></i>
+    </div>
+    <div id="navSettings" class="console-browser navbar-icon">
+        <i class="fas fa-cog"></i>
+    </div>
+    <div class="console-browser navbar-icon">
+        R
+    </div>
+    <div class="mobile-menu logo">
+        Cloud Winterstore
+    </div>
+
+    <div class="mobile-menu">
+        <i class="fas fa-bars"></i>
+    </div>
+    <div class="mobile-menu-content">
+        <div class="mobile-menu-close">
+            <i class="fas fa-times"></i>
+        </div>
+    </div>
+</div>
+
+<!-- script -->
+<script>
+    var folders
+    var accounts 
+    var cloud 
+    var notifications 
+    var settings 
+    var user
+
+    var selectedElement 
+
+
+    window.addEventListener("resize",()=>{
+        if (window.innerWidth >= 600){
+            positionMarkerOn(selectedElement)
+        }
+    })
+
+    window.addEventListener("DOMContentLoaded",()=>{
+        folders = document.getElementById("navFolders")
+        accounts = document.getElementById("navAccounts")
+        cloud = document.getElementById("navCloud")
+        settings = document.getElementById("navSettings")
+        //position marker of folder 
+        loadPage(folders)
+        
+        //listeners
+        accounts.addEventListener("click",()=>{
+            loadPage(accounts)
+        })
+
+
+        cloud.addEventListener("click",()=>{
+            loadPage(cloud)
+        })
+
+        folders.addEventListener("click",()=>{
+            loadPage(folders)
+        })
+
+        settings.addEventListener('click',()=>{
+            loadPage(settings)
+        })
+    })
+
+
+    function loadPage(element){
+        selectedElement = element
+        positionMarkerOn(element)
+    }
+
+
+    function positionMarkerOn(element){
+        var marker = document.getElementById("pagerMarker")
+        marker.style.left = (element.offsetLeft - 10 - 12.8) + (element.offsetWidth / 2)   + "px"
+        console.warn(marker.style.left)
+
+        if (window.innerWidth < 900){
+            marker.style.left = (element.offsetLeft - 10 - 12.8) + (element.offsetWidth / 1.7) + "px"
+            console.warn(marker.style.left)
+        }
+
+        if (window.innerWidth < 800){
+            marker.style.left = (element.offsetLeft - 10 - 12.8) + (element.offsetWidth / 1.8) + "px"
+            console.warn(marker.style.left)
+        }
+    }
+
+</script>

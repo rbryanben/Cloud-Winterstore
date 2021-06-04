@@ -10,5 +10,5 @@ urlpatterns = [
 
     ##############
     ##############REST API
-    path("/create-project",views.createProject),
+    path("create-project",views.createProject),
 ]

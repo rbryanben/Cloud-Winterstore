@@ -21,4 +21,86 @@ body {
 .div-flex.end{
     justify-content: flex-end;
 }
+/* frame pager */
+.frame-pager {
+    position: fixed;
+    height: 100%;
+    background-color: white;
+    left: 1%;
+    top: 55px;
+    width: 98%;
+    border-radius: 6px;
+}
+
+.frame-pager-marker {
+    width: 0;
+      height: 0;
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-bottom: 20px solid white;
+      position: absolute;
+      top: -10px;
+}
+
+/* mobilemenu */
+.mobile-menu-content {
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    display: block;
+    background: url("{% static 'png/mobileback.png' %}");
+    background-size: cover;
+}
+
+.mobile-menu-close {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: x-large;
+    color: gray;
+}
+
+.mobile-menu-items {
+    margin-top: 10%;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap: 10px;
+}
+
+.mobile-menu-item {
+    height: 150px;
+    border-radius: 6px;
+    background-color: rgba(128, 128, 128, 0.26);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mobile-menu-item-text {
+    margin-top: 5px;
+    color: gray;
+}
+
+.mobile-menu-icon{
+    color: gray;
+}
+
+
+
+
+@media only screen and (max-width: 600px) {
+    .frame-pager-marker {
+        display: none;
+    }
+
+    .frame-pager {
+        width: 100%;
+        left: 0%;
+        border-radius: 0px;
+    }
+}
+
 
