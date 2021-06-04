@@ -1,9 +1,11 @@
+{% load static %}
 <style>
     .page-browser {
         display: grid;
         height: 100%;
         grid-template-columns: 20% 90%;
         z-index: 102;
+        cursor: pointer;
     }
 
     .page-browser> .page-browser-left{
@@ -15,18 +17,50 @@
     .page-browser-left-item {
         display: grid;
         grid-template-columns: 10% 90%;
+        gap: 10px;
+        height: 30px;
+        color: gray;
+        margin-top: 10px;
+        transition: all 0.1s ease-in;
+    }
+
+    .page-browser-left-item:hover{
+        transform: scale(1.03);
+        opacity: 0.7;
+    }
+
+    .page-item-icon {
+        font-size: 20px;
+    }
+
+    .page-browser-left-item.selected {
+        color: rgb(105, 105, 105);
+    }
+
+    .page-item-text {
+        font-size: small;
+        height: inherit;
+        margin-top: 3px;
     }
 
 </style>
 
 <div class="page-browser">
     <div class="page-browser-left">
+        <div class="page-browser-left-item selected">
+            <div class="div-flex center" > <i  class="fas fa-folder page-item-icon"></i></div>
+            <div class="page-item-text div-flex start">All files</div>
+        </div>
         <div class="page-browser-left-item">
-            <div class=""></div>
-            <div class="">All integrations</div>
+            <div class="div-flex center" > <i class="fas fa-cloud-download-alt"></i></div>
+            <div class="page-item-text div-flex start">Download stats</div>
+        </div>
+        <div class="page-browser-left-item">
+            <div class="div-flex center" ><i class="fas fa-trash-alt"></i></div>
+            <div class="page-item-text div-flex start">Deleted history</div>
         </div>
     </div>
     <div class="page-browser-right">
-        Mr Ben
+       
     </div>
 </div>

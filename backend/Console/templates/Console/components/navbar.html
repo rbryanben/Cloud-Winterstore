@@ -181,6 +181,11 @@
 
 
     function loadPage(element){
+        //remove all selected classes
+        elementSelected = document.querySelector(".navbar-icon.selected")
+        elementSelected.classList.remove("selected")
+        
+        element.classList.add("selected")
         selectedElement = element
         positionMarkerOn(element)
     }
@@ -189,16 +194,13 @@
     function positionMarkerOn(element){
         var marker = document.getElementById("pagerMarker")
         marker.style.left = (element.offsetLeft - 10 - 12.8) + (element.offsetWidth / 2)   + "px"
-        console.warn(marker.style.left)
 
         if (window.innerWidth < 900){
             marker.style.left = (element.offsetLeft - 10 - 12.8) + (element.offsetWidth / 1.7) + "px"
-            console.warn(marker.style.left)
         }
 
         if (window.innerWidth < 800){
             marker.style.left = (element.offsetLeft - 10 - 12.8) + (element.offsetWidth / 1.8) + "px"
-            console.warn(marker.style.left)
         }
     }
 

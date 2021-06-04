@@ -17,6 +17,7 @@ body {
 }
 .div-flex.start{
     justify-content: start;
+    align-items: center;
 }
 .div-flex.end{
     justify-content: flex-end;
@@ -42,52 +43,7 @@ body {
       top: -10px;
 }
 
-/* mobilemenu */
-.mobile-menu-content {
-    position: fixed;
-    height: 100%;
-    width: 100%;
-    top: 0;
-    visibility: hidden;
-    left: 0;
-    display: block;
-    background: url("{% static 'png/mobileback.png' %}");
-    background-size: cover;
-}
 
-.mobile-menu-close {
-    position: absolute;
-    top: 10px;
-    right: 20px;
-    font-size: x-large;
-    color: gray;
-}
-
-.mobile-menu-items {
-    margin-top: 10%;
-    padding: 20px;
-    display: grid;
-    grid-template-columns: repeat(2,1fr);
-    gap: 10px;
-}
-
-.mobile-menu-item {
-    height: 150px;
-    border-radius: 6px;
-    background-color: rgba(128, 128, 128, 0.26);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.mobile-menu-item-text {
-    margin-top: 5px;
-    color: gray;
-}
-
-.mobile-menu-icon{
-    color: gray;
-}
 
 
 
