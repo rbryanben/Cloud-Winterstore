@@ -88,24 +88,7 @@
         justify-content: center;
     }
 
-    .mobile-menu-content {
-        position: fixed;
-        height: 100%;
-        width: 100%;
-        top: 0;
-        left: 0;
-        display: block;
-        background: url("{% static 'png/mobileback.png' %}");
-        background-size: cover;
-    }
-
-    .mobile-menu-close {
-        position: absolute;
-        top: 10px;
-        right: 20px;
-        font-size: x-large;
-        color: gray;
-    }
+    
 }
 
 @media only screen and (max-width: 500px) {}
@@ -147,12 +130,7 @@
     </div>
 
     <div class="mobile-menu">
-        <i class="fas fa-bars"></i>
-    </div>
-    <div class="mobile-menu-content">
-        <div class="mobile-menu-close">
-            <i class="fas fa-times"></i>
-        </div>
+        <i class="fas fa-bars" onclick="showMobileMenuModal()"></i>
     </div>
 </div>
 

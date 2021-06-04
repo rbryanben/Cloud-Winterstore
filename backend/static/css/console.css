@@ -48,6 +48,7 @@ body {
     height: 100%;
     width: 100%;
     top: 0;
+    visibility: hidden;
     left: 0;
     display: block;
     background: url("{% static 'png/mobileback.png' %}");

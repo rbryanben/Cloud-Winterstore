@@ -1,0 +1,134 @@
+{% load static %}
+<style>
+    /* mobilemenu */
+.mobile-menu-content {
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    display: block;
+    background: url("{% static 'png/mobileback.png' %}");
+    background-size: cover;
+    transform: scale(1.2);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease-in;
+}
+
+.mobile-menu-content.show {
+    visibility: visible;
+    opacity: 1;
+    transform: scale(1);
+}
+
+.mobile-menu-close {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: x-large;
+    color: gray;
+}
+
+.mobile-menu-items {
+    margin-top: 10%;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap: 10px;
+}
+
+.mobile-menu-item {
+    height: 150px;
+    border-radius: 6px;
+    background-color: rgba(128, 128, 128, 0.26);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mobile-menu-item-text {
+    margin-top: 5px;
+    color: gray;
+}
+
+.mobile-menu-icon{
+    color: gray;
+}
+</style>
+
+
+<!-- mobile menu -->
+<div id="mobileMenuModal" class="mobile-menu-content">
+    <div class="mobile-menu-close">
+        <i class="fas fa-times" onclick="hideMobileMenuModal()"></i>
+    </div>
+    <div class="mobile-menu-items">
+        <div class="mobile-menu-item">
+            <div class="div">
+                <div class="div-flex center mobile-menu-icon">
+                    <i  class="fas fa-folder fa-2x"></i>
+                </div>
+                <div class="mobile-menu-item-text">
+                    Storage
+                </div>
+            </div>
+        </div>
+        <div class="mobile-menu-item">
+            <div class="div">
+                <div class="div-flex center mobile-menu-icon">
+                    <i class="fas fa-user fa-2x"></i>
+                </div>
+                <div class="mobile-menu-item-text">
+                    Accounts
+                </div>
+            </div>
+        </div>
+        <div class="mobile-menu-item">
+            <div class="div">
+                <div class="div-flex center mobile-menu-icon">
+                    <i class="fas fa-cloud-upload-alt fa-2x"></i>
+                </div>
+                <div class="mobile-menu-item-text">
+                    Cloud
+                </div>
+            </div>
+        </div>
+        <div class="mobile-menu-item">
+            <div class="div">
+                <div class="div-flex center mobile-menu-icon">
+                    <i class="fas fa-cog fa-2x"></i>
+                </div>
+                <div class="mobile-menu-item-text">
+                    Settings
+                </div>
+            </div>
+        </div>
+        <div class="mobile-menu-item">
+            <div class="div">
+                <div class="div-flex center mobile-menu-icon">
+                    <i class="fas fa-sign-out-alt fa-2x"></i>
+                </div>
+                <div class="mobile-menu-item-text">
+                    Leave
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function showMobileMenuModal(){
+        var mobileMenuModal = document.getElementById("mobileMenuModal") 
+        if (!mobileMenuModal.classList.contains("show")){
+            mobileMenuModal.classList.add("show")
+        } 
+    }
+
+
+    function hideMobileMenuModal(){
+        mobileMenuModal.classList.remove("show")
+    }
+
+</script>
