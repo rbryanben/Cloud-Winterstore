@@ -74,15 +74,15 @@
 
 <div class="page-browser">
     <div class="page-browser-left">
-        <div class="page-browser-left-item selected">
+        <div class="page-browser-left-item selected" id="allFilesButton ">
             <div class="div-flex center" > <i  class="fas fa-folder page-item-icon"></i></div>
             <div class="page-item-text div-flex start">All files</div>
         </div>
-        <div class="page-browser-left-item">
+        <div class="page-browser-left-item" id="downloadStatsButton">
             <div class="div-flex center" > <i class="fas fa-cloud-download-alt"></i></div>
             <div class="page-item-text div-flex start">Download stats</div>
         </div>
-        <div class="page-browser-left-item">
+        <div class="page-browser-left-item" id="deletedHistoryButton">
             <div class="div-flex center" ><i class="fas fa-trash-alt"></i></div>
             <div class="page-item-text div-flex start">Deleted history</div>
         </div>
@@ -96,11 +96,35 @@
 <script>
     //variables
     var filesPage = `{% include 'Console/pages/browser_sub_pages/files.html' %}`
+    var downloadsPage = `{% include 'Console/pages/browser_sub_pages/downloads.html' %}`
+    var deletedPage = `{% include 'Console/pages/browser_sub_pages/deleted.html' %}`
+
+    var allFilesButton ;
+    var downloadStatsButton;
+    var deletedHistoryButton;
+
 
     //entry
     window.addEventListener("DOMContentLoaded",()=>{
         //browserPageLoading()
         loadBrowserSubPage(filesPage)
+        allFilesButton = document.getElementById("allFilesButton ")
+        downloadStatsButton = document.getElementById("downloadStatsButton")
+        deletedHistoryButton = document.getElementById("deletedHistoryButton")
+
+        //listeners
+        allFilesButton.addEventListener("click",()=>{
+            loadBrowserSubPage(filesPage)
+        })
+
+        downloadStatsButton.addEventListener("click",()=>{
+            loadBrowserSubPage(downloadsPage)
+        })
+        
+        deletedHistoryButton.addEventListener("click",()=>{
+            loadBrowserSubPage(deletedPage)
+        })
+ 
     })
 
     //functions
