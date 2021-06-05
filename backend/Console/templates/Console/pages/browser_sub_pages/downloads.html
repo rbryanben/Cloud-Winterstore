@@ -1,1 +1,25 @@
-This is the downloaded files page
+<style>
+    .browser-downloads-page {
+        display: none;
+    }
+</style>
+
+<div class="browser-downloads-page">
+    This is downlad
+</div>
+<script>
+    var downloadsPageBrowser 
+
+    window.addEventListener("DOMContentLoaded",()=>{
+        downloadsPageBrowser = document.querySelector(".browser-downloads-page")
+    })
+
+    function showBrowserDownloadPage(){
+        downloadsPageBrowser.style.display = "block"
+    }
+
+    function hideBrowserDownloadPage(){
+        downloadsPageBrowser.style.display = "none"
+    }
+
+</script>

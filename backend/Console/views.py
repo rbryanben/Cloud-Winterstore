@@ -1,10 +1,12 @@
 import json
-from django.http.response import HttpResponse
+from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
-from SharedApp.models import Developer, Project , TeamCollaboration
+from pymongo.mongo_client import MongoClient
+from SharedApp.models import Developer, Project , TeamCollaboration 
+
 
 @login_required(login_url='/')
 def console(request):
@@ -57,6 +59,19 @@ def createProject(request):
     return HttpResponse("200")
 
 
+#gets files a folder
+@require_http_methods(["POST",])
+@csrf_exempt
+def getFilesAndFoldersIn(request):
+    #get query data
+    receivedJSON = json.loads(request.body)
+    projectName = receivedJSON["projectName"]
+    folderName = receivedJSON["folderName"]
+
+    return render(request,"Console/frames/files.html")
+
+   
+
 def checkProjectName(request,name):
     if (len(name) < 6):
         print("a")
@@ -70,7 +85,7 @@ def checkProjectName(request,name):
     except:
         return True
 
-class dummyProject:
+
     def __init__(self,owner,name) -> None:
         self.owner = owner
         self.name = name

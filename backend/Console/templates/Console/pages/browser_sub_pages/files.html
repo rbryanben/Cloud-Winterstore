@@ -1,6 +1,10 @@
 {% load static %}
 <style>
     /* file browser page */
+    .folder-browser-page {
+        display: none;
+    }
+
 
     .folder-toolbar-navigator>i {
         color: gray;
@@ -75,10 +79,9 @@
         background-color: rgba(142, 178, 226, 0.137);
     }
 
-
 </style>
-<div class="folder-browser-page">
-     
+
+<div class="folder-browser-page">  
     <div id="browserLoader" class="pageLoader" style="transform: scale(0.2);">
          <div class="loader-console"></div>
     </div>
@@ -99,43 +102,61 @@
         </div>
         <!-- separator -->
         <div class="separator"></div>
-        <!-- items -->
-        <div class="folder-categorizer item">
-             <div class=""><input type="checkbox"></div>
-             <div class="categorizer-text"><i class="fas fa-folder"></i>Profile Pictures</div>
-             <div class="categorizer-text">300mb</div>
-             <div class="categorizer-text">02/01/2020</div>
-          
-         </div>
-         <div class="folder-categorizer item">
-             <div class=""><input type="checkbox"></div>
-             <div class="categorizer-text"><i class="fas fa-folder"></i>Media</div>
-             <div class="categorizer-text">300mb</div>
-             <div class="categorizer-text">02/01/2020</div>
-         </div>
-         <div class="folder-categorizer item">
-             <div class=""><input type="checkbox"></div>
-             <div class="categorizer-text"><i class="far fa-file-video" style="color: gray;"></i>Demo.mp4</div>
-             <div class="categorizer-text">40mb</div>
-             <div class="categorizer-text">19/06/2020</div>
-         </div>
-         <div class="folder-categorizer item">
-             <div class=""><input type="checkbox"></div>
-             <div class="categorizer-text"><i class="fas fa-file" style="color: gray;"></i>notes.txt</div>
-             <div class="categorizer-text">40mb</div>
-             <div class="categorizer-text">19/06/2020</div>
-         </div>
-         <div class="folder-categorizer item">
-             <div class=""><input type="checkbox"></div>
-             <div class="categorizer-text"><i class="fas fa-file-pdf" style="color: rgb(233, 125, 125);"></i>stats.pdf</div>
-             <div class="categorizer-text">40mb</div>
-             <div class="categorizer-text">19/06/2020</div>
-         </div>
-         <div class="folder-categorizer item">
-             <div class=""><input type="checkbox"></div>
-             <div class="categorizer-text"><i class="fas fa-file-audio" style="color: gray;"></i>dance.mp3</div>
-             <div class="categorizer-text">40mb</div>
-             <div class="categorizer-text">19/06/2020</div>
-         </div>
+        <!-- files come in here-->
+        <div id="browserFilesContent">
+    
+        </div>
      </div>
-    </div>
+</div>
+
+<script>
+    var filesPageBrowser 
+
+    window.addEventListener("DOMContentLoaded",()=>{
+        filesPageBrowser = document.querySelector(".folder-browser-page")
+        browserPageHideLoading()
+    })
+
+    function showBrowserFilePage(){
+        filesPageBrowser.style.display = "block"
+        //load files in the root directory 
+        loadFiles()
+    }
+
+
+    function loadFiles(){
+        browserPageLoading()
+        details = {
+            "projectName" : "Chat-Sock",
+            "folderName" : "root"
+        }
+        postToServer("/console/get-folder", details, function(responce) {
+        if (responce == "500") {
+            alert("problem")
+        } else {
+            browserPageHideLoading()
+            document.getElementById("browserFilesContent").innerHTML = responce
+        }
+    })
+    }
+
+    function hideBrowserFilePage(){
+        filesPageBrowser.style.display = "none"
+    }
+
+
+    function browserPageHideLoading(){
+        var loader = (document.getElementById("browserLoader"))
+        loader.classList.remove("show")
+    }
+
+    
+    function browserPageLoading(){
+        if (!document.getElementById("browserLoader").classList.contains("show"))
+            document.getElementById("browserLoader").classList.add("show")
+    }
+
+</script>
+
+
+  

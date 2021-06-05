@@ -1,0 +1,23 @@
+"""
+    #add gridfs file
+    import gridfs
+    storageDB = MongoClient()['Winterstore-Storage']
+    gridFSConnection = gridfs.GridFS(storageDB)
+
+    #put a demo file
+    
+    fileToInserted = gridFSConnection.put(open("demo.webm","rb"),filename="demoFile")
+
+    #store reference
+    db["Application"].insert_one({
+        "owner" : "admin",
+        "fileName" : "demo.webm",
+        "reference" : fileToInserted
+    }) 
+   
+   #getting the file
+    fileRef = db['Application'].find_one({"fileName":"demo.webm"})["reference"]
+    receivedFile = gridFSConnection.get(fileRef).read()
+    newFile = open("works.webm","wb")
+    newFile.write(receivedFile)
+    newFile.close() """

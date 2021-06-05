@@ -1,1 +1,26 @@
-deleted html
+<style>
+    .browser-deleted-page {
+        display: none;
+    }
+</style>
+
+<div class="browser-deleted-page">
+    This is deleted
+</div>
+
+<script>
+    var deletedPageBrowser 
+
+    window.addEventListener("DOMContentLoaded",()=>{
+        deletedPageBrowser = document.querySelector(".browser-deleted-page")
+    })
+
+    function showBrowserDeletedPage(){
+        deletedPageBrowser .style.display = "block"
+    }
+
+    function hideBrowserDeletedPage(){
+        deletedPageBrowser .style.display = "none"
+    }
+
+</script>

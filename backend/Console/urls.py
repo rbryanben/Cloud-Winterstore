@@ -11,4 +11,5 @@ urlpatterns = [
     ##############
     ##############REST API
     path("create-project",views.createProject),
+    path("get-folder",views.getFilesAndFoldersIn),
 ]

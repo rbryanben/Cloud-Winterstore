@@ -89,15 +89,14 @@
     </div>
     <div class="page-browser-right" >
         <!-- sub-pages -->
+        {% include 'Console/pages/browser_sub_pages/files.html' %}
+        {% include 'Console/pages/browser_sub_pages/downloads.html' %}
+        {% include 'Console/pages/browser_sub_pages/deleted.html' %}
     </div>
 </div>
 
 
 <script>
-    //variables
-    var filesPage = `{% include 'Console/pages/browser_sub_pages/files.html' %}`
-    var downloadsPage = `{% include 'Console/pages/browser_sub_pages/downloads.html' %}`
-    var deletedPage = `{% include 'Console/pages/browser_sub_pages/deleted.html' %}`
 
     var allFilesButton ;
     var downloadStatsButton;
@@ -111,43 +110,45 @@
         downloadStatsButton = document.getElementById("downloadStatsButton")
         deletedHistoryButton = document.getElementById("deletedHistoryButton")
 
-        loadBrowserSubPage(filesPage,allFilesButton)
+        //show files page first
+        loadBrowserSubPage(allFilesButton)
+        showBrowserFilePage()
+
 
         //listeners
         allFilesButton.addEventListener("click",()=>{
-            loadBrowserSubPage(filesPage,allFilesButton)
+            hideOtherSubPages()
+            showBrowserFilePage()
+            loadBrowserSubPage(allFilesButton)
         })
 
         downloadStatsButton.addEventListener("click",()=>{
-            loadBrowserSubPage(downloadsPage,downloadStatsButton)
+            hideOtherSubPages()
+            showBrowserDownloadPage()
+            loadBrowserSubPage(downloadStatsButton)
         })
         
         deletedHistoryButton.addEventListener("click",()=>{
-            loadBrowserSubPage(deletedPage,deletedHistoryButton)
+            hideOtherSubPages()
+            showBrowserDeletedPage()
+            loadBrowserSubPage(deletedHistoryButton)
         })
  
     })
 
+    function hideOtherSubPages(){
+        hideBrowserDownloadPage()
+        hideBrowserFilePage()
+        hideBrowserDeletedPage()
+    }
+
     //functions
-    function loadBrowserSubPage(page,button){
-        console.warn(button)
+    function loadBrowserSubPage(button){
         //remove selected and assign new selected 
         document.querySelector(".page-browser-left-item.selected").classList.remove("selected")
         if (!button.classList.contains("selected")){
             button.classList.add("selected")
         }
-        document.querySelector(".page-browser-right").innerHTML = page
     }
 
-
-
-    function browserPageHideLoading(){
-        document.getElementById("browserLoader").classList.remove("show")
-    }
-
-    
-    function browserPageLoading(){
-        if (!document.getElementById("browserLoader").classList.contains("show"))
-            document.getElementById("browserLoader").classList.add("show")
-    }
 </script>
