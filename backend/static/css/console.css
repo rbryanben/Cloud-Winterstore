@@ -1,6 +1,11 @@
 body {
     font-family: Arial, Helvetica, sans-serif;
     color: gray;
+    -moz-user-select: none; /* mozilla browsers */
+    -khtml-user-select: none; /* webkit browsers */
+    -webkit-user-select: none;  /* Chrome all / Safari all */
+    -moz-user-select: none;     /* Firefox all */
+    -ms-user-select: none;  
 }
 
 
@@ -60,4 +65,41 @@ body {
     }
 }
 
+
+
+/* loading css */
+.pageLoader{
+    transition: all ease-in 0.1s ;
+    opacity: 0;
+    transform: scale(0.2);
+    position: absolute;
+    top: 35%;
+    left: 52%;
+}
+
+.pageLoader.show{
+    opacity: 1;
+    transform: scale(1);
+}
+
+.loader-console {
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid #539CA1;
+    width: 120px;
+    height: 120px;
+    -webkit-animation: spin 0.8s linear infinite; /* Safari */
+    animation: spin 0.8s linear infinite;
+  }
+  
+  /* Safari */
+  @-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
 

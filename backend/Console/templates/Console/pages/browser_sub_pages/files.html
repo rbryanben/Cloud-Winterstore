@@ -1,0 +1,141 @@
+{% load static %}
+<style>
+    /* file browser page */
+
+    .folder-toolbar-navigator>i {
+        color: gray;
+    }
+    .folder-toolbar-navigator>span{
+        color: gray;
+    }
+    .slash{
+        margin-left: 5px;
+        margin-right: 5px;
+        color: gray;
+    }
+    .directory-name:hover{
+        text-decoration: underline;
+    }
+
+    .slash{
+        text-decoration: none;
+    }
+
+    .upload-file{
+        position: absolute;
+        top: 15px;
+        right: 30px;
+        color: gray;
+        transition: all 0.2s ease-in;
+    }
+
+    .upload-file:hover{
+        transform: scale(1.1);
+    }
+
+    .folder-categorizer {
+        margin-top: 30px;
+        display: grid;
+        grid-template-columns: 10% 60% 20% 10%;
+    }
+
+
+    .categorizer-text {
+        margin-top: 2px;
+        font-size: small;
+        color: gray;
+    }
+
+    .separator {
+        border-bottom: solid 1px rgba(235, 235, 235, 0.685);
+        margin-left: -20px;
+        margin-top: 20px;
+    }
+
+    .folder-browser-page {
+        margin-right: 1.5%;
+    }
+
+    .folder-categorizer.item{
+        
+        margin-top: 0;
+        margin-left: -20px;
+        padding-left: 20px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        border-bottom: solid 1px rgba(235, 235, 235, 0.685);
+    }
+
+    .categorizer-text>i{
+        margin-right: 10px;
+        color: rgb(108, 219, 177);
+    }
+
+    .folder-categorizer.item:hover{
+        background-color: rgba(142, 178, 226, 0.137);
+    }
+
+
+</style>
+<div class="folder-browser-page">
+     
+    <div id="browserLoader" class="pageLoader" style="transform: scale(0.2);">
+         <div class="loader-console"></div>
+    </div>
+    <div class="folder-toolbar">
+        <div class="folder-toolbar-navigator">
+             <i class="fas fa-home"></i><!--directory --><span class="slash">/</span><span class="directory-name">Accounts</span>  <!--directory --><span class="slash">/</span><span class="directory-name">Docs</span>
+        </div>
+        <!-- upload-->
+        <div class="upload-file">
+             <i class="fas fa-upload"></i>
+        </div>
+        <!-- folders-->
+        <div class="folder-categorizer">
+            <div class=""><input type="checkbox"></div>
+            <div class="categorizer-text">Name</div>
+            <div class="categorizer-text">Size</div>
+            <div class="categorizer-text">Modified</div>
+        </div>
+        <!-- separator -->
+        <div class="separator"></div>
+        <!-- items -->
+        <div class="folder-categorizer item">
+             <div class=""><input type="checkbox"></div>
+             <div class="categorizer-text"><i class="fas fa-folder"></i>Profile Pictures</div>
+             <div class="categorizer-text">300mb</div>
+             <div class="categorizer-text">02/01/2020</div>
+          
+         </div>
+         <div class="folder-categorizer item">
+             <div class=""><input type="checkbox"></div>
+             <div class="categorizer-text"><i class="fas fa-folder"></i>Media</div>
+             <div class="categorizer-text">300mb</div>
+             <div class="categorizer-text">02/01/2020</div>
+         </div>
+         <div class="folder-categorizer item">
+             <div class=""><input type="checkbox"></div>
+             <div class="categorizer-text"><i class="far fa-file-video" style="color: gray;"></i>Demo.mp4</div>
+             <div class="categorizer-text">40mb</div>
+             <div class="categorizer-text">19/06/2020</div>
+         </div>
+         <div class="folder-categorizer item">
+             <div class=""><input type="checkbox"></div>
+             <div class="categorizer-text"><i class="fas fa-file" style="color: gray;"></i>notes.txt</div>
+             <div class="categorizer-text">40mb</div>
+             <div class="categorizer-text">19/06/2020</div>
+         </div>
+         <div class="folder-categorizer item">
+             <div class=""><input type="checkbox"></div>
+             <div class="categorizer-text"><i class="fas fa-file-pdf" style="color: rgb(233, 125, 125);"></i>stats.pdf</div>
+             <div class="categorizer-text">40mb</div>
+             <div class="categorizer-text">19/06/2020</div>
+         </div>
+         <div class="folder-categorizer item">
+             <div class=""><input type="checkbox"></div>
+             <div class="categorizer-text"><i class="fas fa-file-audio" style="color: gray;"></i>dance.mp3</div>
+             <div class="categorizer-text">40mb</div>
+             <div class="categorizer-text">19/06/2020</div>
+         </div>
+     </div>
+    </div>

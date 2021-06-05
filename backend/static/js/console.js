@@ -22,7 +22,6 @@ window.addEventListener('DOMContentLoaded', function() {
             bar.classList.add("finish")
             setTimeout(function(){
                 loadingModal.style.display = "none"
-                ShowSuccess("Console loaded")
             },1100)     
         });
     }, 3500) 

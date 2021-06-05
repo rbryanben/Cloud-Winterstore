@@ -227,7 +227,7 @@
         <!-- initiate payment-->
         <div style="margin-top: 20px;" class="sabi-button-lg-green payment-box" onclick="makePayment()">Make Payment</div>
         <!--cancel payment -->
-        <div class="cancel-link">Cancel payment and proceed with <span style="color: rgb(88, 115, 189);" onclick="goto('/console')">free account</span></div>
+        <div class="cancel-link">Cancel payment and proceed with <span style="color: rgb(88, 115, 189);" onclick="goto('/console/')">free account</span></div>
     </div>
 </div>
 
@@ -251,7 +251,7 @@
             if (responce == "200") {
                 hideLoading()
                 setTimeout(function() {
-                    window.location.replace("/console")
+                    window.location.replace("/console/")
                 }, 2000)
                 localStorage.removeItem("enhanced-account")
                 ShowSuccess("Purchase Successful")

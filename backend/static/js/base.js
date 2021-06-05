@@ -13,13 +13,13 @@ function showLoginModal() {
     if (!isAuthenticated) {
         postToServer("/checkAuthentication", null, function(responce) {
             if (responce == "200") {
-                goto("/console")
+                goto("/console/")
             }
         })
     }
 
     if (isAuthenticated) {
-        goto("/console")
+        goto("/console/")
         return
     }
 
@@ -82,7 +82,7 @@ function login() {
     postToServer("/login", credentials, function(responce) {
         if (responce == "200") {
             setTimeout(() => {
-                goto("/console")
+                goto("/console/")
             }, 2000)
             ShowSuccess("Login Successful")
         } else {

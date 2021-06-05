@@ -2,14 +2,23 @@
 <style>
     .projects-modal {
         background: url("{% static 'png/signup_wallpaper.png' %}");
-        display: none;
         display: flex;
+        z-index: 100;
         height: 100%;
         width: 100%;
         background-color: lightgreen;
         position: fixed;
         background-size: cover;
-        
+        transform: scale(1);
+        opacity: 1;
+        visibility: visible;
+        transition: all 0.2s ease-in;
+    }
+
+    .projects-modal.hide{
+        opacity: 0;
+        visibility: hidden;
+        transform: scale(1.1);
     }
 
     .projects-modal-body{
@@ -134,7 +143,7 @@
         
         {% for project in projects %}
         <!--projects-->
-        <div class="projects-modal-body-item">
+        <div class="projects-modal-body-item" onclick="loadProject('{{project.name}}')">
                 <div class="projects-modal-body-item-left div-flex center">
                     <i class="fas fa-cloud"></i>
                 </div>
@@ -245,6 +254,12 @@
     function hideCreateProjectModal(){
         createProjectModal.classList.remove("show")
         projectsModal.classList.remove("hide")
+    }
+
+
+    function loadProject(name){
+        var thisModal = document.querySelector(".projects-modal")
+        thisModal.classList.add("hide")
     }
 
 
