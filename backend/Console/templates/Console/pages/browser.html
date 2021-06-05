@@ -34,7 +34,7 @@
     }
 
     .page-browser-left-item.selected {
-        color: rgb(105, 105, 105);
+        color: rgb(77, 77, 77);
     }
 
     .page-item-text {
@@ -107,28 +107,35 @@
     //entry
     window.addEventListener("DOMContentLoaded",()=>{
         //browserPageLoading()
-        loadBrowserSubPage(filesPage)
         allFilesButton = document.getElementById("allFilesButton ")
         downloadStatsButton = document.getElementById("downloadStatsButton")
         deletedHistoryButton = document.getElementById("deletedHistoryButton")
 
+        loadBrowserSubPage(filesPage,allFilesButton)
+
         //listeners
         allFilesButton.addEventListener("click",()=>{
-            loadBrowserSubPage(filesPage)
+            loadBrowserSubPage(filesPage,allFilesButton)
         })
 
         downloadStatsButton.addEventListener("click",()=>{
-            loadBrowserSubPage(downloadsPage)
+            loadBrowserSubPage(downloadsPage,downloadStatsButton)
         })
         
         deletedHistoryButton.addEventListener("click",()=>{
-            loadBrowserSubPage(deletedPage)
+            loadBrowserSubPage(deletedPage,deletedHistoryButton)
         })
  
     })
 
     //functions
-    function loadBrowserSubPage(page){
+    function loadBrowserSubPage(page,button){
+        console.warn(button)
+        //remove selected and assign new selected 
+        document.querySelector(".page-browser-left-item.selected").classList.remove("selected")
+        if (!button.classList.contains("selected")){
+            button.classList.add("selected")
+        }
         document.querySelector(".page-browser-right").innerHTML = page
     }
 
