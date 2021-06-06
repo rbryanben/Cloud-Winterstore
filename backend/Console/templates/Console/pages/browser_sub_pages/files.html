@@ -86,8 +86,8 @@
          <div class="loader-console"></div>
     </div>
     <div class="folder-toolbar">
-        <div class="folder-toolbar-navigator">
-             <i class="fas fa-home"></i><!--directory --><span class="slash">/</span><span class="directory-name">Accounts</span>  <!--directory --><span class="slash">/</span><span class="directory-name">Docs</span>
+        <div  class="folder-toolbar-navigator">
+             <i class="fas fa-home" onclick="goHome()"></i><span id="dirMapper"><!-- mapping elements here --> </span>
         </div>
         <!-- upload-->
         <div class="upload-file">
@@ -123,7 +123,7 @@
         loadFiles("root")
     }
 
-
+    //page
     function loadFiles(folderID){
         browserPageLoading()
         details = {
@@ -144,7 +144,7 @@
         filesPageBrowser.style.display = "none"
     }
 
-
+    //document
     function browserPageHideLoading(){
         var loader = (document.getElementById("browserLoader"))
         loader.classList.remove("show")
@@ -160,19 +160,69 @@
         return false
     }
 
+    /// browser file objects
     function handleRightClick(){
         alert("hie")
         return false
     }
 
-    function loadIndexObject(event,objectType,folderRef){
+    function loadIndexObject(event,objectType,folderRef,folderName){
         if (objectType == "FD"){
+
+            var objectToMap  = new dirObject(folderRef,folderName)
+            objectToMap.folderRef = folderRef
+            
+            //map 
+            mapCurrent(objectToMap)
             loadFiles(folderRef)
         }
         else {
             alert("not folder")
         }
     }
+
+    
+
+    ///browser navigation
+    let browserNavigationMap = [] 
+
+    let dirObject = class {
+        constructor(folderID,name){
+            this.folderID = folderID
+            this.folderName = name
+        }
+    }
+
+    function mapCurrent(dirObject){
+        browserNavigationMap.push(dirObject)
+        console.warn(browserNavigationMap)
+
+        //add to ui
+        if (dirObject.folderName != 'root'){
+            var mapPosition = browserNavigationMap.length
+            uiElement = `<!--directory --><span class="slash">/</span><span class="directory-name" onclick="goBackward(${mapPosition})" >${dirObject.folderName}</span>`
+            document.getElementById("dirMapper").innerHTML += uiElement
+        }
+    }
+
+
+    function goBackward(n){
+        browserNavigationMap = browserNavigationMap.slice(0,n)
+        console.warn(browserNavigationMap)
+        loadFiles(browserNavigationMap[browserNavigationMap.length - 1].folderRef)
+        var dirMapper = document.getElementById("dirMapper").innerHTML = ""
+        for (var i=0;i != browserNavigationMap.length;i++){
+            uiElement = `<!--directory --><span class="slash">/</span><span class="directory-name" onclick="goBackward(${i + 1})" >${browserNavigationMap[i].folderName}</span>`
+            document.getElementById("dirMapper").innerHTML += uiElement
+        }
+    }
+
+    function goHome(){
+        var dirMapper = document.getElementById("dirMapper").innerHTML = ""
+        browserNavigationMap = []
+        loadFiles('root')
+    }
+
 </script>
 
 

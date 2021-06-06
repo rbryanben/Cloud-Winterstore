@@ -1,5 +1,5 @@
 {% for object in data %}
-<div class="folder-categorizer item" ondblclick="loadIndexObject(event,'{{object.objectType}}','{{object.id}}')" oncontextmenu="handleRightClick()">
+<div class="folder-categorizer item" ondblclick="loadIndexObject(event,'{{object.objectType}}','{{object.id}}','{{object.name}}')" oncontextmenu="handleRightClick()">
     <div class=""><input type="checkbox"></div>
     <div class="categorizer-text">
         <!-- object type-->
