@@ -10,6 +10,6 @@ urlpatterns = [
 
     ##############
     ##############REST API
-    path("create-project",views.createProject),
-    path("get-folder",views.getFilesAndFoldersIn),
+    path("create-project",views.createProject), #creates a project
+    path("get-folder",views.getFolder), #gets a folder
 ]

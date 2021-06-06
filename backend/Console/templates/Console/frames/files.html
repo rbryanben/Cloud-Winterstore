@@ -1,37 +1,21 @@
-<div class="folder-categorizer item">
+{% for object in data %}
+<div class="folder-categorizer item" ondblclick="loadIndexObject(event,'{{object.objectType}}','{{object.id}}')" oncontextmenu="handleRightClick()">
     <div class=""><input type="checkbox"></div>
-    <div class="categorizer-text"><i class="fas fa-folder"></i>Profile Pictures</div>
-    <div class="categorizer-text">300mb</div>
-    <div class="categorizer-text">02/01/2020</div>
- 
+    <div class="categorizer-text">
+        <!-- object type-->
+        {% if object.objectType == 'FD' %}
+            <i class="fas fa-folder"></i>
+        {% elif object.fileType == 'video' %}
+            <i class="far fa-file-video" style="color: gray;"></i>
+        {% elif object.fileType == 'file' %}
+            <i class="fas fa-file" style="color: gray;"></i>
+        {% elif object.fileType == 'audio' %}
+            <i class="fas fa-file-audio" style="color: gray;"></i>
+        {% elif object.fileType == 'pdf' %}
+        <i class="fas fa-file-pdf" style="color: rgb(233, 125, 125);"></i>
+        {% endif %}
+        {{object.name}}</div>
+    <div class="categorizer-text">{{object.size}}</div>
+    <div class="categorizer-text">{{object.created}}</div>
 </div>
-<div class="folder-categorizer item">
-    <div class=""><input type="checkbox"></div>
-    <div class="categorizer-text"><i class="fas fa-folder"></i>Media</div>
-    <div class="categorizer-text">300mb</div>
-    <div class="categorizer-text">02/01/2020</div>
-</div>
-<div class="folder-categorizer item">
-    <div class=""><input type="checkbox"></div>
-    <div class="categorizer-text"><i class="far fa-file-video" style="color: gray;"></i>Demo.mp4</div>
-    <div class="categorizer-text">40mb</div>
-    <div class="categorizer-text">19/06/2020</div>
-</div>
-<div class="folder-categorizer item">
-    <div class=""><input type="checkbox"></div>
-    <div class="categorizer-text"><i class="fas fa-file" style="color: gray;"></i>notes.txt</div>
-    <div class="categorizer-text">40mb</div>
-    <div class="categorizer-text">19/06/2020</div>
-</div>
-<div class="folder-categorizer item">
-    <div class=""><input type="checkbox"></div>
-    <div class="categorizer-text"><i class="fas fa-file-pdf" style="color: rgb(233, 125, 125);"></i>stats.pdf</div>
-    <div class="categorizer-text">40mb</div>
-    <div class="categorizer-text">19/06/2020</div>
-</div>
-<div class="folder-categorizer item">
-    <div class=""><input type="checkbox"></div>
-    <div class="categorizer-text"><i class="fas fa-file-audio" style="color: gray;"></i>dance.mp3</div>
-    <div class="categorizer-text">40mb</div>
-    <div class="categorizer-text">19/06/2020</div>
-</div>
+{% endfor  %}

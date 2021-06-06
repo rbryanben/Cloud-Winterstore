@@ -1,3 +1,4 @@
+from os import name
 from django.db import models
 
 # Create your models here.
@@ -176,3 +177,67 @@ class StorageSettings(models.Model):
 
 
 #storage classes
+
+class IndexObject(models.Model):
+    id = models.CharField(null=False,max_length=128,primary_key=True)
+    project = models.ForeignKey(Project,null=False,on_delete=models.CASCADE)
+    parent = models.ForeignKey('IndexObject',null=True,on_delete=models.CASCADE)
+    owner = models.ForeignKey(User,null=False,on_delete=models.CASCADE)
+    #object type options 
+    OBJECT_TYPE_OPTIONS = [
+        ("FD","folder"),
+        ("FL","file")
+    ]
+
+    objectType = models.CharField(max_length=6,null=False,choices=OBJECT_TYPE_OPTIONS,default="FL")
+    name = models.CharField(max_length=64,null=False)
+    created = models.DateTimeField(null=False,auto_now=True)
+    size = models.IntegerField(null=False,default=0)
+    fileReference = models.TextField(null=False)
+    fileType = models.CharField(max_length=25)
+    allowAllUsersWrite = models.BooleanField(null=False,default=False)
+    allowAllUsersRead = models.BooleanField(null=False,default=False)
+    allowKeyUsersRead = models.BooleanField(null=False,default=True)
+    allowKeyUsersWrite = models.BooleanField(null=False,default=True)
+
+    def getSize(self):
+        if (self.objectType == "FD"):
+            return self.size
+        else:
+            return 0
+    
+    def getFile(self):
+        if (self.objectType == "FD"):
+            return "should return file"
+        else:
+            return None
+
+    def checkIntegrety(self):
+        return True
+    
+    def create(self,owner,objectType,name,project,parent, size=0,fileReference="none",fileType="none",allowAllUsersWrite=False,
+                allowAllUsersRead=False,allowKeyUsersWrite=True,allowKeyUsersRead=True):
+        #generate id
+        def getNewID():
+            idToAssign = string_generator(64)
+            #try and get an object with the generated id, if exception then we can use the id
+            try:
+                IndexObject.objects.get(id=idToAssign)
+                getNewID()
+            except:
+                return idToAssign
+        
+        self.id = getNewID()
+        self.parent = parent
+        self.owner = owner
+        self.project = project
+        self.objectType = objectType
+        self.name = name
+        self.size = size
+        self.fileReference = fileReference
+        self.fileType = fileType
+        self.allowAllUsersWrite = allowAllUsersWrite
+        self.allowAllUsersRead = allowAllUsersRead
+        self.allowKeyUsersRead = allowKeyUsersRead
+        self.allowKeyUsersWrite =allowKeyUsersWrite
+        self.save()

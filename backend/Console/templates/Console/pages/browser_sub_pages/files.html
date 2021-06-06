@@ -40,7 +40,7 @@
     .folder-categorizer {
         margin-top: 30px;
         display: grid;
-        grid-template-columns: 10% 60% 20% 10%;
+        grid-template-columns: 10% 40% 20% 40%;
     }
 
 
@@ -120,15 +120,15 @@
     function showBrowserFilePage(){
         filesPageBrowser.style.display = "block"
         //load files in the root directory 
-        loadFiles()
+        loadFiles("root")
     }
 
 
-    function loadFiles(){
+    function loadFiles(folderID){
         browserPageLoading()
         details = {
             "projectName" : "Chat-Sock",
-            "folderName" : "root"
+            "folderID" :folderID
         }
         postToServer("/console/get-folder", details, function(responce) {
         if (responce == "500") {
@@ -155,7 +155,24 @@
         if (!document.getElementById("browserLoader").classList.contains("show"))
             document.getElementById("browserLoader").classList.add("show")
     }
+     
+    window.oncontextmenu= function(){
+        return false
+    }
 
+    function handleRightClick(){
+        alert("hie")
+        return false
+    }
+
+    function loadIndexObject(event,objectType,folderRef){
+        if (objectType == "FD"){
+            loadFiles(folderRef)
+        }
+        else {
+            alert("not folder")
+        }
+    }
 </script>
 
 
