@@ -104,7 +104,7 @@
 
 
     //entry
-    window.addEventListener("DOMContentLoaded",()=>{
+    function showBrowser(){
         //browserPageLoading()
         allFilesButton = document.getElementById("allFilesButton ")
         downloadStatsButton = document.getElementById("downloadStatsButton")
@@ -113,7 +113,6 @@
         //show files page first
         loadBrowserSubPage(allFilesButton)
         showBrowserFilePage()
-
 
         //listeners
         allFilesButton.addEventListener("click",()=>{
@@ -134,7 +133,7 @@
             loadBrowserSubPage(deletedHistoryButton)
         })
  
-    })
+    }
 
     function hideOtherSubPages(){
         hideBrowserDownloadPage()

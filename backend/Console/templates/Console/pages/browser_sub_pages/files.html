@@ -79,6 +79,20 @@
         background-color: rgba(142, 178, 226, 0.137);
     }
 
+    @media only screen and (max-width: 600px) {
+        .folder-categorizer.item {
+            grid-template-columns: 20% 90% ;
+        }
+
+        .folder-categorizer {
+            grid-template-columns: 20% 90% ;
+        }
+
+        .hide-mobile {
+            display: none;
+        }
+    }
+
 </style>
 
 <div class="folder-browser-page">  
@@ -97,8 +111,8 @@
         <div class="folder-categorizer">
             <div class=""><input type="checkbox"></div>
             <div class="categorizer-text">Name</div>
-            <div class="categorizer-text">Size</div>
-            <div class="categorizer-text">Modified</div>
+            <div class="categorizer-text hide-mobile ">Size</div>
+            <div class="categorizer-text hide-mobile ">Modified</div>
         </div>
         <!-- separator -->
         <div class="separator"></div>
@@ -127,7 +141,7 @@
     function loadFiles(folderID){
         browserPageLoading()
         details = {
-            "projectName" : "Chat-Sock",
+            "projectName" : localStorage.getItem("working-project"),
             "folderID" :folderID
         }
         postToServer("/console/get-folder", details, function(responce) {
@@ -195,8 +209,6 @@
 
     function mapCurrent(dirObject){
         browserNavigationMap.push(dirObject)
-        console.warn(browserNavigationMap)
-
         //add to ui
         if (dirObject.folderName != 'root'){
             var mapPosition = browserNavigationMap.length
@@ -208,17 +220,16 @@
 
     function goBackward(n){
         browserNavigationMap = browserNavigationMap.slice(0,n)
-        console.warn(browserNavigationMap)
         loadFiles(browserNavigationMap[browserNavigationMap.length - 1].folderRef)
         var dirMapper = document.getElementById("dirMapper").innerHTML = ""
         for (var i=0;i != browserNavigationMap.length;i++){
-            uiElement = `<!--directory --><span class="slash">/</span><span class="directory-name" onclick="goBackward(${i + 1})" >${browserNavigationMap[i].folderName}</span>`
+            uiElement = ` <!--directory --><span class="slash">/</span><span class="directory-name" onclick="goBackward(${i + 1})" >${browserNavigationMap[i].folderName}</span>`
             document.getElementById("dirMapper").innerHTML += uiElement
         }
     }
 
     function goHome(){
-        var dirMapper = document.getElementById("dirMapper").innerHTML = ""
+        var dirMapper = document.getElementById("dirMapper").innerHTML = " "
         browserNavigationMap = []
         loadFiles('root')
     }

@@ -72,6 +72,7 @@ def getFolder(request):
     receivedJSON = json.loads(request.body)
     projectName = receivedJSON["projectName"]
     folderID = receivedJSON["folderID"]
+    print(projectName,folderID)
     
     #folder
     folder = None
@@ -97,7 +98,13 @@ def routineNewProject(request,newProject):
     newDemoFile = IndexObject()
     demoFileKey = "HUJDKMEBEJN2G456SGTYINGHT6782HBCDHETYUSHJTIONH7890IFHGR678HNGJOTUI"
     newDemoFile.create(request.user,"FL","demo.webm",newProject,newRootIndexObject,size=467317,fileReference=demoFileKey,fileType="video",allowKeyUsersWrite=False)
-    
+    #create a new demo  folder
+    newDemoFolder = IndexObject()
+    newDemoFolder.create(request.user,"FD","Media",newProject,newRootIndexObject)
+    #create file in new demo folder
+    newDemoDocument = IndexObject()
+    newDemoDocument.create(request.user,"FL","getting-started.pdf",newProject,newDemoFolder,size=34231,fileType="pdf")
+
 
 
 def checkProjectName(request,name):

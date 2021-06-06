@@ -15,7 +15,7 @@ from email.mime.text import MIMEText
 import json
 import uuid
 from .models import UnverifiedUser ,RecoveryObject , EnhancedSubscription
-from SharedApp.models import Developer, Project
+from SharedApp.models import Developer, Project ,IndexObject
 
 
 #Clicking verification link may not work is I am using SSL
@@ -163,42 +163,41 @@ def recoveryReset(request,slug):
 def verifyUser(request,link):
     #Method POST
     if (request.method == "POST"):
-        try:
-            receivedJSON = json.loads(request.body)
-            receivedUser = UnverifiedUser.objects.get(verificationLink=receivedJSON["link"])
+       #try:
+        receivedJSON = json.loads(request.body)
+        receivedUser = UnverifiedUser.objects.get(verificationLink=receivedJSON["link"])
 
-            #if codes dont match return 
-            if (receivedUser.verificationCode != receivedJSON["code"]):
-                return HttpResponse("500")
-
-            #create a new user account
-            newUser = User()
-            newUser.email = receivedUser.email
-            newUser.set_password(receivedUser.password)
-            newUser.username = receivedUser.username
-            newUser.save()
-
-            #delete unverified user account
-            UnverifiedUser.delete(receivedUser)
-
-            #create a new developer Account
-            newDeveloper = Developer()
-            newDeveloper.create(newUser)
-
-            #New Account setup 
-            NewAccountProcedure(newUser)
-
-            #login user
-            print(newUser.username,receivedUser.password)
-            user = authenticate(username=newUser.username,password=receivedUser.password)
-            if user is not None:
-                login(request, user)
-                return HttpResponse("200") 
-            else:
-                return HttpResponse("500")
-        
-        except:
+        #if codes dont match return 
+        if (receivedUser.verificationCode != receivedJSON["code"]):
             return HttpResponse("500")
+
+        #create a new user account
+        newUser = User()
+        newUser.email = receivedUser.email
+        newUser.set_password(receivedUser.password)
+        newUser.username = receivedUser.username
+        newUser.save()
+
+        #delete unverified user account
+        UnverifiedUser.delete(receivedUser)
+
+        #create a new developer Account
+        newDeveloper = Developer()
+        newDeveloper.create(newUser)
+
+        #login user
+        print(newUser.username,receivedUser.password)
+        user = authenticate(username=newUser.username,password=receivedUser.password)
+        if user is not None:
+            login(request, user)
+            #New Account setup 
+            NewAccountProcedure(request,newUser)
+            return HttpResponse("200") 
+        else:
+            return HttpResponse("500")
+        
+        #except:
+            #return HttpResponse("500")
             
     
     #check if link exists 
@@ -401,8 +400,13 @@ def checkEmailValid(email):
 
 ####
 #### Procedures
+from Console.views import routineNewProject
 
-def NewAccountProcedure(user):
+def NewAccountProcedure(request,user):
     #create demo project
     demoProject = Project()
     demoProject.create("Demo-Project",user)
+
+    print("fired")
+    routineNewProject(request,demoProject)
+    

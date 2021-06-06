@@ -259,6 +259,8 @@
 
     function loadProject(name){
         var thisModal = document.querySelector(".projects-modal")
+        localStorage.setItem("working-project",name)
+        showBrowser()
         thisModal.classList.add("hide")
     }
 
@@ -276,6 +278,9 @@
                 if (responce != "500") {
                     hideLoading()
                     ShowSuccess("Project Created")
+                    setTimeout(()=>{
+                        loadProject(text)
+                    },2000)
                 } else {
                     hideLoading()
                     ShowWarning("Failed to create project")

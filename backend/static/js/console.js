@@ -24,7 +24,7 @@ window.addEventListener('DOMContentLoaded', function() {
                 loadingModal.style.display = "none"
             },1100)     
         });
-    }, 3500) 
+    }, 1050) 
 })
 
 
