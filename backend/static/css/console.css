@@ -6,6 +6,11 @@ body {
     -webkit-user-select: none;  /* Chrome all / Safari all */
     -moz-user-select: none;     /* Firefox all */
     -ms-user-select: none;  
+
+    -webkit-tap-highlight-color: transparent;
+}
+div {
+    outline-style: none;
 }
 
 
