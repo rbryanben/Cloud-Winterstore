@@ -191,7 +191,15 @@
             loadFiles(folderRef)
         }
         else {
-            alert("not folder")
+            ///if the file download the file 
+            var fileRef = folderRef
+            var fileName = folderName
+            
+            ///download file 
+            data = {
+                "id" : folderRef
+            }
+            downloadFile(data,fileName)
         }
     }
 

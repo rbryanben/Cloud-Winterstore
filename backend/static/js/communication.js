@@ -31,10 +31,10 @@ function postToServer(url, data, callback) {
             a.style.display = 'none';
             document.body.appendChild(a);
             a.click();
-            showSuccess("Download Started")
+            ShowSuccess("Download Started")
         }
         else {
-            showWarning("Download Failed")
+            ShowWarning("Download Failed")
         }
     };
     // Post data to URL which handles post request

@@ -131,14 +131,15 @@ def routineNewProject(request,newProject):
     newRootIndexObject.create(request.user,"FD",f"{request.user.username}.{newProject.name}",newProject,None)
     #create a new demo file 
     newDemoFile = IndexObject()
-    demoFileKey = "HUJDKMEBEJN2G456SGTYINGHT6782HBCDHETYUSHJTIONH7890IFHGR678HNGJOTUI"
+    demoFileKey = "HUJDKMEBEJN2G456SGTYINGHT6782HBCDHETYUSHJTIONH7890IFHGR678HNGJOT"
     newDemoFile.create(request.user,"FL","demo.webm",newProject,newRootIndexObject,size=467317,fileReference=demoFileKey,fileType="video",allowKeyUsersWrite=False)
     #create a new demo  folder
     newDemoFolder = IndexObject()
     newDemoFolder.create(request.user,"FD","Media",newProject,newRootIndexObject)
     #create file in new demo folder
     newDemoDocument = IndexObject()
-    newDemoDocument.create(request.user,"FL","getting-started.pdf",newProject,newDemoFolder,size=34231,fileType="pdf")
+    gettingStartedKey = "HYU789IUJ87YHUYT67YGVCFDSER456YTGVBNMKJIKJJ8UUY76TTTFDSER543EFRT"
+    newDemoDocument.create(request.user,"FL","getting-started.pdf",newProject,newDemoFolder,size=34231,fileType="pdf",fileReference="HYU789IUJ87YHUYT67YGVCFDSER456YTGVBNMKJIKJJ8UUY76TTTFDSER543EFRT")
 
 
 
