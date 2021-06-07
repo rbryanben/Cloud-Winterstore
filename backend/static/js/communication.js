@@ -33,9 +33,7 @@ function postToServer(url, data, callback) {
             a.click();
             ShowSuccess("Download Started")
         }
-        else {
-            ShowWarning("Download Failed")
-        }
+       
     };
     // Post data to URL which handles post request
     xhttp.open("POST", "/console/get-file");
