@@ -1,6 +1,6 @@
 import json
+import gridfs
 from os import name
-import string
 from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
@@ -66,28 +66,63 @@ def createProject(request):
 
 #gets files a folder
 @require_http_methods(["POST",])
+@login_required(login_url='/console/login-required')
 @csrf_exempt
 def getFolder(request):
     #get query data
-    receivedJSON = json.loads(request.body)
-    projectName = receivedJSON["projectName"]
-    folderID = receivedJSON["folderID"]
-    print(projectName,folderID)
+    try:
+        receivedJSON = json.loads(request.body)
+        projectName = receivedJSON["projectName"]
+        folderID = receivedJSON["folderID"]
     
-    #folder
-    folder = None
-    if (folderID == "root"):
-        folder = IndexObject.objects.get(name=f"{request.user.username}.{projectName}")
-    else:
-        folder = IndexObject.objects.get(id=folderID)
+        #folder
+        folder = None
+        try:
+            if (folderID == "root"):
+                folder = IndexObject.objects.get(name=f"{request.user.username}.{projectName}")
+            else:
+                folder = IndexObject.objects.get(id=folderID)
 
-    context = {
-        "data" : IndexObject.objects.filter(parent=folder)
-    }
+            context = {
+                "data" : IndexObject.objects.filter(parent=folder)
+            }
+        except:
+            return HttpResponse("500")
 
-    return render(request,"Console/frames/files.html",context)
+        return render(request,"Console/frames/files.html",context)
+    except:
+        return HttpResponse("doesn't seem like json data")
 
-   
+@csrf_exempt
+@require_http_methods(["POST","GET"])
+@login_required(login_url='/console/login-required')
+def getFile(request):
+    receivedJSON = json.loads(request.body)
+    fileID = receivedJSON['id']
+    #get file SQL object 
+    bsonDocumentKey  = IndexObject.objects.get(id=fileID).fileReference
+    #get file from mongo 
+    returnedFile = mongoGetFile(bsonDocumentKey)
+    return HttpResponse(returnedFile,content_type='application/octet-stream')   
+
+
+def loginRequired(request):
+    return HttpResponse("denied")
+
+#mongo helpers 
+def mongoGetFile(bsonDocumentKey):
+    mongoClient = MongoClient()
+    #get bson object with supllied key 
+    db = mongoClient["Winterstore"]["Application"]
+    bsonObject = db.find_one({"key":bsonDocumentKey})["reference"]
+    
+    #get file from gridfs
+    storageDB = MongoClient()['Winterstore-Storage']
+    gridFSConnection = gridfs.GridFS(storageDB)
+
+    #return file
+    return gridFSConnection.get(bsonObject).read()
+
 
 #routine for creating a project
 def routineNewProject(request,newProject):
