@@ -111,7 +111,7 @@ def getFile(request):
         try:
             indexObjectProject = indexObject.project
             currentDeveloper = Developer.objects.get(user=request.user)
-            collaboration = TeamCollaboration.objects.get(project=indexObjectProject,developer=currentDeveloper)
+            TeamCollaboration.objects.get(project=indexObjectProject,developer=currentDeveloper)
         except:
             return HttpResponse("denied")
         
