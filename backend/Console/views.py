@@ -1,4 +1,5 @@
 import json
+import re
 import gridfs
 from os import name
 from django.http.response import HttpResponse, JsonResponse
@@ -100,7 +101,20 @@ def getFile(request):
     receivedJSON = json.loads(request.body)
     fileID = receivedJSON['id']
     #get file SQL object 
-    bsonDocumentKey  = IndexObject.objects.get(id=fileID).fileReference
+    indexObject = IndexObject.objects.get(id=fileID)
+    bsonDocumentKey  = indexObject.fileReference
+
+    #check user is the owner of the project 
+    #if not check if the current developer is collaborating in the index object's project
+    if (request.user != indexObject.owner):
+        #check if there is a collaboration
+        try:
+            indexObjectProject = indexObject.project
+            currentDeveloper = Developer.objects.get(user=request.user)
+            collaboration = TeamCollaboration.objects.get(project=indexObjectProject,developer=currentDeveloper)
+        except:
+            return HttpResponse("denied")
+        
     #get file from mongo 
     returnedFile = mongoGetFile(bsonDocumentKey)
     return HttpResponse(returnedFile,content_type='application/octet-stream')   
