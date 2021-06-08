@@ -72,6 +72,12 @@
         color: rgb(66, 126, 194);
     }
 
+    @media only screen and (max-width: 600px) {
+        .downloads-modal {
+            display: none;
+        }
+    }
+
 
 </style>
 
@@ -80,7 +86,7 @@
         <i class="fas fa-times" onclick="hideDownloads()"></i>
     </div>
 
-    <div class="header-downloads">Downloads</div>
+    <div class="header-downloads" >Downloads</div>
     <div class="downloads-list">
         
     </div>
