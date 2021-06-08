@@ -102,7 +102,7 @@ def getFile(request):
     fileID = receivedJSON['id']
     #get file SQL object 
     indexObject = IndexObject.objects.get(id=fileID)
-    bsonDocumentKey  = indexObject.fileReference
+    bsonDocumentKey  = indexObject.fileReference 
 
     #check user is the owner of the project 
     #if not check if the current developer is collaborating in the index object's project
@@ -116,6 +116,7 @@ def getFile(request):
             return HttpResponse("denied")
         
     #get file from mongo 
+    print(bsonDocumentKey)
     returnedFile = mongoGetFile(bsonDocumentKey)
     return HttpResponse(returnedFile,content_type='application/octet-stream')   
 

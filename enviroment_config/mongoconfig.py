@@ -16,7 +16,7 @@ db["Application"].insert_one({
     "owner" : "admin",
     "fileName" : "demo.webm",
     "reference" : fileToInserted,
-    "key" : "HUJDKMEBEJN2G456SGTYINGHT6782HBCDHETYUSHJTIONH7890IFHGR678HNGJOTUI"
+    "key" : "HUJDKMEBEJN2G456SGTYINGHT6782HBCDHETYUSHJTIONH7890IFHGR678HNGJOT"
 }) 
 
 
