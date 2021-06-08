@@ -10,15 +10,8 @@ window.addEventListener('DOMContentLoaded', function() {
     
     //should happen after all images have loaded
     setTimeout(() => {
-            var loadingModal = document.getElementById("loadingModal")
-            //complete loading
-            var bar = document.getElementById("loadingBar")
-            bar.classList.add("finish")
-            setTimeout(function(){
-                loadingModal.style.display = "none"
-            },1100)  
-    
-    }, 1500) 
+        loadingModal.style.display = "none"
+    }, 1100) 
 })
 
 

@@ -116,7 +116,6 @@ def getFile(request):
             return HttpResponse("denied")
         
     #get file from mongo 
-    print(bsonDocumentKey)
     returnedFile = mongoGetFile(bsonDocumentKey)
     return HttpResponse(returnedFile,content_type='application/octet-stream')   
 
