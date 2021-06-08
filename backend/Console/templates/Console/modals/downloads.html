@@ -1,0 +1,101 @@
+<style>
+    .downloads-modal {
+        position: fixed;
+        right: 0;
+        top: 0;
+        height: 100%;
+        width: 0%;
+        visibility: hidden;
+        transition: all 0.1s ease-in;
+        cursor: pointer;
+        z-index: 102;
+        background-color: rgba(255, 255, 255, 0.897);
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+
+    .downloads-modal.show {
+        width: 20%;
+        visibility: visible;
+    }
+
+    .downloads-modal-close {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        color: gray;
+    }
+
+    .header-downloads {
+        margin-top: 50px;
+        margin-left: 10px;
+        font-size: small;
+        color: gray;
+    }
+    .downloads-list {
+        margin-left: 20px;
+        margin-top: 20px;
+    }
+
+    .download-item {
+        margin-top: 20px;
+        font-size: small;
+        color: gray;
+    }
+    .download-bar{
+        margin-right: 20px;
+        height: 6px;
+        margin-top: 10px;
+        border-radius: 3px;
+        background-color: rgba(196, 196, 196, 0.836);
+    }
+
+    .download-progress {
+        border-radius: inherit;
+        width: 0%;
+        background-color: rgb(116, 207, 172);
+        height: inherit;
+    }
+
+    .download-cancel {
+        color: rgb(129, 165, 206);
+        font-size: small;
+        padding: 2px;
+        border-radius: 6px;
+        margin-right: 10px;
+        position: relative;
+        border: solid 1px rgb(129, 165, 206);
+        transition: all 0.1s ease-in;
+    }
+
+    .download-cancel:hover{
+        border: solid 1px rgb(66, 126, 194);
+        color: rgb(66, 126, 194);
+    }
+
+
+</style>
+
+<div id="downloadsModal" class="downloads-modal">
+    <div class="downloads-modal-close">
+        <i class="fas fa-times" onclick="hideDownloads()"></i>
+    </div>
+
+    <div class="header-downloads">Downloads</div>
+    <div class="downloads-list">
+        
+    </div>
+</div>
+
+<script>
+    function showDownloads(){
+        var modal = document.querySelector(".downloads-modal")
+        if (!modal.classList.contains("show")){
+            modal.classList.add("show")
+        }  
+    }
+
+    function hideDownloads(){
+        var modal = document.querySelector(".downloads-modal")
+        downloadsModal.classList.remove("show")
+    }
+</script>
