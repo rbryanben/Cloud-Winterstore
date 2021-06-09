@@ -46,7 +46,7 @@ def console(request):
 @require_http_methods(["POST",])
 def uploadFile(request):    
     #get attributes
-    uploadedFile = request.FILES['file'].read()
+    uploadedFile = None
     allowAllUsersWrite = None
     allowAllUsersRead = None
     allowKeyUsersRead = None
@@ -90,46 +90,54 @@ def uploadFile(request):
     #
     #
 
-
-    #create an index object 
-    newIndexObject = IndexObject()
-    newIndexObject.create(request.user,"FL",name,parentIndexObject.project,parentIndexObject,size=size) #create first time to get reference
+    try:
+        #create an index object 
+        newIndexObject = IndexObject()
+        newIndexObject.create(request.user,"FL",name,parentIndexObject.project,parentIndexObject,size=size) #create first time to get reference
+        
+        #upload to mongo
+        mongoUploadFile(uploadedFile,newIndexObject.id,name,request.user.username)
     
-    #upload to mongo
-    mongoUploadFile(uploadedFile,newIndexObject.id,name,request.user.username)
+        #update indexObject
+        fileType = "video"
+        newIndexObject.fileReference= newIndexObject.id
+        newIndexObject.fileType=fileType
+        newIndexObject.allowKeyUsersWrite=allowKeyUsersWrite
+        newIndexObject.allowKeyUsersRead=allowKeyUsersRead
+        newIndexObject.allowAllUsersRead=allowKeyUsersRead
+        newIndexObject.allowAllUsersWrite=allowAllUsersWrite
+        newIndexObject.save()
 
-    #update indexObject
-    fileType = "video"
-    print(type(allowAllUsersWrite))
-    newIndexObject.create(request.user,"FL",name,parentIndexObject.project,parentIndexObject,size=size,fileReference=newIndexObject.id,fileType=fileType,allowKeyUsersWrite=allowKeyUsersWrite
-    ,allowKeyUsersRead=allowKeyUsersRead,allowAllUsersRead=allowKeyUsersRead,allowAllUsersWrite=allowAllUsersWrite)
-
-    return HttpResponse("200")
+        return HttpResponse("200")
+    except:
+        return HttpResponse("Boss man! something is seriously wrong")
 
 # Create Project API
 @require_http_methods(["POST",])
 @csrf_exempt
 def createProject(request):
-    receivedJSON = json.loads(request.body)
-    newProjectName = receivedJSON["name"]
-    
-    #check standard
-    if (not checkProjectName(request,newProjectName)):
+    try:
+        receivedJSON = json.loads(request.body)
+        newProjectName = receivedJSON["name"]
+        
+        #check standard
+        if (not checkProjectName(request,newProjectName)):
+            return HttpResponse("500")
+        
+        #has 5 projects 
+        if (len(Project.objects.filter(owner=request.user)) >= 5):
+            return HttpResponse("500")
+        
+        #create project 
+        newProject = Project()
+        newProject.create(newProjectName,request.user)
+
+        #run project creation routine
+        routineNewProject(request,newProject)
+
+        return HttpResponse("200")
+    except:
         return HttpResponse("500")
-    
-    #has 5 projects 
-    if (len(Project.objects.filter(owner=request.user)) >= 5):
-        return HttpResponse("500")
-    
-    #create project 
-    newProject = Project()
-    newProject.create(newProjectName,request.user)
-
-    #run project creation routine
-    routineNewProject(request,newProject)
-
-    return HttpResponse("200")
-
 
 #gets files a folder
 @require_http_methods(["POST",])
@@ -164,26 +172,29 @@ def getFolder(request):
 @require_http_methods(["POST","GET"])
 @login_required(login_url='/console/login-required')
 def getFile(request):
-    receivedJSON = json.loads(request.body)
-    fileID = receivedJSON['id']
-    #get file SQL object 
-    indexObject = IndexObject.objects.get(id=fileID)
-    bsonDocumentKey  = indexObject.fileReference 
+    try:
+        receivedJSON = json.loads(request.body)
+        fileID = receivedJSON['id']
+        #get file SQL object 
+        indexObject = IndexObject.objects.get(id=fileID)
+        bsonDocumentKey  = indexObject.fileReference
+        
+        #check user is the owner of the project 
+        #if not check if the current developer is collaborating in the index object's project
+        if (request.user != indexObject.owner):
+            #check if there is a collaboration
+            try:
+                indexObjectProject = indexObject.project
+                currentDeveloper = Developer.objects.get(user=request.user)
+                TeamCollaboration.objects.get(project=indexObjectProject,developer=currentDeveloper)
+            except:
+                return HttpResponse("denied")
 
-    #check user is the owner of the project 
-    #if not check if the current developer is collaborating in the index object's project
-    if (request.user != indexObject.owner):
-        #check if there is a collaboration
-        try:
-            indexObjectProject = indexObject.project
-            currentDeveloper = Developer.objects.get(user=request.user)
-            TeamCollaboration.objects.get(project=indexObjectProject,developer=currentDeveloper)
-        except:
-            return HttpResponse("denied")
-
-    #get file from mongo 
-    returnedFile = mongoGetFile(bsonDocumentKey)
-    return HttpResponse(returnedFile,content_type='application/octet-stream')   
+        #get file from mongo 
+        returnedFile = mongoGetFile(bsonDocumentKey)
+        return HttpResponse(returnedFile,content_type='application/octet-stream')  
+    except:
+        return HttpResponse("500") 
 
 
 def loginRequired(request):
