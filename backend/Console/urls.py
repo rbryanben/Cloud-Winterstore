@@ -13,6 +13,7 @@ urlpatterns = [
     path("create-project",views.createProject), #creates a project
     path("get-folder",views.getFolder), #gets a folder
     path("get-file",views.getFile), #gets a file
+    path("upload-file",views.uploadFile), #uploads file
 
 
     ###############

@@ -39,6 +39,10 @@ def console(request):
     }
     return render(request,"Console/console.html",context)
 
+@login_required
+@require_http_methods(["POST",])
+def uploadFile(request):
+    return HttpResponse("200")
 
 # Create Project API
 @require_http_methods(["POST",])

@@ -105,7 +105,7 @@
         </div>
         <!-- upload-->
         <div class="upload-file">
-             <i class="fas fa-upload"></i>
+             <i class="fas fa-upload" onclick="uploadFile()"></i>
         </div>
         <!-- folders-->
         <div class="folder-categorizer">
@@ -225,6 +225,15 @@
         }
     }
 
+    let fileInputForUpload = document.createElement("input")
+
+    function uploadFile(){
+        fileInputForUpload.type = "file"
+        fileInputForUpload.click()
+        fileInputForUpload.addEventListener("change",function(){
+            showUploads()
+        })
+    }
 
     function goBackward(n){
         browserNavigationMap = browserNavigationMap.slice(0,n)
@@ -235,6 +244,7 @@
             document.getElementById("dirMapper").innerHTML += uiElement
         }
     }
+
 
     function goHome(){
         var dirMapper = document.getElementById("dirMapper").innerHTML = " "

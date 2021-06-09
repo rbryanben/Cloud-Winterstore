@@ -1,0 +1,182 @@
+<style>
+    .upload-moadal {
+        position: fixed;
+        right: 0;
+        top: 0;
+        height: 100%;
+        width: 0%;
+        visibility: hidden;
+        transition: all 0.1s ease-in;
+        cursor: pointer;
+        z-index: 102;
+        background-color: rgba(255, 255, 255, 0.897);
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+
+    .upload-moadal.show {
+        width: 20%;
+        visibility: visible;
+    }
+
+    .upload-moadal-close {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        color: gray;
+    }
+
+    .upheader-uploads {
+        margin-top: 50px;
+        margin-left: 10px;
+        font-size: small;
+        color: gray;
+    }
+    .uploads-list {
+        font-size:small;
+        margin-left: 20px;
+        margin-top: 20px;
+        color:gray;
+    }
+
+    .download-item {
+        margin-top: 20px;
+        font-size: small;
+        color: gray;
+    }
+    .download-bar{
+        margin-right: 20px;
+        height: 6px;
+        margin-top: 10px;
+        border-radius: 3px;
+        background-color: rgba(196, 196, 196, 0.836);
+    }
+
+    .download-progress {
+        border-radius: inherit;
+        width: 0%;
+        background-color: rgb(116, 207, 172);
+        height: inherit;
+    }
+
+    .download-cancel {
+        color: rgb(129, 165, 206);
+        font-size: small;
+        padding: 2px;
+        border-radius: 6px;
+        margin-right: 10px;
+        position: relative;
+        border: solid 1px rgb(129, 165, 206);
+        transition: all 0.1s ease-in;
+    }
+
+    .download-cancel:hover{
+        border: solid 1px rgb(66, 126, 194);
+        color: rgb(66, 126, 194);
+    }
+
+    .uploads-data {
+        margin-top:5px;
+    }
+
+    .access-control-detail {
+        margin-top:5px;
+    }
+
+    .access-control-detail>span {
+        margin-left: 5px;
+    }
+
+    .upload-file-complete {
+        padding:5px;
+        border:solid gray 1px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100px;
+        border-radius: 6px;
+        margin-top: 20px;
+        transition: all 0.1s ease-in;
+    }
+
+    .upload-file-complete:hover{
+        transform: scale(1.01);
+    }
+
+    .upload-progress{
+        border-radius: inherit;
+        width: 90%;
+        background-color: rgb(116, 207, 172);
+        height: inherit;
+    }
+
+    .upload-bar {
+        margin-right: 20px;
+        height: 6px;
+        margin-top: 20px;
+        border-radius: 3px;
+        background-color: rgba(196, 196, 196, 0.836);
+    }
+    @media only screen and (max-width: 600px) {
+        .upload-moadal {
+            display: none;
+        }
+    }
+
+
+</style>
+
+<div id="uploadsModal" class="upload-moadal">
+    <div class="upload-moadal-close">
+        <i class="fas fa-times" onclick="hideUploads()"></i>
+    </div>
+
+    <div class="upheader-uploads" >Upload</div>
+    <div class="uploads-list">
+        <div class="uploads-data">
+            Filename : demo.webm
+        </div>
+        <div class="uploads-data">
+            Size : 23432 bytes
+        </div>
+        <div class="uploads-data">
+            Owner : Current User
+        </div>
+        <!-- access control details -->
+        <div class="access-control-detail div-flex start" style="margin-top: 20px;">
+            <input id="allowAllUsersWrite" type="checkbox"><span class="">allowAllUsersWrite</span>
+        </div>
+        <div class="access-control-detail div-flex start">
+            <input id="allowAllUsersRead" type="checkbox"><span class="">allowAllUsersRead</span>
+        </div>
+        <div class="access-control-detail div-flex start">
+            <input id="allowKeyUsersRead" checked="checked" type="checkbox"><span class="">allowKeyUsersRead</span>
+        </div>
+        <div class="access-control-detail div-flex start">
+            <input id="allowKeyUsersWrite" checked="checked" type="checkbox"><span class="">allowKeyUsersWrite</span>
+        </div>
+        <div class="upload-file-complete">
+            Upload
+        </div>
+
+
+        <div class="upload-bar">
+            <div class="upload-progress">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showUploads(){
+        var modal = document.querySelector(".upload-moadal")
+        if (!modal.classList.contains("show")){
+            modal.classList.add("show")
+        }  
+    }
+
+    function hideUploads(){
+        var modal = document.querySelector(".upload-moadal")
+        uploadsModal.classList.remove("show")
+    }
+</script>>
