@@ -114,7 +114,15 @@
         height: 6px;
         margin-top: 20px;
         border-radius: 3px;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.5s ease-in;
         background-color: rgba(196, 196, 196, 0.836);
+    }
+
+    .upload-bar.show{
+        visibility: visible;
+        opacity: 1;
     }
     @media only screen and (max-width: 600px) {
         .upload-moadal {
@@ -132,11 +140,11 @@
 
     <div class="upheader-uploads" >Upload</div>
     <div class="uploads-list">
-        <div class="uploads-data">
+        <div id="uploadName" class="uploads-data">
             Filename : demo.webm
         </div>
-        <div class="uploads-data">
-            Size : 23432 bytes
+        <div id="uploadSize" class="uploads-data">
+            Size : 
         </div>
         <div class="uploads-data">
             Owner : Current User
@@ -154,13 +162,13 @@
         <div class="access-control-detail div-flex start">
             <input id="allowKeyUsersWrite" checked="checked" type="checkbox"><span class="">allowKeyUsersWrite</span>
         </div>
-        <div class="upload-file-complete">
+        <div class="upload-file-complete" onclick="sendFile()">
             Upload
         </div>
 
 
-        <div class="upload-bar">
-            <div class="upload-progress">
+        <div id="upload-bar" class="upload-bar">
+            <div id="upload-progress" class="upload-progress">
 
             </div>
         </div>

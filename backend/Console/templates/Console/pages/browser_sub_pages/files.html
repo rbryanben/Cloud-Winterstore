@@ -5,6 +5,9 @@
         display: none;
     }
 
+    .browserFilesContent {
+        overflow-y: scroll;
+    }
 
     .folder-toolbar-navigator>i {
         color: gray;
@@ -226,14 +229,68 @@
     }
 
     let fileInputForUpload = document.createElement("input")
-
+    let uploadIndex ;
     function uploadFile(){
         fileInputForUpload.type = "file"
         fileInputForUpload.click()
+        fileInputForUpload.id = "fileUploads"
         fileInputForUpload.addEventListener("change",function(){
             showUploads()
+            console.warn(fileInputForUpload.files[0].name)
+            document.getElementById("uploadSize").innerHTML = "Size : " + fileInputForUpload.files[0].size
+            document.getElementById("uploadName").innerHTML = "Name : " + fileInputForUpload.files[0].name
         })
+        //set working index
+        if (browserNavigationMap.length == 0){
+            uploadIndex = "root"
+        }
+        else {
+            uploadIndex = browserNavigationMap[browserNavigationMap.length - 1].folderID
+        }
     }
+
+    function sendFile(){
+        //show upload bar 
+        var uploadBar = document.getElementById("upload-bar")
+        if (!uploadBar.classList.contains("show")){
+            uploadBar.classList.add("show")
+        }
+
+        //form data
+        var file = fileInputForUpload.files[0];
+        var formData = new FormData();
+        formData.append("file",file)
+        formData.append("name",fileInputForUpload.files[0].name)
+        formData.append("size",fileInputForUpload.files[0].size)
+        formData.append("project",localStorage.getItem("working-project"))
+        //access control 
+        formData.append("parent",uploadIndex)
+        formData.append("allowAllUsersWrite", document.getElementById("allowAllUsersWrite").checked)
+        formData.append("allowAllUsersRead",document.getElementById("allowAllUsersRead").checked)
+        formData.append("allowKeyUsersRead",document.getElementById("allowKeyUsersRead").checked)
+        formData.append("allowKeyUsersWrite",document.getElementById("allowKeyUsersWrite").checked)
+
+    
+        //xml http 
+        var request = new XMLHttpRequest();
+        request.open('POST', '/console/upload-file'); 
+        // upload progress event
+        request.upload.addEventListener('progress', function(e) {
+            // upload progress as percentage
+            let percent_completed = (e.loaded / e.total)*100;
+            document.getElementById("upload-progress").style.width = percent_completed +"%";
+            
+            if (percent_completed >= 100){
+                setTimeout(()=>{
+                    hideUploads()
+                    ShowSuccess("Upload Completed")
+                },1000)  
+            }
+        });
+        // send POST request to server
+        request.send(formData);
+    }
+
 
     function goBackward(n){
         browserNavigationMap = browserNavigationMap.slice(0,n)

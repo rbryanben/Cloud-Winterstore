@@ -22,6 +22,7 @@ function postToServer(url, data, callback) {
  let xhttp = new XMLHttpRequest();
 
  function downloadFile(data,filename){
+     console.warn("fired 1")
     if (currentlyDownloading){
         ShowWarning("Multiple Download Unsupported")
         return
@@ -42,6 +43,7 @@ function postToServer(url, data, callback) {
     xhttp.onreadystatechange = function() {
         var a;
         if (xhttp.readyState === 4 && xhttp.status === 200) {
+            console.warn("fired 3")
             currentlyDownloading = false
             downloadList.innerHTML = ""
             setTimeout(()=>{
@@ -71,6 +73,7 @@ function postToServer(url, data, callback) {
     // You should set responseType as blob for binary responses
     xhttp.responseType = 'blob';
     xhttp.send(JSON.stringify(data));
+    console.warn("fired 2")
 }
 
 function cancelCurrentDownload(){

@@ -1,13 +1,16 @@
+from hashlib import new
 import json
+from math import trunc
 import re
 import gridfs
-from os import name
+from os import name, truncate
 from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from pymongo.mongo_client import MongoClient
+from distutils.util import strtobool
 from SharedApp.models import Developer, Project , TeamCollaboration, IndexObject
 
 
@@ -41,7 +44,66 @@ def console(request):
 
 @login_required
 @require_http_methods(["POST",])
-def uploadFile(request):
+def uploadFile(request):    
+    #get attributes
+    uploadedFile = request.FILES['file'].read()
+    allowAllUsersWrite = None
+    allowAllUsersRead = None
+    allowKeyUsersRead = None
+    allowKeyUsersWrite = None
+    name = None
+    project = None
+    parent = None
+    size = None
+
+    try:
+        uploadedFile = request.FILES['file'].read()
+        allowAllUsersWrite = strtobool(request.POST.get("allowAllUsersWrite"))
+        allowAllUsersRead = strtobool(request.POST.get("allowAllUsersRead"))
+        allowKeyUsersRead = strtobool(request.POST.get("allowKeyUsersRead"))
+        allowKeyUsersWrite = strtobool(request.POST.get("allowKeyUsersWrite"))
+        name = request.POST.get("name")
+        project = request.POST.get("project")
+        parent = request.POST.get("parent")
+        size= request.POST.get("size")
+    except:
+        return HttpResponse("woahh - does'nt seem like the data we need")
+    
+    #check if the username exists in the directory 
+    parentIndexObject = None
+    try:
+        if (parent == "root"):
+            parentIndexObject = IndexObject.objects.get(name=f"{request.user.username}.{project}")
+        else:
+            parentIndexObject = IndexObject.objects.get(id=parent)
+    except:
+        return HttpResponse("500")
+
+    #check if the filename file exists 
+    try:
+        IndexObject.objects.get(name=name,parent=parentIndexObject)
+        return HttpResponse("500 - repeated filename")
+    except:
+        pass
+
+    #check if the client as not reached maximum limit 
+    #
+    #
+
+
+    #create an index object 
+    newIndexObject = IndexObject()
+    newIndexObject.create(request.user,"FL",name,parentIndexObject.project,parentIndexObject,size=size) #create first time to get reference
+    
+    #upload to mongo
+    mongoUploadFile(uploadedFile,newIndexObject.id,name,request.user.username)
+
+    #update indexObject
+    fileType = "video"
+    print(type(allowAllUsersWrite))
+    newIndexObject.create(request.user,"FL",name,parentIndexObject.project,parentIndexObject,size=size,fileReference=newIndexObject.id,fileType=fileType,allowKeyUsersWrite=allowKeyUsersWrite
+    ,allowKeyUsersRead=allowKeyUsersRead,allowAllUsersRead=allowKeyUsersRead,allowAllUsersWrite=allowAllUsersWrite)
+
     return HttpResponse("200")
 
 # Create Project API
@@ -118,7 +180,7 @@ def getFile(request):
             TeamCollaboration.objects.get(project=indexObjectProject,developer=currentDeveloper)
         except:
             return HttpResponse("denied")
-        
+
     #get file from mongo 
     returnedFile = mongoGetFile(bsonDocumentKey)
     return HttpResponse(returnedFile,content_type='application/octet-stream')   
@@ -140,6 +202,26 @@ def mongoGetFile(bsonDocumentKey):
 
     #return file
     return gridFSConnection.get(bsonObject).read()
+
+def mongoUploadFile(file,key,filename,owner):
+    #upload file to storage
+    storageDB = MongoClient()['Winterstore-Storage']
+    gridFSConnection = gridfs.GridFS(storageDB)
+
+    #put file 
+    referenceObject = gridFSConnection.put(file,filename=filename)
+
+    #store reference object in db 
+    mongoClient = MongoClient()
+    db = mongoClient["Winterstore"]
+    db["Application"].insert_one({
+        "owner" : owner,
+        "fileName" : filename,
+        "reference" : referenceObject,
+        "key" : key
+    }) 
+
+    return True
 
 
 #routine for creating a project
