@@ -92,6 +92,13 @@
         left: 400px;
         border-radius: 6px;
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    .file-menu-modal.show{
+        opacity: 1;
+        visibility: visible;
     }
 
     .file-menu-modal-item{
@@ -178,6 +185,8 @@
         browserPageHideLoading()
     })
 
+   
+
     function showBrowserFilePage(){
         filesPageBrowser.style.display = "block"
         //load files in the root directory 
@@ -225,10 +234,26 @@
     function handleRightClick(event){
         //show options moadal
         var optionsModal = document.getElementById("fileOptionsModal")
+        console.warn(optionsModal)
         //set  position on mouse position
         optionsModal.style.left = event.clientX + "px"
         optionsModal.style.top = event.clientY + "px"
+        //show modal 
+        if (!optionsModal.classList.contains("show")){
+            optionsModal.classList.add("show")
+        }
         return false
+    }
+
+
+    function handleSingleClick() {
+        hideOptionsModal()
+    }   
+
+
+    function hideOptionsModal(){
+        var optionsModal = document.getElementById("fileOptionsModal")
+        optionsModal.classList.remove("show")
     }
 
     function loadIndexObject(event,objectType,folderRef,folderName){
