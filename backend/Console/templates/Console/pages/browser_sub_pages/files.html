@@ -82,6 +82,33 @@
         background-color: rgba(142, 178, 226, 0.137);
     }
 
+    .file-menu-modal {
+        background-color: white;
+        height: auto;
+        width: 220px;
+        z-index: 101;
+        position: fixed;
+        top: 190px;
+        left: 400px;
+        border-radius: 6px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+
+    .file-menu-modal-item{
+        font-size: small;
+        color: gray;
+        padding: 10px;
+        padding-left: 20px;
+    }
+
+    .file-menu-modal-item:hover{
+        background-color: rgba(243, 243, 243, 0.795);
+    }
+
+    .separator {
+        margin:0;
+    }
+
     @media only screen and (max-width: 600px) {
         .folder-categorizer.item {
             grid-template-columns: 20% 90% ;
@@ -122,6 +149,23 @@
         <!-- files come in here-->
         <div id="browserFilesContent">
     
+        </div>
+
+        <!-- file menu modal-->
+        <div class="file-menu-modal" id="fileOptionsModal">
+            <div class="file-menu-modal-item">
+                Open
+            </div>
+            <div class="file-menu-modal-item">
+                Rename
+            </div>
+            <div class="file-menu-modal-item">
+                Delete
+            </div>
+            <div class="separator"></div>
+            <div class="file-menu-modal-item">
+                Access Control
+            </div>
         </div>
      </div>
 </div>
@@ -178,8 +222,12 @@
     }
 
     /// browser file objects
-    function handleRightClick(){
-        alert("hie")
+    function handleRightClick(event){
+        //show options moadal
+        var optionsModal = document.getElementById("fileOptionsModal")
+        //set  position on mouse position
+        optionsModal.style.left = event.clientX + "px"
+        optionsModal.style.top = event.clientY + "px"
         return false
     }
 
