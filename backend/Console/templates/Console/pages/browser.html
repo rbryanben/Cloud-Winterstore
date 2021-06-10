@@ -47,6 +47,7 @@
         padding-right: 10%;
         padding-left: 20px;
         padding-top: 20px;
+        height: 100%;
     }
 
     
@@ -87,7 +88,7 @@
             <div class="page-item-text div-flex start">Deleted history</div>
         </div>
     </div>
-    <div class="page-browser-right" >
+    <div class="page-browser-right" onclick="hideOptionsModals()" >
         <!-- sub-pages -->
         {% include 'Console/pages/browser_sub_pages/files.html' %}
         {% include 'Console/pages/browser_sub_pages/downloads.html' %}
@@ -102,7 +103,11 @@
     var downloadStatsButton;
     var deletedHistoryButton;
 
-
+    //hide all options modal
+    function hideOptionsModals(){
+        hideOptionsModal()
+        hideBrowserOptionsPage()
+    }
     //entry
     function showBrowser(){
         function postToServer(url, data, callback) {

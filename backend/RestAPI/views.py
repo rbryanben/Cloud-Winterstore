@@ -1,3 +1,4 @@
+from os import name
 from Console.views import console
 import json
 from django import http
@@ -5,7 +6,7 @@ from django.http import response
 from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import render
 from datetime import datetime
-from SharedApp.models import IndexObject
+from SharedApp.models import IndexObject, Project
 from django.contrib.admin.utils import NestedObjects
 from django.db import router
 from pymongo import MongoClient
@@ -29,8 +30,48 @@ def gateway(request):
     #return
     return JsonResponse(response)
 
+def newFolder(request):
+    #check if owner of project
+
+    folderName = None
+    projectName = None
+    parentID = None
+    try:
+        receivedJSON = json.loads(request.body)
+        folderName = receivedJSON['folderName']
+        projectName = receivedJSON['projectName']
+        parentID = receivedJSON['parentID']
+    except:
+        return HttpResponse("500")
+    
+    #parent object container
+    parentObject = None
+    
+    #if parent object is not root
+    if (parentID != "root"):
+        parentObject = IndexObject.objects.get(id=parentID)
+    
+    #if parent object is root
+    if (parentID == "root"):
+        parentObject = IndexObject.objects.get(name=f"{request.user.username}.{projectName}")
+
+    #check if similar name exists in parent
+    try:
+        IndexObject.objects.get(parent=parentObject,name=folderName)
+        return HttpResponse("1701")
+    except:
+        pass
+    
+    #at this point create an index object 
+    newFolder = IndexObject()
+    newFolder.create(request.user,"FD",folderName,Project.objects.get(owner=request.user,name=projectName),parentObject)
+
+    return HttpResponse("200")
+
 
 def deleteIndexObject(request):
+    #check if owner of project
+
     objectID =None
     #try and extract json 
     try:

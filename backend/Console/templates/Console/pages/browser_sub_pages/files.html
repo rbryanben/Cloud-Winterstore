@@ -3,10 +3,13 @@
     /* file browser page */
     .folder-browser-page {
         display: none;
+        height: 100%;
     }
 
     .browserFilesContent {
         overflow-y: scroll;
+        overflow-x: hidden;
+        height: 100%;
     }
 
     .folder-toolbar-navigator>i {
@@ -115,6 +118,9 @@
     .separator {
         margin:0;
     }
+    .folder-toolbar {
+        height: 100%;
+    }
 
     @media only screen and (max-width: 600px) {
         .folder-categorizer.item {
@@ -136,7 +142,7 @@
     <div id="browserLoader" class="pageLoader" style="transform: scale(0.2);">
          <div class="loader-console"></div>
     </div>
-    <div class="folder-toolbar">
+    <div class="folder-toolbar" >
         <div  class="folder-toolbar-navigator">
              <i class="fas fa-home" onclick="goHome()"></i><span id="dirMapper"><!-- mapping elements here --> </span>
         </div>
@@ -154,7 +160,7 @@
         <!-- separator -->
         <div class="separator"></div>
         <!-- files come in here-->
-        <div id="browserFilesContent">
+        <div id="browserFilesContent" class="browserFilesContent" oncontextmenu="showOptionsModal(event)" >
     
         </div>
 
@@ -172,6 +178,19 @@
             <div class="separator"></div>
             <div class="file-menu-modal-item">
                 Access Control
+            </div>
+        </div>
+
+        <!-- plain options -->
+        <div class="file-menu-modal" id="browserOptionsModal">
+            <div class="file-menu-modal-item" >
+                Upload File
+            </div>
+            <div class="file-menu-modal-item" onclick="plainMenuNewFolderClick()">
+                New Folder
+            </div>
+            <div class="file-menu-modal-item">
+                Reload Index
             </div>
         </div>
      </div>
@@ -202,7 +221,7 @@
         }
         postToServer("/console/get-folder", details, function(responce) {
         if (responce == "500") {
-            alert("problem")
+            ShowWarning("Connection Problem")
         } else {
             browserPageHideLoading()
             document.getElementById("browserFilesContent").innerHTML = responce
@@ -211,12 +230,37 @@
     }
 
     
+    //options modal 
+    function showOptionsModal(event){
+        if (showingFolder){
+            return
+        }
+
+        showBrowserOptionsModal(event)
+    }
+    
+    //plain  options modal
+    function showBrowserOptionsModal(event){
+        var modal = document.getElementById("browserOptionsModal")
+        //set  position on mouse position
+        modal.style.left = event.clientX + "px"
+        modal.style.top = event.clientY + "px"
+        if (!modal.classList.contains("show")){
+            modal.classList.add("show")
+        }
+    }
+
+    //plain options modal hide
+    function hideBrowserOptionsPage(){
+        var modal = document.getElementById("browserOptionsModal")
+        modal.classList.remove("show")
+    }
 
     function hideBrowserFilePage(){
         filesPageBrowser.style.display = "none"
     }
 
-    //document
+    //loading modal
     function browserPageHideLoading(){
         var loader = (document.getElementById("browserLoader"))
         loader.classList.remove("show")
@@ -228,10 +272,12 @@
             document.getElementById("browserLoader").classList.add("show")
     }
      
+    //right clicked event
     window.oncontextmenu= function(){
         return false
     }
 
+    //class indexObject
     let IndexObject = class {
         constructor(objectID,objectType,objectName,objectSize,objectCreated){
             this.objectID = objectID
@@ -242,10 +288,14 @@
         }
     }
 
+    //focused object variable
     let focusedFile ;
 
-    /// browser file objects
+    /// browser file objects handle right clicks
+    let showingFolder = false
     function handleRightClick(event,objectID,objectType,objectName,objectSize,objectCreated){
+        //showing folder 
+        showingFolder = true
         //show options moadal
         var optionsModal = document.getElementById("fileOptionsModal")
 
@@ -265,14 +315,14 @@
     }
 
 
-    ///for menu modal
+    ///menu-open
     function menuModalOpenClick(){
         //open file or folder through loading the index object 
         loadIndexObject(event,focusedFile.objectType,focusedFile.objectID,focusedFile.objectName)
         hideOptionsModal()
     }
 
-    
+    //menu-delete
     function menuModalDeleteClick(){
         //file to delete json
         data = {
@@ -289,6 +339,38 @@
     })
     }
 
+    //plain menu-new folder
+    function plainMenuNewFolderClick(){
+        createNewFolder("Documents")
+    }
+
+    //create new folderrequest
+    function createNewFolder(name){
+        var parentID = "root"
+        if (browserNavigationMap.length > 0){
+            parentID = browserNavigationMap[browserNavigationMap.length - 1].folderID
+        }
+        data = {
+            "folderName" : name,
+            "projectName" : localStorage.getItem("working-project"),
+            "parentID" : parentID,
+        } 
+
+        postToServer("/api/new-folder/",data, function(responce) {
+            if (responce == "200") {
+                reloadFiles()
+            }
+            else if (responce == "1701"){
+                ShowWarning("Repeated Folder Name")
+            } 
+            else {
+                ShowWarning("Folder Creation Failed")
+            }
+        })
+
+    }
+
+
     function handleSingleClick() {
         hideOptionsModal()
     }   
@@ -297,6 +379,7 @@
     function hideOptionsModal(){
         var optionsModal = document.getElementById("fileOptionsModal")
         optionsModal.classList.remove("show")
+        showingFolder = false
     }
 
     function loadIndexObject(event,objectType,folderRef,folderName){
@@ -322,7 +405,7 @@
         }
     }
 
-    //application
+    //reload current directory
     function reloadFiles(){
         //reload data with the current window
         var currentDirectory;
@@ -339,6 +422,7 @@
     ///browser navigation
     let browserNavigationMap = [] 
 
+    //directory object class
     let dirObject = class {
         constructor(folderID,name){
             this.folderID = folderID
