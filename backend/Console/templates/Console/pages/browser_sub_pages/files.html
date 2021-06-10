@@ -160,7 +160,7 @@
 
         <!-- file menu modal-->
         <div class="file-menu-modal" id="fileOptionsModal">
-            <div class="file-menu-modal-item">
+            <div class="file-menu-modal-item" onclick="menuModalOpenClick()">
                 Open
             </div>
             <div class="file-menu-modal-item">
@@ -230,19 +230,44 @@
         return false
     }
 
+    let IndexObject = class {
+        constructor(objectID,objectType,objectName,objectSize,objectCreated){
+            this.objectID = objectID
+            this.objectType = objectType
+            this.objectName = objectName
+            this.objectSize = objectSize
+            this.objectCreated = objectCreated
+        }
+    }
+
+    let focusedFile ;
+
     /// browser file objects
-    function handleRightClick(event){
+    function handleRightClick(event,objectID,objectType,objectName,objectSize,objectCreated){
         //show options moadal
         var optionsModal = document.getElementById("fileOptionsModal")
-        console.warn(optionsModal)
+
         //set  position on mouse position
         optionsModal.style.left = event.clientX + "px"
         optionsModal.style.top = event.clientY + "px"
+
+        //set new focused file 
+        focusedFile = new IndexObject(objectID,objectType,objectName,objectSize,objectCreated)
+
+
         //show modal 
         if (!optionsModal.classList.contains("show")){
             optionsModal.classList.add("show")
         }
         return false
+    }
+
+
+    ///for menu modal
+    function menuModalOpenClick(){
+        //open file or folder through loading the index object 
+        loadIndexObject(event,focusedFile.objectType,focusedFile.objectID,focusedFile.objectName)
+        hideOptionsModal()
     }
 
 
