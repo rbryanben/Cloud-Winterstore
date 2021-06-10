@@ -288,6 +288,16 @@
                         hideUploads()
                         uploadBar.classList.remove("show")
                         ShowSuccess("Upload Completed")
+
+                        //reload data with the current window
+                        var currentDirectory;
+                        if (browserNavigationMap.length > 0){
+                            currentDirectory = browserNavigationMap[browserNavigationMap.length - 1].folderID
+                        }
+                        else {
+                            currentDirectory = "root"
+                        }
+                        loadFiles(currentDirectory)
                     },1000)  
                 }
             });
