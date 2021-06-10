@@ -166,7 +166,7 @@
             <div class="file-menu-modal-item">
                 Rename
             </div>
-            <div class="file-menu-modal-item">
+            <div class="file-menu-modal-item" onclick="menuModalDeleteClick()">
                 Delete
             </div>
             <div class="separator"></div>
@@ -209,6 +209,8 @@
         }
     })
     }
+
+    
 
     function hideBrowserFilePage(){
         filesPageBrowser.style.display = "none"
@@ -270,6 +272,22 @@
         hideOptionsModal()
     }
 
+    
+    function menuModalDeleteClick(){
+        //file to delete json
+        data = {
+            "id" : focusedFile.objectID
+        }
+        //delete file via API
+        postToServer("/api/delete/", data, function(responce) {
+        if (responce == "200") {
+            hideOptionsModal()
+            reloadFiles()
+        } else {
+            ShowWarning("Something Went Wrong")
+        }
+    })
+    }
 
     function handleSingleClick() {
         hideOptionsModal()
@@ -304,6 +322,18 @@
         }
     }
 
+    //application
+    function reloadFiles(){
+        //reload data with the current window
+        var currentDirectory;
+        if (browserNavigationMap.length > 0){
+            currentDirectory = browserNavigationMap[browserNavigationMap.length - 1].folderID
+        }
+        else {
+            currentDirectory = "root"
+        }
+        loadFiles(currentDirectory)
+    }
     
 
     ///browser navigation
@@ -426,6 +456,3 @@
     }
 
 </script>
-
-
-  
