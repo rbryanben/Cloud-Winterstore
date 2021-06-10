@@ -121,6 +121,69 @@
     .folder-toolbar {
         height: 100%;
     }
+    .name-folder-modal-subtext {
+        margin-top: 10px;
+        font-size: x-small;
+    }
+
+    /* name folder modal  */
+    .name-folder-modal {
+        position: fixed;
+        z-index: 102;
+        top: 50%;
+        left: 50%;
+        border-radius: 6px;
+        transform: translate(-50%,-50%);
+        padding: 20px;
+        background-color: white;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        visibility: hidden;
+        opacity: 0;
+        transition: all 0.1s ease-in;
+    }
+
+    .name-folder-modal.show{
+        visibility: visible;
+        opacity: 1;
+        transform: translate(-50%,-50%);
+    }
+
+    .name-folder-modal-header {
+        font-size: small;
+    }
+
+    .create-folder-button {
+        padding: 15px 20px;
+        font-size: x-small;
+        background-color: #8594E3;
+        color: white;
+        text-align: center;
+        margin-top: 10px;
+        border-radius: 6px;
+        width: 80px;
+        margin-left: -10px;
+        transition: all 0.2s ease-in;
+    }
+
+    .create-folder-button:hover {
+        transform: scale(1.02);
+    }
+
+    .cancel-folder-button {
+        padding: 15px 20px;
+        font-size: x-small;
+        background-color: white;
+        border: solid 1px gray;
+        text-align: center;
+        margin-top: 10px;
+        border-radius: 6px;
+        width: 80px;
+    }
+
+    .folder-namer-buttons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
 
     @media only screen and (max-width: 600px) {
         .folder-categorizer.item {
@@ -162,6 +225,23 @@
         <!-- files come in here-->
         <div id="browserFilesContent" class="browserFilesContent" oncontextmenu="showOptionsModal(event)" >
     
+        </div>
+
+        <!-- name folder modal  -->
+        <div id="nameFolderModal" class="name-folder-modal">
+            <div class="name-folder-modal-header">Folder Name</div>
+            <div class="name-folder-modal-subtext">Enter new folder name</div>
+            <div id="projectNameNew" class="input-frame" style="position: relative;">
+                <input id="newFolderName" class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;">
+            </div>
+            <div class="folder-namer-buttons">
+                <div class="cancel-folder-button" onclick="hideNameFolderModal()">
+                    Cancel
+                </div>
+                <div id="createFolderButton" class="create-folder-button">
+                    Create Folder
+                </div>
+            </div>
         </div>
 
         <!-- file menu modal-->
@@ -266,7 +346,26 @@
         loader.classList.remove("show")
     }
 
-    
+
+    //name folder modal
+    function showNameFolderModal(){
+        var modal = document.getElementById("nameFolderModal")
+        if (!modal.classList.contains("show")){
+            modal.classList.add("show")
+            document.getElementById("createFolderButton").addEventListener("click",()=>{
+                createNewFolder(document.getElementById("newFolderName").value)
+            })
+        }
+    }
+
+    function hideNameFolderModal(){
+        var modal = document.getElementById("nameFolderModal")
+        if (modal.classList.contains("show")){
+            modal.classList.remove("show")
+        }
+    }
+
+
     function browserPageLoading(){
         if (!document.getElementById("browserLoader").classList.contains("show"))
             document.getElementById("browserLoader").classList.add("show")
@@ -341,7 +440,7 @@
 
     //plain menu-new folder
     function plainMenuNewFolderClick(){
-        createNewFolder("Documents")
+        showNameFolderModal()
     }
 
     //create new folderrequest
@@ -358,6 +457,7 @@
 
         postToServer("/api/new-folder/",data, function(responce) {
             if (responce == "200") {
+                hideNameFolderModal()
                 reloadFiles()
             }
             else if (responce == "1701"){
