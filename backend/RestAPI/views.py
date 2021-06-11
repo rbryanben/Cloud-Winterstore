@@ -1,4 +1,6 @@
 from os import name
+
+from pymongo.common import BaseObject
 from Console.views import console
 import json
 from django import http
@@ -87,19 +89,29 @@ def deleteIndexObject(request):
 
     #if file delete the file and respind with 200
     if (objectToDelete.objectType == "FL"):
+        if (objectToDelete.fileReference == "HUJDKMEBEJN2G456SGTYINGHT6782HBCDHETYUSHJTIONH7890IFHGR678HNGJOT"or objectToDelete.fileReference == "HYU789IUJ87YHUYT67YGVCFDSER456YTGVBNMKJIKJJ8UUY76TTTFDSER543EFRT"):
+            objectToDelete.delete()
+            return HttpResponse("200")
+
         destroyIndexObject(objectToDelete)
         return HttpResponse("200")
 
     #if folder delete object cause it has no file in Mongo
     #but now there is a problem which is to delete all children belonging to the parent object
     if (objectToDelete.objectType == "FD"):
-        using = "default"
-        nested_objects = NestedObjects(using)
-        nested_objects.collect([objectToDelete])
-        print(nested_objects.nested())
+        deleteFolder(objectToDelete)
 
     return HttpResponse("200")
 
+
+def deleteFolder(folder):
+    childObject = IndexObject.objects.filter(parent=folder)
+    for object in childObject:
+        if (object.objectType == "FD"):
+            deleteFolder(object)
+        else:
+            destroyIndexObject(object)
+    folder.delete()
 
 def destroyIndexObject(object):
     mongoClient = MongoClient()
