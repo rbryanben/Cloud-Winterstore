@@ -2,3 +2,6 @@
 200 = Success
 1700 = Project Name Exists
 1701 = Folder Name Exists
+1702 = Folder Name Contains Unwanted Charectors
+1703 = Repeated File Name
+

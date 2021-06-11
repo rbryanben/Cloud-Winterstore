@@ -42,9 +42,9 @@ def console(request):
     }
     return render(request,"Console/console.html",context)
 
-@login_required
+@login_required(login_url='/console/login-required')
 @require_http_methods(["POST",])
-def uploadFile(request):    
+def uploadFile(request):  
     #get attributes
     uploadedFile = None
     allowAllUsersWrite = None
@@ -69,6 +69,11 @@ def uploadFile(request):
     except:
         return HttpResponse("woahh - does'nt seem like the data we need")
     
+    #check if folder contains unwanted charectors
+    special_characters = "'""!@#$%^&*()-+?_=,<>/""'"
+    if any(c in special_characters for c in name):
+        return HttpResponse("1702")
+
     #check if the username exists in the directory 
     parentIndexObject = None
     try:
@@ -82,7 +87,7 @@ def uploadFile(request):
     #check if the filename file exists 
     try:
         IndexObject.objects.get(name=name,parent=parentIndexObject)
-        return HttpResponse("500 - repeated filename")
+        return HttpResponse("1703")
     except:
         pass
 

@@ -1,3 +1,4 @@
+from math import trunc
 from os import name
 
 from pymongo.common import BaseObject
@@ -8,11 +9,13 @@ from django.http import response
 from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import render
 from datetime import datetime
-from SharedApp.models import IndexObject, Project
+from SharedApp.models import Developer, IndexObject, Project, TeamCollaboration ,FileKey
 from django.contrib.admin.utils import NestedObjects
 from django.db import router
 from pymongo import MongoClient
 import gridfs
+from django.contrib.auth.decorators import login_required
+
 
 
 #
@@ -32,6 +35,7 @@ def gateway(request):
     #return
     return JsonResponse(response)
 
+@login_required(login_url='/console/login-required')
 def newFolder(request):
     #check if owner of project
 
@@ -71,10 +75,8 @@ def newFolder(request):
 
     return HttpResponse("200")
 
-
+@login_required(login_url='/console/login-required')
 def deleteIndexObject(request):
-    #check if owner of project
-
     objectID =None
     #try and extract json 
     try:
@@ -84,8 +86,15 @@ def deleteIndexObject(request):
         return HttpResponse("Hey! This does'nt look like the json file we need")
     
     #get object to delete
-    objectToDelete = IndexObject.objects.get(id=objectID)
-    
+    objectToDelete = None
+    try:
+        objectToDelete = IndexObject.objects.get(id=objectID)
+    except:
+        return HttpResponse("Not Found")
+
+    #check if owner of project
+    if(not checkPemmission(request,objectToDelete,"delete")):
+        return HttpResponse("denied")
 
     #if file delete the file and respind with 200
     if (objectToDelete.objectType == "FL"):
@@ -131,3 +140,37 @@ def destroyIndexObject(object):
     #delete the indexObject from SQL
     object.delete()
 
+def checkPemmission(request,IndexFile,method):
+    #check if owner of project 
+    projectFileObjectBelong =  IndexFile.project
+    if (projectFileObjectBelong.owner == request.user):
+        return True
+    
+
+    #if not the owner check if the user is collborating in the project
+    try:
+        TeamCollaboration.objects.get(developer=Developer.objects.get(user=request.user),project=projectFileObjectBelong)
+        return True
+    except:
+        pass
+
+    #from here person is a normal user
+    userHasKey = False
+
+    #try and obtain key
+    try:
+        FileKey.objects.get(file=IndexFile.id,user=request.user)
+        userHasKey = True
+    except:pass
+
+    if (method == "delete"):
+        #check if all users can write
+        if (IndexFile.allowAllUsersWrite):
+            return True
+        #if all users can write check if key users can write
+        #and if the current user has a key 
+        if (IndexFile.allowKeyUsersWrite and userHasKey):
+            return True
+
+    #no permission at all
+    return False
