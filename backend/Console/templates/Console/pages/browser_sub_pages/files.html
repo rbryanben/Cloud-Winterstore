@@ -9,7 +9,7 @@
     .browserFilesContent {
         overflow-y: scroll;
         overflow-x: hidden;
-        height: 100%;
+        min-height: 100%;
     }
 
     .folder-toolbar-navigator>i {
@@ -356,7 +356,7 @@
         if (showingFolder){
             return
         }
-
+        hideOptionsModal()
         showBrowserOptionsModal(event)
     }
     
@@ -366,6 +366,18 @@
         //set  position on mouse position
         modal.style.left = event.clientX + "px"
         modal.style.top = event.clientY + "px"
+
+        //if person clicks on the bottom part of the screen show the options modal on the top of 
+        //the cursor , cause options wont be visible at the bottom...same for the x axis
+        boundaryPointY = 0.85 * window.innerHeight
+        boundaryPointX = 0.82 * window.innerWidth
+        if (event.clientY > boundaryPointY){
+            modal.style.top = event.clientY - modal.clientHeight + "px"
+        }
+        if (event.clientX > boundaryPointX){
+            modal.style.left = event.clientX - modal.clientWidth+ "px"
+        }
+
         if (!modal.classList.contains("show")){
             modal.classList.add("show")
         }
@@ -442,12 +454,24 @@
         optionsModal.style.left = event.clientX + "px"
         optionsModal.style.top = event.clientY + "px"
 
+        //if person clicks on the bottom part of the screen show the options modal on the top of 
+        //the cursor , cause options wont be visible at the bottom...same for the x axis
+        boundaryPointY = 0.85 * window.innerHeight
+        boundaryPointX = 0.82 * window.innerWidth
+        if (event.clientY > boundaryPointY){
+            optionsModal.style.top = event.clientY - optionsModal.clientHeight + "px"
+        }
+        if (event.clientX > boundaryPointX){
+            optionsModal.style.left = event.clientX - optionsModal.clientWidth+ "px"
+        }
+
         //set new focused file 
         focusedFile = new IndexObject(objectID,objectType,objectName,objectSize,objectCreated)
 
 
         //show modal 
         if (!optionsModal.classList.contains("show")){
+            hideBrowserOptionsPage()
             optionsModal.classList.add("show")
         }
         return false
