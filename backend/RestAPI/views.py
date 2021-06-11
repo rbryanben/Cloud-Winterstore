@@ -44,6 +44,7 @@ def newFolder(request):
     except:
         return HttpResponse("500")
     
+
     #parent object container
     parentObject = None
     

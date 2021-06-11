@@ -238,7 +238,7 @@
                 <div class="cancel-folder-button" onclick="hideNameFolderModal()">
                     Cancel
                 </div>
-                <div id="createFolderButton" class="create-folder-button">
+                <div id="createFolderButton" onclick="createNewFolder()" class="create-folder-button">
                     Create Folder
                 </div>
             </div>
@@ -279,38 +279,79 @@
 <script>
     var filesPageBrowser 
 
+    /////////////////////////////////////////////////////////////classes and variables 
+    
+    //class indexObject
+    let IndexObject = class {
+        constructor(objectID,objectType,objectName,objectSize,objectCreated){
+            this.objectID = objectID
+            this.objectType = objectType
+            this.objectName = objectName
+            this.objectSize = objectSize
+            this.objectCreated = objectCreated
+        }
+    }
+
+    //directory object class
+    let dirObject = class {
+        constructor(folderID,name){
+            this.folderID = folderID
+            this.folderName = name
+        }
+    }
+
+
+    //focused object variable, this could be a file or folder
+    let focusedFile ;
+
+    /// browser file objects handle right clicks
+    let showingFolder = false
+
+    ///browser navigation, used to track the current directory
+    let browserNavigationMap = [] 
+
+    //for file upload
+    let fileInputForUpload = document.createElement("input")
+    let uploadIndex ; //holds the value of the directory to upload the file, because a person may change folders
+
+    //entry point
     window.addEventListener("DOMContentLoaded",()=>{
         filesPageBrowser = document.querySelector(".folder-browser-page")
         browserPageHideLoading()
     })
 
-   
+   ///////////////////////////////////////////////////////////
+   ///////////////////////////////////////////////////////////
+   /////////////////////////////////////////////////////////// Page Show and Hide
 
+    //function to show browser page
     function showBrowserFilePage(){
         filesPageBrowser.style.display = "block"
         //load files in the root directory 
         loadFiles("root")
     }
 
-    //page
-    function loadFiles(folderID){
-        browserPageLoading()
-        details = {
-            "projectName" : localStorage.getItem("working-project"),
-            "folderID" :folderID
-        }
-        postToServer("/console/get-folder", details, function(responce) {
-        if (responce == "500") {
-            ShowWarning("Connection Problem")
-        } else {
-            browserPageHideLoading()
-            document.getElementById("browserFilesContent").innerHTML = responce
-        }
-    })
+    function hideBrowserFilePage(){
+        filesPageBrowser.style.display = "none"
     }
 
-    
-    //options modal 
+    //browser right column is loading...used when we are trying to retrive something for the right column .i.e files in that 
+    //directory
+    function browserPageLoading(){
+        if (!document.getElementById("browserLoader").classList.contains("show"))
+            document.getElementById("browserLoader").classList.add("show")
+    }
+    function browserPageHideLoading(){
+        var loader = (document.getElementById("browserLoader"))
+        loader.classList.remove("show")
+    }
+
+    ///////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////// Plain options modal 
+
+    //options modal show entry because we need to separate between the file modal
+    // file modal is for individual files, this one is to create folders, reload index e.t.c , and is different
     function showOptionsModal(event){
         if (showingFolder){
             return
@@ -336,27 +377,19 @@
         modal.classList.remove("show")
     }
 
-    function hideBrowserFilePage(){
-        filesPageBrowser.style.display = "none"
+    //new folder option
+    function plainMenuNewFolderClick(){
+        showNameFolderModal()
     }
 
-    //loading modal
-    function browserPageHideLoading(){
-        var loader = (document.getElementById("browserLoader"))
-        loader.classList.remove("show")
-    }
-
-
-    //name folder modal
+    //shows the modal to name a folder once the user clicks "New Folder" in the options modal
     function showNameFolderModal(){
         var modal = document.getElementById("nameFolderModal")
         if (!modal.classList.contains("show")){
             modal.classList.add("show")
-            document.getElementById("createFolderButton").addEventListener("click",()=>{
-                createNewFolder(document.getElementById("newFolderName").value)
-            })
         }
     }
+
 
     function hideNameFolderModal(){
         var modal = document.getElementById("nameFolderModal")
@@ -365,33 +398,40 @@
         }
     }
 
-
-    function browserPageLoading(){
-        if (!document.getElementById("browserLoader").classList.contains("show"))
-            document.getElementById("browserLoader").classList.add("show")
+    //once user has name modal, send the request to the Server 
+    function createNewFolder(){
+    name = document.getElementById("newFolderName").value
+    var parentID = "root"
+    if (browserNavigationMap.length > 0){
+        parentID = browserNavigationMap[browserNavigationMap.length - 1].folderID
     }
-     
-    //right clicked event
-    window.oncontextmenu= function(){
-        return false
-    }
+    data = {
+        "folderName" : name,
+        "projectName" : localStorage.getItem("working-project"),
+        "parentID" : parentID,
+    } 
 
-    //class indexObject
-    let IndexObject = class {
-        constructor(objectID,objectType,objectName,objectSize,objectCreated){
-            this.objectID = objectID
-            this.objectType = objectType
-            this.objectName = objectName
-            this.objectSize = objectSize
-            this.objectCreated = objectCreated
+    postToServer("/api/new-folder/",data, function(responce) {
+        if (responce == "200") {
+            hideNameFolderModal()
+            reloadFiles()
         }
+        else if (responce == "1701"){
+            ShowWarning("Repeated Folder Name")
+        } 
+        else {
+            ShowWarning("Folder Creation Failed")
+        }
+    })
+
     }
 
-    //focused object variable
-    let focusedFile ;
 
-    /// browser file objects handle right clicks
-    let showingFolder = false
+    ///////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////// File and Folder options modal
+    
+    //shows options modal after file or folder has been right clicked
     function handleRightClick(event,objectID,objectType,objectName,objectSize,objectCreated){
         //showing folder 
         showingFolder = true
@@ -413,15 +453,21 @@
         return false
     }
 
-
-    ///menu-open
-    function menuModalOpenClick(){
-        //open file or folder through loading the index object 
-        loadIndexObject(event,focusedFile.objectType,focusedFile.objectID,focusedFile.objectName)
-        hideOptionsModal()
+    //hide file options modal
+    function hideOptionsModal(){
+        var optionsModal = document.getElementById("fileOptionsModal")
+        optionsModal.classList.remove("show")
+        showingFolder = false
     }
 
-    //menu-delete
+    //open file option 
+    function menuModalOpenClick(){
+    //open file or folder through loading the index object 
+    loadIndexObject(event,focusedFile.objectType,focusedFile.objectID,focusedFile.objectName)
+    hideOptionsModal()
+    }
+
+    //delete file option
     function menuModalDeleteClick(){
         //file to delete json
         data = {
@@ -438,50 +484,11 @@
     })
     }
 
-    //plain menu-new folder
-    function plainMenuNewFolderClick(){
-        showNameFolderModal()
-    }
-
-    //create new folderrequest
-    function createNewFolder(name){
-        var parentID = "root"
-        if (browserNavigationMap.length > 0){
-            parentID = browserNavigationMap[browserNavigationMap.length - 1].folderID
-        }
-        data = {
-            "folderName" : name,
-            "projectName" : localStorage.getItem("working-project"),
-            "parentID" : parentID,
-        } 
-
-        postToServer("/api/new-folder/",data, function(responce) {
-            if (responce == "200") {
-                hideNameFolderModal()
-                reloadFiles()
-            }
-            else if (responce == "1701"){
-                ShowWarning("Repeated Folder Name")
-            } 
-            else {
-                ShowWarning("Folder Creation Failed")
-            }
-        })
-
-    }
-
-
-    function handleSingleClick() {
-        hideOptionsModal()
-    }   
-
-
-    function hideOptionsModal(){
-        var optionsModal = document.getElementById("fileOptionsModal")
-        optionsModal.classList.remove("show")
-        showingFolder = false
-    }
-
+    ///////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////// Functions for files 
+    
+    //function to load index, this is where files or folders that are clicked are sent
     function loadIndexObject(event,objectType,folderRef,folderName){
         if (objectType == "FD"){
 
@@ -505,6 +512,23 @@
         }
     }
 
+    //function to load files for a given folderID, to the files body
+    function loadFiles(folderID){
+        browserPageLoading()
+        details = {
+            "projectName" : localStorage.getItem("working-project"),
+            "folderID" :folderID
+        }
+        postToServer("/console/get-folder", details, function(responce) {
+        if (responce == "500") {
+            ShowWarning("Connection Problem")
+        } else {
+            browserPageHideLoading()
+            document.getElementById("browserFilesContent").innerHTML = responce
+        }
+        })
+    }
+
     //reload current directory
     function reloadFiles(){
         //reload data with the current window
@@ -518,18 +542,7 @@
         loadFiles(currentDirectory)
     }
     
-
-    ///browser navigation
-    let browserNavigationMap = [] 
-
-    //directory object class
-    let dirObject = class {
-        constructor(folderID,name){
-            this.folderID = folderID
-            this.folderName = name
-        }
-    }
-
+    //function to map index given a new dir object 
     function mapCurrent(dirObject){
         browserNavigationMap.push(dirObject)
         //add to ui
@@ -540,8 +553,7 @@
         }
     }
 
-    let fileInputForUpload = document.createElement("input")
-    let uploadIndex ;
+    //function to upload a file, but does not post to serverbut calls the modal to set access control
     function uploadFile(){
         fileInputForUpload.type = "file"
         fileInputForUpload.click()
@@ -561,6 +573,7 @@
         }
     }
 
+    //function to send the file to the server
     function sendFile(){
         try{
             //show upload bar 
@@ -621,7 +634,7 @@
         }
     }
 
-
+    //goes back to previous directory
     function goBackward(n){
         browserNavigationMap = browserNavigationMap.slice(0,n)
         loadFiles(browserNavigationMap[browserNavigationMap.length - 1].folderRef)
@@ -632,11 +645,26 @@
         }
     }
 
-
+    //goes to home directory
     function goHome(){
         var dirMapper = document.getElementById("dirMapper").innerHTML = " "
         browserNavigationMap = []
         loadFiles('root')
     }
+
+    //////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////// Global functions
+    
+    //prevents chrome's properties modal from showing up
+    window.oncontextmenu= function(){
+        return false
+    }
+
+    //for hiding all modals on page click
+    ///seems repeated to me
+    function handleSingleClick() {
+        hideOptionsModal()
+    }   
 
 </script>
