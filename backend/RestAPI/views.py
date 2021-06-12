@@ -123,6 +123,12 @@ def deleteFolder(folder):
     folder.delete()
 
 def destroyIndexObject(object):
+    #prevent deletion of startup files
+    objectToDelete = object
+    if (objectToDelete.fileReference == "HUJDKMEBEJN2G456SGTYINGHT6782HBCDHETYUSHJTIONH7890IFHGR678HNGJOT"or objectToDelete.fileReference == "HYU789IUJ87YHUYT67YGVCFDSER456YTGVBNMKJIKJJ8UUY76TTTFDSER543EFRT"):
+        object.delete()
+        return
+
     mongoClient = MongoClient()
     #get bson object with supllied key a, as well as delete it
     db = mongoClient["Winterstore"]["Application"]
