@@ -165,7 +165,7 @@ def checkPemmission(request,IndexFile,method):
 
     #try and obtain key
     try:
-        FileKey.objects.get(file=IndexFile.id,user=request.user)
+        FileKey.objects.get(file=IndexFile,user=request.user)
         userHasKey = True
     except:pass
 

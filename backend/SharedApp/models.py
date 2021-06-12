@@ -128,16 +128,6 @@ class DeletedIntegration(models.Model):
         self.save()
 
 
-#User Key
-
-class FileKey(models.Model):
-    file = models.TextField(null=False)
-    user = models.ForeignKey(User,null=False,on_delete=models.CASCADE)
-
-    def create(self,file,user):
-        self.file = file 
-        self.user = user
-        self.save()
 
 
 
@@ -240,4 +230,15 @@ class IndexObject(models.Model):
         self.allowAllUsersRead = allowAllUsersRead
         self.allowKeyUsersRead = allowKeyUsersRead
         self.allowKeyUsersWrite =allowKeyUsersWrite
+        self.save()
+
+
+#User Key
+class FileKey(models.Model):
+    file = models.ForeignKey(IndexObject,on_delete=models.CASCADE,null=False)
+    user = models.ForeignKey(User,null=False,on_delete=models.CASCADE)
+
+    def create(self,file,user):
+        self.file = file 
+        self.user = user
         self.save()

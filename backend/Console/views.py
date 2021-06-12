@@ -70,7 +70,7 @@ def uploadFile(request):
         return HttpResponse("woahh - does'nt seem like the data we need")
     
     #check if folder contains unwanted charectors
-    special_characters = "'""!@#$%^&*-+?=,<>/""'"
+    special_characters = "'""!@#$%^&*+?=,<>/""'"
     if any(c in special_characters for c in name):
         return HttpResponse("1702")
 

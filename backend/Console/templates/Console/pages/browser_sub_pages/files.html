@@ -9,7 +9,7 @@
     .browserFilesContent {
         overflow-y: scroll;
         overflow-x: hidden;
-        min-height: 100%;
+        height: 100vh;
     }
 
     .folder-toolbar-navigator>i {
@@ -677,6 +677,12 @@
         var dirMapper = document.getElementById("dirMapper").innerHTML = " "
         browserNavigationMap = []
         loadFiles('root')
+    }
+
+
+    //function to set the files panel height to window height
+    function adjustFilePanelHeight(){
+
     }
 
     //////////////////////////////////////////////////////
