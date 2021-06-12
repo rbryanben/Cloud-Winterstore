@@ -35,6 +35,46 @@ def gateway(request):
     #return
     return JsonResponse(response)
 
+
+@login_required(login_url='/console/login-required')
+def renameIndexObject(request):
+    objectID = None
+    newName = None
+
+    try:
+        receivedJSON = json.loads(request.body)
+        objectID = receivedJSON["id"]
+        newName = receivedJSON["name"]
+    except:
+        return HttpResponse("Does'nt seem like the JSON we need")
+
+    #object to rename
+    indexObjectToRename = None
+    try:
+        indexObjectToRename = IndexObject.objects.get(id=objectID)
+    except:
+        return HttpResponse("Object not found")
+
+    #check permissions
+    if (not checkPemmission(request,indexObjectToRename,"write")):
+        return HttpResponse("denied")
+
+    #check if the name exists in the current folder 
+    parentObject = indexObjectToRename.parent
+    try:
+        IndexObject.objects.get(parent=parentObject,name=newName)
+        return HttpResponse("1703")
+    except:
+        pass
+
+    #rename object 
+    indexObjectToRename.name = newName
+    indexObjectToRename.save()
+
+    return HttpResponse("200")
+
+
+#is not checking permission 
 @login_required(login_url='/console/login-required')
 def newFolder(request):
     #check if owner of project
@@ -93,7 +133,7 @@ def deleteIndexObject(request):
         return HttpResponse("Not Found")
 
     #check if owner of project
-    if(not checkPemmission(request,objectToDelete,"delete")):
+    if(not checkPemmission(request,objectToDelete,"write")):
         return HttpResponse("denied")
 
     #if file delete the file and respind with 200
@@ -169,7 +209,7 @@ def checkPemmission(request,IndexFile,method):
         userHasKey = True
     except:pass
 
-    if (method == "delete"):
+    if (method == "write"):
         #check if all users can write
         if (IndexFile.allowAllUsersWrite):
             return True
@@ -177,6 +217,7 @@ def checkPemmission(request,IndexFile,method):
         #and if the current user has a key 
         if (IndexFile.allowKeyUsersWrite and userHasKey):
             return True
+    
 
     #no permission at all
     return False

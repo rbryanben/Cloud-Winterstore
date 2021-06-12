@@ -227,6 +227,23 @@
     
         </div>
 
+        <!-- rename folder modal  -->
+        <div id="renameFolderModal" class="name-folder-modal">
+            <div class="name-folder-modal-header">Rename</div>
+            <div class="name-folder-modal-subtext">Enter new name</div>
+            <div id="projectNameNew" class="input-frame" style="position: relative;">
+                <input id="renameText" class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;">
+            </div>
+            <div class="folder-namer-buttons">
+                <div class="cancel-folder-button" onclick="hideRenameModal()" >
+                    Cancel
+                </div>
+                <div id="createFolderButton" class="create-folder-button" onclick="sendRenameRequest()"> 
+                    Rename
+                </div>
+            </div>
+        </div>
+       
         <!-- name folder modal  -->
         <div id="nameFolderModal" class="name-folder-modal">
             <div class="name-folder-modal-header">Folder Name</div>
@@ -249,7 +266,7 @@
             <div class="file-menu-modal-item" onclick="menuModalOpenClick()">
                 Open
             </div>
-            <div class="file-menu-modal-item">
+            <div class="file-menu-modal-item" onclick="showRenameModal()">
                 Rename
             </div>
             <div class="file-menu-modal-item" onclick="menuModalDeleteClick()">
@@ -396,6 +413,7 @@
 
     //shows the modal to name a folder once the user clicks "New Folder" in the options modal
     function showNameFolderModal(){
+        hideRenameModal()
         var modal = document.getElementById("nameFolderModal")
         if (!modal.classList.contains("show")){
             modal.classList.add("show")
@@ -508,6 +526,50 @@
     })
     }
 
+
+    //show the rename modal 
+    let objectToRename ;
+    function showRenameModal(){
+        hideNameFolderModal()
+        var modal = document.getElementById("renameFolderModal")
+        if (!modal.classList.contains("show")){
+            modal.classList.add("show")
+        }
+        //set the textbox to the current filename 
+        var renameInput = document.getElementById("renameText")
+        renameInput.value =  (focusedFile.objectName)
+        renameInput.focus()
+        renameInput.select()
+
+        //keep selected file local 
+        objectToRename = focusedFile
+    }
+
+    //send rename request 
+    function sendRenameRequest(){
+        var renameInput = document.getElementById("renameText")
+        //send rename request
+        data = {
+            "id" : objectToRename.objectID,
+            "name" : renameInput.value
+        }
+        postToServer("/api/rename-object/", data, function(responce) {
+            if (responce == "200") {
+                hideRenameModal()
+                reloadFiles()
+            } else {
+                ShowWarning("Rename Failed")
+            }
+        })
+    }
+
+    //show the rename modal 
+    function hideRenameModal(){
+        var modal = document.getElementById("renameFolderModal")
+        modal.classList.remove("show") 
+    }
+    
+    
     ///////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////
     /////////////////////////////////////////////////////// Functions for files 
@@ -679,11 +741,6 @@
         loadFiles('root')
     }
 
-
-    //function to set the files panel height to window height
-    function adjustFilePanelHeight(){
-
-    }
 
     //////////////////////////////////////////////////////
     //////////////////////////////////////////////////////
