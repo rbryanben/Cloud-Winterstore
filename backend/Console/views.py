@@ -70,7 +70,7 @@ def uploadFile(request):
         return HttpResponse("woahh - does'nt seem like the data we need")
     
     #check if folder contains unwanted charectors
-    special_characters = "'""!@#$%^&*()-+?_=,<>/""'"
+    special_characters = "'""!@#$%^&*-+?=,<>/""'"
     if any(c in special_characters for c in name):
         return HttpResponse("1702")
 
@@ -201,7 +201,6 @@ def getFile(request):
     except:
         return HttpResponse("500") 
 
-
 def loginRequired(request):
     return HttpResponse("denied")
 
@@ -239,7 +238,6 @@ def mongoUploadFile(file,key,filename,owner):
 
     return True
 
-
 #routine for creating a project
 def routineNewProject(request,newProject):
     #start a new root index object
@@ -256,8 +254,6 @@ def routineNewProject(request,newProject):
     newDemoDocument = IndexObject()
     gettingStartedKey = "HYU789IUJ87YHUYT67YGVCFDSER456YTGVBNMKJIKJJ8UUY76TTTFDSER543EFRT"
     newDemoDocument.create(request.user,"FL","getting-started.pdf",newProject,newDemoFolder,size=34231,fileType="pdf",fileReference="HYU789IUJ87YHUYT67YGVCFDSER456YTGVBNMKJIKJJ8UUY76TTTFDSER543EFRT")
-
-
 
 def checkProjectName(request,name):
     if (len(name) < 6):
