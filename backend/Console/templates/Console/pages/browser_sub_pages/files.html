@@ -199,6 +199,41 @@
         }
     }
 
+    /* file access control modal */
+    .file-access-control-modal{
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        margin-left: 1%;
+        margin-right: 1%;
+        height: 0%;
+        border-radius: 6px 6px 0px 0px;
+        background-color: white;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        width: 95%;
+        padding: 20px;
+        visibility: hidden;
+        transition:  all 0.1s ease-in;
+        cursor: pointer;
+    }
+
+    .file-access-control-modal.show {
+        height: 50%;
+        visibility: visible;
+    }
+
+    .file-access-control-modal>.close {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        color: gray;
+    }
+
+    .file-access-control-modal>.header{
+        font-size: small;
+    }
+
+
 </style>
 
 <div class="folder-browser-page">  
@@ -244,6 +279,14 @@
             </div>
         </div>
        
+        <!-- access control modal -->
+        <div id="accessControlModal" class="file-access-control-modal">
+            <div class="header">Access Control Panel</div>
+            <div class="close"><i class="fas fa-times" onclick="hideAccessControlModal()"></i></div>
+            <div class="p" style="margin-top: 40px;">Sadly I have to end here for Today..for the mean time here is a trick question</div>
+            <div class="p" style="margin-top: 5px;">What goes up and never comes back down ?</div>
+            <button onclick="alert('Your Age !')" style="margin-top: 20px;">Show Answer</button>
+        </div>
         <!-- name folder modal  -->
         <div id="nameFolderModal" class="name-folder-modal">
             <div class="name-folder-modal-header">Folder Name</div>
@@ -273,7 +316,7 @@
                 Delete
             </div>
             <div class="separator"></div>
-            <div class="file-menu-modal-item">
+            <div class="file-menu-modal-item" onclick="showAccessControlModal()">
                 Access Control
             </div>
         </div>
@@ -361,6 +404,28 @@
     function browserPageHideLoading(){
         var loader = (document.getElementById("browserLoader"))
         loader.classList.remove("show")
+    }
+
+    ///////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////// Access Control Modal
+    function showAccessControlModal(){
+        var modal = document.getElementById("accessControlModal")
+        if (!modal.classList.contains("show")){
+            modal.classList.add("show")
+        }
+    }
+
+    function showAccessControlModal(){
+        var modal = document.getElementById("accessControlModal")
+        if (!modal.classList.contains("show")){
+            modal.classList.add("show")
+        }
+    }
+
+    function hideAccessControlModal(){
+        var modal = document.getElementById("accessControlModal")
+        modal.classList.remove("show")
     }
 
     ///////////////////////////////////////////////////////
@@ -455,7 +520,6 @@
     })
 
     }
-
 
     ///////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////
