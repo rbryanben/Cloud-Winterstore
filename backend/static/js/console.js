@@ -4,11 +4,11 @@
 window.addEventListener('DOMContentLoaded', function() {
     
     //disable loading
-    document.getElementById("loadingModal").style.display = "none"
+    //document.getElementById("loadingModal").style.display = "none"
       
     //should happen after all images have loaded
     setTimeout(() => {
-        //loadingModal.style.display = "none"
+        loadingModal.style.display = "none"
     }, 1100) 
 })
 
