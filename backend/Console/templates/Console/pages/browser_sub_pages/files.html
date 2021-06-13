@@ -12,6 +12,10 @@
         height: 100vh;
     }
 
+    .folder-toolbar-navigator {
+        padding-left: 20px;
+    }
+
     .folder-toolbar-navigator>i {
         color: gray;
     }
@@ -46,6 +50,7 @@
     .folder-categorizer {
         margin-top: 30px;
         display: grid;
+        padding-left: 20px;
         grid-template-columns: 10% 40% 20% 40%;
     }
 
@@ -67,13 +72,17 @@
     }
 
     .folder-categorizer.item{
-        
         margin-top: 0;
-        margin-left: -20px;
         padding-left: 20px;
         padding-top: 10px;
         padding-bottom: 10px;
         border-bottom: solid 1px rgba(235, 235, 235, 0.685);
+        transition: all 0.1s ease;
+    }
+
+
+    .folder-categorizer.selected {
+        border: solid rgba(59, 83, 187, 0.384) 1px;
     }
 
     .categorizer-text>i{
@@ -281,7 +290,7 @@
         <!-- separator -->
         <div class="separator"></div>
         <!-- files come in here-->
-        <div id="browserFilesContent" class="browserFilesContent" oncontextmenu="showOptionsModal(event)" >
+        <div id="browserFilesContent" class="browserFilesContent" onclick="removeAnyModal()" oncontextmenu="showOptionsModal(event)" >
     
         </div>
 
@@ -422,6 +431,8 @@
         }
     }
 
+    //index object selected
+    let indexObjectSelected = false
 
     //focused object variable, this could be a file or folder
     let focusedFile ;
@@ -643,9 +654,16 @@
     ///////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////
     /////////////////////////////////////////////////////// File and Folder options modal
-    
+
     //shows options modal after file or folder has been right clicked
-    function handleRightClick(event,objectID,objectType,objectName,objectSize,objectCreated){
+    function handleRightClick(event,objectID,objectType,objectName,objectSize,objectCreated,object){
+        if (selectedObject != object){
+            removeAllSelected()
+            indexObjectSelected = false
+        }
+        if (!indexObjectSelected){
+            return false
+        }
         //showing folder 
         showingFolder = true
         //show options moadal
@@ -936,8 +954,28 @@
 
     //for hiding all modals on page click
     ///seems repeated to me
-    function handleSingleClick() {
-        hideOptionsModal()
+
+
+    function removeAllSelected(){
+        var AllObjects = document.querySelectorAll(".folder-categorizer")
+        AllObjects.forEach(element => {
+            element.classList.remove("selected")
+        });
+    }
+
+    let selectedObject ;
+    function handleSingleClick(object) { 
+        removeAllSelected()
+        selectedObject = object
+        if (!object.classList.contains("selected")){
+            object.classList.add("selected")
+        }
+        indexObjectSelected = true
     }   
 
+
+    function removeAnyModal(){
+        hideOptionsModal()
+        hideBrowserOptionsPage()
+    }
 </script>
