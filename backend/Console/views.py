@@ -109,7 +109,7 @@ def uploadFile(request):
         newIndexObject.fileType=fileType
         newIndexObject.allowKeyUsersWrite=allowKeyUsersWrite
         newIndexObject.allowKeyUsersRead=allowKeyUsersRead
-        newIndexObject.allowAllUsersRead=allowKeyUsersRead
+        newIndexObject.allowAllUsersRead=allowAllUsersRead
         newIndexObject.allowAllUsersWrite=allowAllUsersWrite
         newIndexObject.save()
 

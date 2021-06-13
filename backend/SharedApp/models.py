@@ -237,7 +237,8 @@ class IndexObject(models.Model):
 class FileKey(models.Model):
     file = models.ForeignKey(IndexObject,on_delete=models.CASCADE,null=False)
     user = models.ForeignKey(User,null=False,on_delete=models.CASCADE)
-
+    dateObtained = models.DateTimeField(null=False,auto_now=True)
+    
     def create(self,file,user):
         self.file = file 
         self.user = user

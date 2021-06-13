@@ -6,5 +6,7 @@ urlpatterns = [
     path('delete/', views.deleteIndexObject), #delete
     path('new-folder/', views.newFolder), #new folder
     path('rename-object/', views.renameIndexObject), #rename folder
+    path('get-people-with-key/',views.getPeopleWithKey), #get people with key
+    path('get-set-access-control/',views.getSetAccessControl), #get set access controls
 ]
 

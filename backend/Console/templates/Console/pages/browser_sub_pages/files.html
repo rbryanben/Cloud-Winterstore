@@ -232,6 +232,29 @@
     .file-access-control-modal>.header{
         font-size: small;
     }
+    .file-access-control-modal>.subtext{
+        font-size: 9pt;
+        margin-top: 4px;
+        opacity: 0.9;
+    }
+    .file-access-control-modal>.body{
+        display: grid;
+        grid-template-columns: 20% 80%;
+        opacity: 0.9;
+    }
+
+    .file-access-control-modal>.body>.left{
+        height: 100vh;
+        border-right: solid 1px rgba(235, 235, 235, 0.753);
+    }
+
+    .file-access-control-modal>.body>.right{
+        padding-left: 20px;
+    }
+
+    .sm {
+        font-size: 9pt;
+    }
 
 
 </style>
@@ -281,11 +304,50 @@
        
         <!-- access control modal -->
         <div id="accessControlModal" class="file-access-control-modal">
-            <div class="header">Access Control Panel</div>
+            <!-- cancel -->
             <div class="close"><i class="fas fa-times" onclick="hideAccessControlModal()"></i></div>
-            <div class="p" style="margin-top: 40px;">Sadly I have to end here for Today..for the mean time here is a trick question</div>
-            <div class="p" style="margin-top: 5px;">What goes up and never comes back down ?</div>
-            <button onclick="alert('Your Age !')" style="margin-top: 20px;">Show Answer</button>
+            <!-- access control about section-->
+            <div class="header">Access Control Panel</div>
+            <div id="access-control-object-ownwer" class="subtext" style="margin-top: 20px;">Owner : rbryanben</div>
+            <div id="access-control-object-ownwer" class="subtext">Owner Account Type : developer</div>
+            <div class="separator" style="margin-top: 20px;"></div>
+            <!-- body-->
+            <div class="body">
+                <div class="left">
+                    <div class="access-control-detail div-flex start" style="margin-top: 20px;">
+                        <input id="allowAllUsersWriteAccessControl" type="checkbox" onclick="updateObjectAccessControl()"><span class="sm">allowAllUsersWrite</span>
+                    </div>
+                    <div class="access-control-detail div-flex start">
+                        <input id="allowAllUsersReadAccessControl" type="checkbox" onclick="updateObjectAccessControl()"><span class="sm">allowAllUsersRead</span>
+                    </div>
+                    <div class="access-control-detail div-flex start">
+                        <input id="allowKeyUsersWriteAccessControl" type="checkbox" onclick="updateObjectAccessControl()"><span class="sm">allowKeyUsersWrite</span>
+                    </div>
+                    <div class="access-control-detail div-flex start">
+                        <input id="allowKeyUsersReadAccessControl" type="checkbox" onclick="updateObjectAccessControl()"><span class="sm">allowKeyUsersRead</span>
+                    </div>
+                </div>
+                <div class="right">
+                    <!-- top bar -->
+                    <div class="sm" style="margin-top: 20px;">Accounts with key</div>
+                    <!-- categorizer-->
+                    <div class="folder-categorizer item" style="margin-top: 15px;">
+                        <div class=""><input type="checkbox"></div>
+                        <div class="categorizer-text">
+                            <!-- object type-->                 
+                            Identifier</div>
+                        <div class="categorizer-text hide-mobile ">Providers</div>
+                        <div class="categorizer-text hide-mobile ">Obtained</div>
+                    </div>
+                    <div id="accessControlLoader" class="pageLoader"  style="transform: scale(0.2);top: 60%;">
+                        <div class="loader-console"></div>
+                   </div>
+                    <!--items panel-->
+                    <div id="accounts-with-key" class="accounts-with-key">
+
+                    </div>
+                </div>
+            </div>
         </div>
         <!-- name folder modal  -->
         <div id="nameFolderModal" class="name-folder-modal">
@@ -409,18 +471,64 @@
     ///////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////
     /////////////////////////////////////////////////////// Access Control Modal
-    function showAccessControlModal(){
-        var modal = document.getElementById("accessControlModal")
-        if (!modal.classList.contains("show")){
-            modal.classList.add("show")
+
+    function updateObjectAccessControl(){
+        data = {
+            "AUR" : document.getElementById("allowAllUsersReadAccessControl").checked ,
+            "AUW" : document.getElementById("allowAllUsersWriteAccessControl").checked,
+            "AKW" : document.getElementById("allowKeyUsersWriteAccessControl").checked ,
+            "AKR" : document.getElementById("allowKeyUsersReadAccessControl").checked,
+            "id" : fileThatHasAccessControlOpen.objectID
         }
+        
+        putToServer("/api/get-set-access-control/", data, function(responce) {
+            if (responce !=  "200"){
+                ShowWarning("Connection Error")
+            }
+        });
     }
+
+    let fileThatHasAccessControlOpen ;
 
     function showAccessControlModal(){
         var modal = document.getElementById("accessControlModal")
         if (!modal.classList.contains("show")){
             modal.classList.add("show")
         }
+        //loading
+        accessControlLoading()
+
+        data = {
+            "id" : focusedFile.objectID
+        }
+
+        fileThatHasAccessControlOpen = focusedFile
+
+        //set access control  params
+        postToServer("/api/get-set-access-control/", data, function(responce) {
+            var controls  = JSON.parse(responce)
+            document.getElementById("allowAllUsersReadAccessControl").checked = controls['allowAllUsersRead']
+            document.getElementById("allowAllUsersWriteAccessControl").checked = controls['allowAllUsersWrite']
+            document.getElementById("allowKeyUsersWriteAccessControl").checked = controls['allowKeyUsersWrite']
+            document.getElementById("allowKeyUsersReadAccessControl").checked = controls['allowKeyUsersRead']
+        });
+
+        //get people with the keys
+        postToServer("/api/get-people-with-key/", data, function(responce) {
+            hideAccessControlLoading()
+            var bodyToPlace = document.getElementById('accounts-with-key')
+            bodyToPlace.innerHTML = ""
+            JSON.parse(responce).forEach(element => {
+                element = `<!-- item frame -->
+                        <div class="folder-categorizer item">
+                            <div class=""><input type="checkbox"></div>
+                            <div class="categorizer-text">${element['user']['email']}</div>
+                            <div class="categorizer-text hide-mobile "><i class="fas fa-envelope" style="color: gray;"></i></div>
+                            <div class="categorizer-text hide-mobile ">${element['dateObtained']}</div>
+                        </div>` 
+                bodyToPlace.innerHTML += element
+            });
+        })
     }
 
     function hideAccessControlModal(){
@@ -428,6 +536,17 @@
         modal.classList.remove("show")
     }
 
+    function accessControlLoading(){
+        var loadingElement = document.getElementById("accessControlLoader")
+        if (!loadingElement.classList.contains("show")){
+            loadingElement.classList.add("show")
+        } 
+    }
+
+    function hideAccessControlLoading(){
+        var loadingElement = document.getElementById("accessControlLoader")
+        loadingElement.classList.remove("show")
+    }
     ///////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////
     /////////////////////////////////////////////////////// Plain options modal 

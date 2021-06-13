@@ -17,6 +17,22 @@ function postToServer(url, data, callback) {
 }
 
 
+function putToServer(url, data, callback) {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            callback(xmlhttp.response);
+        }
+    }
+
+    xmlhttp.open("PUT", serverURL + url)
+    xmlhttp.setRequestHeader('Content-Type', 'application/json');
+    xmlhttp.send(JSON.stringify(data));
+
+}
+
+
+
  //function downloads a file
  let currentlyDownloading = false
  let xhttp = new XMLHttpRequest();

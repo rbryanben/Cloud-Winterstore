@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'WebApplication', #register WebApplication package
     'Console', #console package
     'SharedApp', #Shared
+    'rest_framework',#Rest Framework
 ]
 
 MIDDLEWARE = [

@@ -1,3 +1,4 @@
+from distutils.util import strtobool
 from math import trunc
 from os import name
 
@@ -15,7 +16,9 @@ from django.db import router
 from pymongo import MongoClient
 import gridfs
 from django.contrib.auth.decorators import login_required
-
+from django.core import exceptions
+from django.forms.models import model_to_dict
+from SharedApp import serializers
 
 
 #
@@ -34,6 +37,88 @@ def gateway(request):
 
     #return
     return JsonResponse(response)
+
+@login_required(login_url='/console/login-required')
+def getPeopleWithKey(request):
+    indexObject = None
+    try:
+        receivedJSON = json.loads(request.body)
+        indexObject =  IndexObject.objects.get(id=receivedJSON['id'])
+    except exceptions.ObjectDoesNotExist:
+        return HttpResponse("not found")
+    except:
+        return HttpResponse("Doesn't look like the JSON we need")
+    
+
+    #check permission 
+    if (not checkPemmission(request,indexObject,"write")):
+        return HttpResponse("denied")
+    
+    #get all objects for file 
+    objects = None
+    try:
+        objects = FileKey.objects.filter(file=indexObject)
+        #serialize responce 
+        serializer = serializers.FileKeySerializer(objects,many=True)
+        return JsonResponse(serializer.data,safe=False)
+    except:
+        return HttpResponse({})
+    
+@login_required(login_url='/console/login-required')
+def getSetAccessControl(request):
+    if request.method == "POST":
+        indexObject = None
+        try:
+            receivedJSON = json.loads(request.body)
+            indexObject =  IndexObject.objects.get(id=receivedJSON['id'])
+        except exceptions.ObjectDoesNotExist:
+            return HttpResponse("not found")
+        except:
+            return HttpResponse("Doesn't look like the JSON we need")
+        
+        #check permission 
+        if (not checkPemmission(request,indexObject,"write")):
+            return HttpResponse("denied")
+        
+
+        return JsonResponse({
+                "allowAllUsersWrite" : indexObject.allowAllUsersWrite,
+                'allowAllUsersRead' : indexObject.allowAllUsersRead,
+                'allowKeyUsersRead' : indexObject.allowKeyUsersRead,
+                'allowKeyUsersWrite' : indexObject.allowKeyUsersWrite
+        })
+    
+    if request.method == "PUT":
+        #get attributes
+        allowAllUsersWrite = None
+        allowAllUsersRead = None
+        allowKeyUsersRead = None
+        allowKeyUsersWrite = None
+        indexObject = None
+        try:
+            receivedJSON = json.loads(request.body)
+            allowAllUsersWrite = receivedJSON['AUW']
+            allowAllUsersRead = receivedJSON['AUR']
+            allowKeyUsersRead = receivedJSON['AKR']
+            allowKeyUsersWrite = receivedJSON['AKW']
+            indexObject = IndexObject.objects.get(id=receivedJSON['id'])   
+        except exceptions.ObjectDoesNotExist:
+            return HttpResponse("not found")
+        except:
+            return HttpResponse("woahh - does'nt seem like the data we need")
+        
+        #check permission 
+        if (not checkPemmission(request,indexObject,"write")):
+            return HttpResponse("denied")
+        
+        #update 
+        indexObject.allowAllUsersWrite = allowAllUsersWrite
+        indexObject.allowAllUsersRead = allowAllUsersRead
+        indexObject.allowKeyUsersRead = allowKeyUsersRead
+        indexObject.allowKeyUsersWrite = allowKeyUsersWrite
+        indexObject.save()
+        
+        return HttpResponse("200")
 
 
 @login_required(login_url='/console/login-required')
@@ -72,7 +157,6 @@ def renameIndexObject(request):
     indexObjectToRename.save()
 
     return HttpResponse("200")
-
 
 #is not checking permission 
 @login_required(login_url='/console/login-required')
@@ -216,6 +300,15 @@ def checkPemmission(request,IndexFile,method):
         #if all users can write check if key users can write
         #and if the current user has a key 
         if (IndexFile.allowKeyUsersWrite and userHasKey):
+            return True
+    
+    elif (method == "read"):
+        #check if all users can write
+        if (IndexFile.allowAllUsersRead):
+            return True
+        #if all users can write check if key users can write
+        #and if the current user has a key 
+        if (IndexFile.allowKeyUsersRead and userHasKey):
             return True
     
 
