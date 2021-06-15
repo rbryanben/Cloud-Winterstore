@@ -375,7 +375,7 @@
                     <div class="sm" style="margin-top: 20px;padding-left: 20px;">Accounts with key <!-- add acccount --><span class="add-account-key"><i class="fas fa-plus" onclick="showAddAccountKey()"></i></span><!-- delete account--><span class="delete-account-key" id="deleteAccountKeyButton"><i class="fas fa-trash" onclick="deleteSelectedKeyAccounts()"></i></span></div> 
                     <!-- categorizer-->
                     <div class="folder-categorizer item" style="margin-top: 15px;">
-                        <div class=""><input type="checkbox"></div>
+                        <div class=""><input type="checkbox" id="allKeysSelector" onclick="selectAllAccountsWithKeys(this)"></div>
                         <div class="categorizer-text">
                             <!-- object type-->                 
                             Identifier</div>
@@ -386,7 +386,7 @@
                         <div class="loader-console"></div>
                    </div>
                     <!--items panel-->
-                    <div id="accounts-with-key" class="accounts-with-key" style="overflow-y: scroll;">
+                    <div id="accounts-with-key" class="accounts-with-key" style="overflow-y: scroll; overflow-x: hidden; min-height: 40px;">
 
                     </div>
                 </div>
@@ -566,7 +566,7 @@
             JSON.parse(responce).forEach(element => {
                 element = `<!-- item frame -->
                         <div class="folder-categorizer item">
-                            <div class=""><input type="checkbox" onclick="addSelectedAccountToCheckedList('${element['user']['email']}',this)"></div>
+                            <div class=""><input type="checkbox" class="accountKeyCheckBox" onclick="addSelectedAccountToCheckedList('${element['user']['email']}',this)"></div>
                             <div class="categorizer-text">${element['user']['email']}</div>
                             <div class="categorizer-text hide-mobile "><i class="fas fa-envelope" style="color: gray;"></i></div>
                             <div class="categorizer-text hide-mobile ">${element['dateObtained']}</div>
@@ -577,6 +577,27 @@
             var listInElement = document.getElementById("accounts-with-key")
             listInElement.style.height = listInElement.clientHeight + "px"
         })
+    }
+
+    function selectAllAccountsWithKeys(object){
+        if (object.checked == true){
+            var array = document.querySelectorAll(".accountKeyCheckBox")
+            array.forEach(element => {
+                if (element.checked == false){
+                    element.click()
+                }
+            });
+        }
+        else{
+            document.getElementById("deleteAccountKeyButton").classList.remove("show")
+            selectedAccountsList = []
+            var array = document.querySelectorAll(".accountKeyCheckBox")
+            array.forEach(element => {
+                if (element.checked == true){
+                    element.click()
+                }
+            });
+        }
     }
 
     function hideAccessControlModal(){
@@ -605,6 +626,7 @@
         postToServer("/api/remove-keys/",data, function(responce) {
         if (responce == "200") {
             document.getElementById("deleteAccountKeyButton").classList.remove("show")
+            document.getElementById("allKeysSelector").checked = false
             showAccessControlModal()
         } else {
             ShowWarning("Deletion Failed")
