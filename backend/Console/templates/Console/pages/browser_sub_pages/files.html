@@ -258,13 +258,30 @@
     }
 
     .file-access-control-modal>.body>.right{
-        padding-left: 20px;
+        padding: none;
     }
 
     .sm {
         font-size: 9pt;
     }
 
+    /* account keys */
+    .delete-account-key {
+        margin-left: 20px;
+        visibility: hidden;
+        opacity: 0;
+        transition: all 0.2s ease-in;
+    }
+
+    .add-account-key {
+        opacity: 0.8;
+        margin-left: 20px;
+    }
+
+    .delete-account-key.show{
+        opacity: 0.8;
+        visibility: visible;
+    }
 
 </style>
 
@@ -338,7 +355,7 @@
                 </div>
                 <div class="right">
                     <!-- top bar -->
-                    <div class="sm" style="margin-top: 20px;">Accounts with key</div>
+                    <div class="sm" style="margin-top: 20px;padding-left: 20px;">Accounts with key <!-- add acccount --><span class="add-account-key"><i class="fas fa-plus"></i></span><!-- delete account--><span class="delete-account-key" id="deleteAccountKeyButton"><i class="fas fa-trash" onclick="deleteSelectedKeyAccounts()"></i></span></div> 
                     <!-- categorizer-->
                     <div class="folder-categorizer item" style="margin-top: 15px;">
                         <div class=""><input type="checkbox"></div>
@@ -352,7 +369,7 @@
                         <div class="loader-console"></div>
                    </div>
                     <!--items panel-->
-                    <div id="accounts-with-key" class="accounts-with-key">
+                    <div id="accounts-with-key" class="accounts-with-key" style="overflow-y: scroll;">
 
                     </div>
                 </div>
@@ -532,13 +549,16 @@
             JSON.parse(responce).forEach(element => {
                 element = `<!-- item frame -->
                         <div class="folder-categorizer item">
-                            <div class=""><input type="checkbox"></div>
+                            <div class=""><input type="checkbox" onclick="addSelectedAccountToCheckedList('${element['user']['email']}',this)"></div>
                             <div class="categorizer-text">${element['user']['email']}</div>
                             <div class="categorizer-text hide-mobile "><i class="fas fa-envelope" style="color: gray;"></i></div>
                             <div class="categorizer-text hide-mobile ">${element['dateObtained']}</div>
                         </div>` 
                 bodyToPlace.innerHTML += element
             });
+
+            var listInElement = document.getElementById("accounts-with-key")
+            listInElement.style.height = listInElement.clientHeight + "px"
         })
     }
 
@@ -558,6 +578,54 @@
         var loadingElement = document.getElementById("accessControlLoader")
         loadingElement.classList.remove("show")
     }
+    
+    function deleteSelectedKeyAccounts(){
+        data = {
+            "file" : fileThatHasAccessControlOpen.objectID,
+            "accounts" : selectedAccountsList
+        }
+
+        postToServer("/api/remove-keys/",data, function(responce) {
+        if (responce == "200") {
+            showAccessControlModal()
+        } else {
+            ShowWarning("Deletion Failed")
+        }
+        })
+    }
+
+    //access control account selection
+    let selectedAccountsList = []
+    function addSelectedAccountToCheckedList(email,object){
+        //show delete button
+        var deleteButton = document.getElementById("deleteAccountKeyButton")
+
+        if (object.checked == false){
+            //remove element 
+            removeItemOnce(selectedAccountsList,email)
+            //if length is less than 1 then hide bin
+            if (selectedAccountsList.length == 0){
+                deleteButton.classList.remove("show")
+            }
+
+        }
+        else {
+            selectedAccountsList.push(email)
+            if (!deleteButton.classList.contains("show")){
+                deleteButton.classList.add("show")
+            }
+        }
+    }
+
+
+    function removeItemOnce(arr, value) {
+        var index = arr.indexOf(value);
+        if (index > -1) {
+            arr.splice(index, 1);
+        }
+        return arr;
+    }
+
     ///////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////
     /////////////////////////////////////////////////////// Plain options modal 
@@ -770,7 +838,7 @@
         modal.classList.remove("show") 
     }
     
-    
+
     ///////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////
     /////////////////////////////////////////////////////// Functions for files 

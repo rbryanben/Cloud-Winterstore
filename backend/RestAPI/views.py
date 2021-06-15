@@ -1,8 +1,8 @@
 from distutils.util import strtobool
 from math import trunc
 from os import name
-
 from pymongo.common import BaseObject
+from rest_framework.exceptions import NotFound
 from Console.views import console
 import json
 from django import http
@@ -19,6 +19,7 @@ from django.contrib.auth.decorators import login_required
 from django.core import exceptions
 from django.forms.models import model_to_dict
 from SharedApp import serializers
+from django.contrib.auth.models import User
 
 
 #
@@ -120,6 +121,31 @@ def getSetAccessControl(request):
         
         return HttpResponse("200")
 
+@login_required(login_url='/console/login-required')
+def removeKeys(request):
+    userList = None
+    indexObject = None
+    try:
+        receivedJSON = json.loads(request.body)
+        userList = receivedJSON["accounts"]
+        indexObject = IndexObject.objects.get(id=receivedJSON['file'])
+    except exceptions.ObjectDoesNotExist:
+        return HttpResponse("not found")
+    except:
+        return HttpResponse("500")
+    
+    #check permission
+    if (not checkPemmission(request,indexObject,"write")):
+        return HttpResponse("denied")
+    
+    #delete users
+    for email in userList:
+        try:
+            FileKey.objects.filter(file=indexObject,user=User.objects.get(email=email)).delete()
+        except:
+            pass
+    
+    return HttpResponse("200")
 
 @login_required(login_url='/console/login-required')
 def renameIndexObject(request):

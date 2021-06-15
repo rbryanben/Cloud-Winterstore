@@ -8,5 +8,6 @@ urlpatterns = [
     path('rename-object/', views.renameIndexObject), #rename folder
     path('get-people-with-key/',views.getPeopleWithKey), #get people with key
     path('get-set-access-control/',views.getSetAccessControl), #get set access controls
+    path('remove-keys/',views.removeKeys), #remove users with keys
 ]
 
