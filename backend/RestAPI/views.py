@@ -66,6 +66,30 @@ def getPeopleWithKey(request):
         return HttpResponse({})
     
 @login_required(login_url='/console/login-required')
+def giveKey(request):
+    account = None
+    indexObject = None
+
+    try:
+        receivedJSON = json.loads(request.body)
+        account = User.objects.get(email=receivedJSON['account'])
+        indexObject = IndexObject.objects.get(id=receivedJSON['file'])
+    except exceptions.ObjectDoesNotExist:
+        return HttpResponse("not found")
+    except:
+        return HttpResponse("500")
+
+    #check permission
+    if (not checkPemmission(request,indexObject,"write")):
+        return HttpResponse("denied")
+
+    #add a new Key 
+    newKey = FileKey()
+    newKey.create(indexObject,account)
+
+    return HttpResponse("200")
+
+@login_required(login_url='/console/login-required')
 def getSetAccessControl(request):
     if request.method == "POST":
         indexObject = None

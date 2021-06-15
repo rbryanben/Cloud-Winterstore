@@ -641,7 +641,20 @@
             "file" : (fileThatHasAccessControlOpen.objectID)
         }
 
-        
+        postToServer("/api/give-key/", data, function(responce) {
+        if (responce == "200") {
+            hideAddAccountKey()
+            showAccessControlModal()
+        }
+        else if (responce == "not found"){
+            ShowWarning("Account Not Found")
+        }
+        else {
+            ShowWarning("Request Failed")
+        }
+    })
+
+
     }
 
     function showAddAccountKey(){
