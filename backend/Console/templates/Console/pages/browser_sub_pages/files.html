@@ -328,6 +328,23 @@
             </div>
         </div>
        
+        <!-- access control add account modal -->
+        <!-- rename folder modal  -->
+        <div id="accountKeyAddModal" class="name-folder-modal">
+            <div class="name-folder-modal-header">Give key to account</div>
+            <div class="name-folder-modal-subtext">Enter account id</div>
+            <div id="projectNameNew" class="input-frame" style="position: relative;">
+                <input id="accountKeyIDText" class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;">
+            </div>
+            <div class="folder-namer-buttons">
+                <div class="cancel-folder-button" onclick="hideAddAccountKey()" >
+                    Cancel
+                </div>
+                <div id="createFolderButton" class="create-folder-button" onclick=" giveKeyToAccountHTTP()"> 
+                    Give Key
+                </div>
+            </div>
+        </div>
         <!-- access control modal -->
         <div id="accessControlModal" class="file-access-control-modal">
             <!-- cancel -->
@@ -355,7 +372,7 @@
                 </div>
                 <div class="right">
                     <!-- top bar -->
-                    <div class="sm" style="margin-top: 20px;padding-left: 20px;">Accounts with key <!-- add acccount --><span class="add-account-key"><i class="fas fa-plus"></i></span><!-- delete account--><span class="delete-account-key" id="deleteAccountKeyButton"><i class="fas fa-trash" onclick="deleteSelectedKeyAccounts()"></i></span></div> 
+                    <div class="sm" style="margin-top: 20px;padding-left: 20px;">Accounts with key <!-- add acccount --><span class="add-account-key"><i class="fas fa-plus" onclick="showAddAccountKey()"></i></span><!-- delete account--><span class="delete-account-key" id="deleteAccountKeyButton"><i class="fas fa-trash" onclick="deleteSelectedKeyAccounts()"></i></span></div> 
                     <!-- categorizer-->
                     <div class="folder-categorizer item" style="margin-top: 15px;">
                         <div class=""><input type="checkbox"></div>
@@ -587,6 +604,7 @@
 
         postToServer("/api/remove-keys/",data, function(responce) {
         if (responce == "200") {
+            document.getElementById("deleteAccountKeyButton").classList.remove("show")
             showAccessControlModal()
         } else {
             ShowWarning("Deletion Failed")
@@ -617,6 +635,26 @@
         }
     }
 
+    function giveKeyToAccountHTTP(){
+        data = {
+            "account" : document.getElementById("accountKeyIDText").value,
+            "file" : (fileThatHasAccessControlOpen.objectID)
+        }
+
+        
+    }
+
+    function showAddAccountKey(){
+        var modal = document.getElementById("accountKeyAddModal")
+        if (!modal.classList.contains("show")){
+            modal.classList.add("show")
+        }
+    }
+
+    function hideAddAccountKey(){
+        var modal = document.getElementById("accountKeyAddModal")
+        modal.classList.remove("show")
+    }
 
     function removeItemOnce(arr, value) {
         var index = arr.indexOf(value);
