@@ -83,6 +83,14 @@ def giveKey(request):
     if (not checkPemmission(request,indexObject,"write")):
         return HttpResponse("denied")
 
+    #prevent duplication 
+    try:
+        FileKey.objects.get(file=indexObject,user=account)
+        print("hello")
+        return HttpResponse("200")
+    except:
+        pass
+
     #add a new Key 
     newKey = FileKey()
     newKey.create(indexObject,account)
