@@ -43,9 +43,6 @@
         transition: all 0.2s ease-in;
     }
 
-    .upload-file:hover{
-        transform: scale(1.1);
-    }
 
     .folder-categorizer {
         margin-top: 30px;
@@ -283,6 +280,22 @@
         visibility: visible;
     }
 
+    /*  delete button multiple files */
+
+    .delete-button-files {
+        margin-right: 20px;
+        color: gray;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.2s ease-in;
+    }
+
+    .delete-button-files.show {
+        opacity: 1;
+        visibility: visible;
+    }
+
+
 </style>
 
 <div class="folder-browser-page">  
@@ -293,13 +306,13 @@
         <div  class="folder-toolbar-navigator">
              <i class="fas fa-home" onclick="goHome()"></i><span id="dirMapper"><!-- mapping elements here --> </span>
         </div>
-        <!-- upload-->
+        <!-- upload and delete-->
         <div class="upload-file">
-             <i class="fas fa-upload" onclick="uploadFile()"></i>
+             <i class="delete-button-files"><i class="fas fa-trash" onclick="deleteSelectedFiles()"></i></i> <!-- upload--> <i class="fas fa-upload" onclick="uploadFile()"></i>
         </div>
         <!-- folders-->
         <div class="folder-categorizer">
-            <div class=""><input type="checkbox"></div>
+            <div class=""><input type="checkbox" onclick="selectUnselectAllFiles(this)"></div>
             <div class="categorizer-text">Name</div>
             <div class="categorizer-text hide-mobile ">Size</div>
             <div class="categorizer-text hide-mobile ">Modified</div>
@@ -1083,6 +1096,69 @@
         loadFiles('root')
     }
 
+
+    function showFilesBin(){
+        var bin = document.querySelector(".delete-button-files")
+        if (!bin.classList.contains("show")){
+            bin.classList.add("show")
+        }
+    }
+
+
+    function hideFilesBin(){
+        var bin = document.querySelector(".delete-button-files")
+        bin.classList.remove("show")
+    }
+
+
+    function selectUnselectAllFiles(object){
+        if (object.checked){
+            array = document.querySelectorAll(".filesCheckboxBox")
+            array.forEach(element => {
+                if (element.checked == false){
+                    element.click()
+                }
+            });
+        }
+        else {
+            array = document.querySelectorAll(".filesCheckboxBox")
+            array.forEach(element => {
+                if (element.checked){
+                    element.click()
+                }
+            });
+        }
+    }
+
+    let markedFiles = []
+    function markFile(id,object){
+        if (object.checked){
+            markedFiles.push(id)
+            showFilesBin()
+        }
+        else {
+            removeItemOnce(markedFiles,id)
+            if (markedFiles.length == 0){
+                hideFilesBin()
+            }
+        }
+    }
+
+
+    function deleteSelectedFiles(){
+        markedFiles.forEach(element => {
+            data = {
+                "id" : element 
+            }
+            //delete file via API
+            postToServer("/api/delete/", data, function(responce) {
+            if (responce == "200") {
+                hideOptionsModal()
+                reloadFiles()
+            } 
+            });
+        })
+    }
 
     //////////////////////////////////////////////////////
     //////////////////////////////////////////////////////

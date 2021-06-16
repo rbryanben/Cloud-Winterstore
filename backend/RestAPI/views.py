@@ -86,7 +86,6 @@ def giveKey(request):
     #prevent duplication 
     try:
         FileKey.objects.get(file=indexObject,user=account)
-        print("hello")
         return HttpResponse("200")
     except:
         pass
@@ -293,7 +292,6 @@ def deleteIndexObject(request):
         deleteFolder(objectToDelete)
 
     return HttpResponse("200")
-
 
 def deleteFolder(folder):
     childObject = IndexObject.objects.filter(parent=folder)

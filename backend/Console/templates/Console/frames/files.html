@@ -1,6 +1,6 @@
 {% for object in data %}
 <div class="folder-categorizer item" onclick="handleSingleClick(this)" ondblclick="loadIndexObject(event,'{{object.objectType}}','{{object.id}}','{{object.name}}')" oncontextmenu="handleRightClick(event,'{{object.id}}','{{object.objectType}}','{{object.name}}','{{object.size}}','{{object.created}}',this)">
-    <div class=""><input type="checkbox"></div>
+    <div class=""><input type="checkbox" class="filesCheckboxBox" onclick="markFile('{{object.id}}',this)"></div>
     <div class="categorizer-text">
         <!-- object type-->
         {% if object.objectType == 'FD' %}
