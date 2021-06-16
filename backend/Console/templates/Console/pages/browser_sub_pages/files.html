@@ -312,7 +312,7 @@
         </div>
         <!-- folders-->
         <div class="folder-categorizer">
-            <div class=""><input type="checkbox" onclick="selectUnselectAllFiles(this)"></div>
+            <div class=""><input id="selectUnselectAllFiles" type="checkbox" onclick="selectUnselectAllFiles(this)"></div>
             <div class="categorizer-text">Name</div>
             <div class="categorizer-text hide-mobile ">Size</div>
             <div class="categorizer-text hide-mobile ">Modified</div>
@@ -1167,6 +1167,7 @@
                 hideOptionsModal()
                 reloadFiles()
                 hideFilesBin()
+                document.getElementById("selectUnselectAllFiles").checked = false
             } 
             });
         })
