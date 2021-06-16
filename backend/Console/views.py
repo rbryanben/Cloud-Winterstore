@@ -104,7 +104,14 @@ def uploadFile(request):
         mongoUploadFile(uploadedFile,newIndexObject.id,name,request.user.username)
     
         #update indexObject
-        fileType = "video"
+        fileType = "file"
+        if (name.endswith(".mp3") or name.endswith(".WAV")):
+            fileType = "audio"
+        elif (name.endswith(".mp4") or name.endswith(".MOV") or name.endswith(".WMV") or name.endswith(".FLV")  or name.endswith(".MKV")):
+            fileType = "video"
+        elif (name.endswith(".pdf")):
+            fileType = "pdf" 
+
         newIndexObject.fileReference= newIndexObject.id
         newIndexObject.fileType=fileType
         newIndexObject.allowKeyUsersWrite=allowKeyUsersWrite

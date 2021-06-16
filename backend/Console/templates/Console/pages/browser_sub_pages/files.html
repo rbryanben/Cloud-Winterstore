@@ -399,7 +399,7 @@
                         <div class="loader-console"></div>
                    </div>
                     <!--items panel-->
-                    <div id="accounts-with-key" class="accounts-with-key" style="overflow-y: scroll; overflow-x: hidden; min-height: 40px;">
+                    <div id="accounts-with-key" class="accounts-with-key" style="overflow-y: scroll; overflow-x: hidden; min-height: 100px;">
 
                     </div>
                 </div>
@@ -1014,12 +1014,23 @@
     }
 
     //function to send the file to the server
-    function sendFile(){
-        try{
-            //show upload bar 
-            var uploadBar = document.getElementById("upload-bar")
-            
+    let request = new XMLHttpRequest();
+    function sendFile(object){
+        //show upload bar 
+        var uploadBar = document.getElementById("upload-bar")
 
+        if (object.innerHTML != "Cancel"){
+            object.innerHTML = "Cancel"
+        }
+        else{
+            uploadBar.classList.remove("show")
+            request.abort()
+            object.innerHTML = "Upload"
+            return
+        }
+
+        try{
+            uploadBar.classList.add("show")
             //form data
             var file = fileInputForUpload.files[0];
             var formData = new FormData();
@@ -1040,7 +1051,7 @@
             }
         
             //xml http 
-            var request = new XMLHttpRequest();
+
             request.open('POST', '/console/upload-file'); 
             // upload progress event
             request.onreadystatechange = function() {
@@ -1155,6 +1166,7 @@
             if (responce == "200") {
                 hideOptionsModal()
                 reloadFiles()
+                hideFilesBin()
             } 
             });
         })

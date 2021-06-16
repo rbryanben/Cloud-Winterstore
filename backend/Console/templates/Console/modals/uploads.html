@@ -162,7 +162,7 @@
         <div class="access-control-detail div-flex start">
             <input id="allowKeyUsersWrite" checked="checked" type="checkbox"><span class="">allowKeyUsersWrite</span>
         </div>
-        <div class="upload-file-complete" onclick="sendFile()">
+        <div class="upload-file-complete" onclick="sendFile(this)">
             Upload
         </div>
 
@@ -177,6 +177,7 @@
 
 <script>
     function showUploads(){
+        document.querySelector(".upload-file-complete").innerHTML = "Upload"
         var modal = document.querySelector(".upload-moadal")
         if (!modal.classList.contains("show")){
             modal.classList.add("show")
