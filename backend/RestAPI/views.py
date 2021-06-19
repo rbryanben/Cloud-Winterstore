@@ -20,6 +20,7 @@ from django.core import exceptions
 from django.forms.models import model_to_dict
 from SharedApp import serializers
 from django.contrib.auth.models import User
+from django.core import exceptions
 
 
 #
@@ -64,7 +65,28 @@ def getPeopleWithKey(request):
         return JsonResponse(serializer.data,safe=False)
     except:
         return HttpResponse({})
+
+@login_required(login_url='/console/login-required')
+def getDeletedObjectsForProject(request):
+    project = None
+
+    try:
+        receivedJSON = json.loads(request.body)
+        project = Project.objects.get(owner=request.user,name=receivedJSON['project'])
+    except exceptions.ObjectDoesNotExist:
+        return HttpResponse("not found")
+    except:
+        return HttpResponse("500")
+
+    #get 200 deleted projects 
+    deletedFiles = deletedFile.objects.filter(project=project)
+    print(deletedFiles)
+    serializerObject = serializers.DeletedFileSerializer(deletedFiles,many=True)
+    print(serializerObject.data)
     
+    return JsonResponse(serializerObject.data,safe=False)
+
+
 @login_required(login_url='/console/login-required')
 def giveKey(request):
     account = None

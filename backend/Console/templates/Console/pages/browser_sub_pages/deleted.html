@@ -2,14 +2,24 @@
     .browser-deleted-page {
         display: none;
     }
+
+
+    /* for a demo */
+    #bodyDeletedFiles {
+        padding-left: 20px;
+    }
+
+
 </style>
 
 <div class="browser-deleted-page">
-    This is deleted
+    <div id="bodyDeletedFiles" class=""> hello there</div>
 </div>
 
 <script>
     var deletedPageBrowser 
+    let deletedObjectArray 
+
 
     window.addEventListener("DOMContentLoaded",()=>{
         deletedPageBrowser = document.querySelector(".browser-deleted-page")
@@ -17,10 +27,31 @@
 
     function showBrowserDeletedPage(){
         deletedPageBrowser .style.display = "block"
+        //get deleted files
+        getDeletedFiles()
     }
 
     function hideBrowserDeletedPage(){
         deletedPageBrowser .style.display = "none"
     }
+
+    function getDeletedFiles(){
+        var bodyToShow = document.getElementById("bodyDeletedFiles")
+        //get objects from the server 
+        data = {
+            "project" : localStorage.getItem("working-project")
+        }
+        postToServer("/api/get-deleted-files/", data, function(responce) {
+            if (responce == "500" || responce == "not found"){}
+            else{
+                deletedObjectArray = JSON.parse(responce)
+                deletedObjectArray.forEach(element => {
+                    bodyToShow.innerHTML += `<div>${JSON.stringify(element)}</div>`
+                });
+            }
+        })
+
+    }
+
 
 </script>

@@ -1,5 +1,5 @@
 from rest_framework import fields, serializers
-from .models import FileKey
+from .models import FileKey , deletedFile
 from SharedApp import models
 from django.contrib.auth.models import User
 
@@ -15,3 +15,8 @@ class FileKeySerializer(serializers.ModelSerializer):
     class Meta:
         model = FileKey
         fields = ['id','user','dateObtained'] 
+    
+class DeletedFileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = deletedFile
+        fields = ['name','deletedBy','owner','fileID','deleted']
