@@ -22,6 +22,9 @@ function disableScrolling() {
 }
 
 
+
+///keys global
+let lockUploadAndDownloadModal = true
 let key1 = false
 let key2 = false
 let optionKey = 0
@@ -39,11 +42,11 @@ document.addEventListener('keydown',(event)=>{
         optionKey = 85
     }
 
-    if (key2 && key1 && optionKey == 68){
+    if (key2 && key1 && optionKey == 68 && lockUploadAndDownloadModal == false){
         hideUploads()
         showDownloads()
     }
-    if (key2 && key1 && optionKey == 85){
+    if (key2 && key1 && optionKey == 85  && lockUploadAndDownloadModal == false){
         hideDownloads()
         showUploads()
     }

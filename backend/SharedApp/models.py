@@ -144,11 +144,19 @@ class DownloadStat(models.Model):
 
 
 class deletedFile(models.Model):
-    file = models.TextField(null=False)
+    name = models.TextField(null=False,default="None")
+    deletedBy = models.TextField(null=False,default="None")
+    owner = models.TextField(null=False,default="None")
+    fileID = models.TextField(null=False,default="None")
     deleted = models.DateTimeField(auto_now=True,null=False)
+    project = models.ForeignKey(Project,on_delete=models.CASCADE,null=False,default="")
 
-    def create(self,file):
-        self.file = file
+    def create(self,name,deletedBy,owner,fileID,project):
+        self.name = name
+        self.deletedBy = deletedBy
+        self.owner = owner
+        self.fileID = fileID
+        self.project = project
         self.save()
 
 

@@ -79,7 +79,8 @@
 
 
     .folder-categorizer.selected {
-        border: solid rgba(59, 83, 187, 0.384) 1px;
+        opacity: 0.8;
+        background-color: rgba(128, 128, 128, 0.089);
     }
 
     .categorizer-text>i{
@@ -696,12 +697,14 @@
         var modal = document.getElementById("accountKeyAddModal")
         if (!modal.classList.contains("show")){
             modal.classList.add("show")
+            lockUploadAndDownloadModal = true
         }
     }
 
     function hideAddAccountKey(){
         var modal = document.getElementById("accountKeyAddModal")
         modal.classList.remove("show")
+        lockUploadAndDownloadModal = false
     }
 
     function removeItemOnce(arr, value) {
@@ -765,8 +768,10 @@
         hideRenameModal()
         var modal = document.getElementById("nameFolderModal")
         if (!modal.classList.contains("show")){
-            modal.classList.add("show")
+            modal.classList.add("show")    
+            lockUploadAndDownloadModal = true
         }
+        
     }
 
 
@@ -774,7 +779,9 @@
         var modal = document.getElementById("nameFolderModal")
         if (modal.classList.contains("show")){
             modal.classList.remove("show")
+            lockUploadAndDownloadModal = false
         }
+        
     }
 
     //once user has name modal, send the request to the Server 
@@ -885,6 +892,7 @@
     //show the rename modal 
     let objectToRename ;
     function showRenameModal(){
+        lockUploadAndDownloadModal = true
         hideNameFolderModal()
         var modal = document.getElementById("renameFolderModal")
         if (!modal.classList.contains("show")){
@@ -920,6 +928,7 @@
 
     //show the rename modal 
     function hideRenameModal(){
+        lockUploadAndDownloadModal = false
         var modal = document.getElementById("renameFolderModal")
         modal.classList.remove("show") 
     }

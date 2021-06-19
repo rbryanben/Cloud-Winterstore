@@ -10,7 +10,7 @@ from django.http import response
 from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import render
 from datetime import datetime
-from SharedApp.models import Developer, IndexObject, Project, TeamCollaboration ,FileKey
+from SharedApp.models import Developer, IndexObject, Project, TeamCollaboration ,FileKey , deletedFile
 from django.contrib.admin.utils import NestedObjects
 from django.db import router
 from pymongo import MongoClient
@@ -281,6 +281,7 @@ def deleteIndexObject(request):
     if (objectToDelete.objectType == "FL"):
         if (objectToDelete.fileReference == "HUJDKMEBEJN2G456SGTYINGHT6782HBCDHETYUSHJTIONH7890IFHGR678HNGJOT"or objectToDelete.fileReference == "HYU789IUJ87YHUYT67YGVCFDSER456YTGVBNMKJIKJJ8UUY76TTTFDSER543EFRT"):
             objectToDelete.delete()
+            #keep recored of deleted file 
             return HttpResponse("200")
 
         destroyIndexObject(objectToDelete)
