@@ -280,33 +280,37 @@ def deleteIndexObject(request):
     #if file delete the file and respind with 200
     if (objectToDelete.objectType == "FL"):
         if (objectToDelete.fileReference == "HUJDKMEBEJN2G456SGTYINGHT6782HBCDHETYUSHJTIONH7890IFHGR678HNGJOT"or objectToDelete.fileReference == "HYU789IUJ87YHUYT67YGVCFDSER456YTGVBNMKJIKJJ8UUY76TTTFDSER543EFRT"):
+            #keep record of deleted record 
+            newDeletedFile = deletedFile()
+            newDeletedFile.create(objectToDelete.name,request.user.username,objectToDelete.owner.username,objectToDelete.id,objectToDelete.project)
             objectToDelete.delete()
-            #keep recored of deleted file 
             return HttpResponse("200")
 
-        destroyIndexObject(objectToDelete)
+        destroyIndexObject(objectToDelete,request)
         return HttpResponse("200")
 
     #if folder delete object cause it has no file in Mongo
     #but now there is a problem which is to delete all children belonging to the parent object
     if (objectToDelete.objectType == "FD"):
-        deleteFolder(objectToDelete)
+        deleteFolder(objectToDelete,request)
 
     return HttpResponse("200")
 
-def deleteFolder(folder):
+def deleteFolder(folder,request):
     childObject = IndexObject.objects.filter(parent=folder)
     for object in childObject:
         if (object.objectType == "FD"):
             deleteFolder(object)
         else:
-            destroyIndexObject(object)
+            destroyIndexObject(object,request)
     folder.delete()
 
-def destroyIndexObject(object):
+def destroyIndexObject(object,request):
     #prevent deletion of startup files
     objectToDelete = object
     if (objectToDelete.fileReference == "HUJDKMEBEJN2G456SGTYINGHT6782HBCDHETYUSHJTIONH7890IFHGR678HNGJOT"or objectToDelete.fileReference == "HYU789IUJ87YHUYT67YGVCFDSER456YTGVBNMKJIKJJ8UUY76TTTFDSER543EFRT"):
+        newDeletedFile = deletedFile()
+        newDeletedFile.create(objectToDelete.name,request.user.username,objectToDelete.owner.username,objectToDelete.id,objectToDelete.project)
         object.delete()
         return
 
@@ -325,6 +329,8 @@ def destroyIndexObject(object):
     gridFSConnection.delete(bsonObject)
 
     #delete the indexObject from SQL
+    newDeletedFile = deletedFile()
+    newDeletedFile.create(objectToDelete.name,request.user.username,objectToDelete.owner.username,objectToDelete.id,objectToDelete.project)
     object.delete()
 
 def checkPemmission(request,IndexFile,method):
