@@ -1,15 +1,23 @@
-
-
-//Start
-window.addEventListener('DOMContentLoaded', function() {
-    
-    //disable loading
-    document.getElementById("loadingModal").style.display = "none"
-      
-    //should happen after all images have loaded
-    setTimeout(() => {
-        loadingModal.style.display = "none"
-    }, 0) 
+//entry
+window.document.addEventListener("readystatechange",()=>{
+    var progress = document.querySelector(".loading-modal-body-bar-inner")
+    switch (document.readyState) {
+        case "interactive":
+            // The document has finished loading. We can now access the DOM elements.
+            // But sub-resources such as scripts, images, stylesheets and frames are still loading.
+            if (!progress.classList.contains("second")){
+                progress.classList.add("second")
+            }
+            break;
+        case "complete":
+            // The page is fully loaded.
+            if (!progress.classList.contains("third")){
+                progress.style.transition = "all 0.2s ease-in"
+                progress.classList.add("third")
+                setTimeout(hideConsoleLoading(),200)
+            }
+            break;
+        }
 })
 
 

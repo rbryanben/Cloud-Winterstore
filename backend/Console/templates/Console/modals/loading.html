@@ -62,27 +62,27 @@
     }
 
     .loading-modal-body-bar-inner {
-        width: 100%;
+        width: 0%;
         background-color: rgb(38, 129, 121);
         height: inherit;
         border-radius: inherit;
-        animation: bar-animation 1s;
-        transition: all 1s ease-in;
+        transition: all 5s ease-in;
     }
+
+    .loading-modal-body-bar-inner.second {
+        width: 80%;
+    }
+
+    .loading-modal-body-bar-inner.third{
+        width: 100%;
+    }
+
 
     .loading-modal-body-bar-inner.error {
         background-color: orange;
     }
 
 
-    @keyframes bar-animation {
-        from {
-            width: 10%;
-        }
-        to {
-            width: 100%;
-        }
-    }
 </style>
   <!-- loading modal -->
   <div id="loadingModal" class="loading-modal">
@@ -113,5 +113,9 @@
     document.getElementById("loading-image").onload = function() {
         var modal = document.querySelector(".loading-modal-body")
         modal.classList.add("show")
+    }
+
+    function hideConsoleLoading(){
+        document.getElementById("loadingModal").style.display = "none"
     }
 </script>
