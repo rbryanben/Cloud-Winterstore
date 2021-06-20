@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+
+<script>
+    let CloudWinterstoreConnection = class {
+    constructor(username,password){
+        this.username = username
+        this.password = password
+        this.authenticate()
+    }
+
+    static WinterstoreURL = "http://192.168.1.6"
+    
+    //test connection
+    testConnection(){
+        PostToCloudWinterstore("/api/gateway/",{},(responce)=>{
+            console.warn(responce)
+        })
+    }
+
+    //authenticate 
+    authenticate(){
+        PostToCloudWinterstore("/login",{"username":this.username,"password":this.password},(response)=>{
+            if (response == "200"){
+                console.warn("authenticated")
+            }
+            else {
+                console.warn("authentication failed")
+            }
+        })
+    }
+
+    //get file 
+    getFile(key,callback){
+        var data = {
+            "id" : key
+        }
+        //download file
+        PostToCloudWinterstore("/console/get-file",data,(response)=>{
+            var xhttpWinterstoreConnection = new XMLHttpRequest();
+
+            xhttpWinterstoreConnection.onreadystatechange = function() {
+                alert("hie there")
+                var a;
+                if (xhttpWinterstoreConnection.readyState === 4 && xhttpWinterstoreConnection.status === 200) {
+                    currentlyDownloading = false
+                    downloadList.innerHTML = ""
+                    setTimeout(()=>{
+                        hideDownloads()
+                    },1000)
+                    // Trick for making downloadable link
+                    a = document.createElement('a');
+                    a.href = window.URL.createObjectURL(xhttpWinterstoreConnection.response);
+                    // Give filename you wish to download
+                    a.download = "test.mp4";
+                    a.style.display = 'none';
+                    document.body.appendChild(a);
+                    a.click();
+                } 
+            };
+            // Post data to URL which handles post request
+            xhttp.open("POST", "/console/get-file");
+            xhttp.setRequestHeader("Content-Type", "application/json");
+            // You should set responseType as blob for binary responses
+            xhttp.responseType = 'blob';
+            xhttp.send(JSON.stringify(data));        
+        })
+    }
+}
+
+function PostToCloudWinterstore(url, data, callback) {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            callback(xmlhttp.response);
+        }
+    }
+
+    xmlhttp.open("POST", CloudWinterstoreConnection.WinterstoreURL + url)
+    xmlhttp.setRequestHeader('Content-Type', 'application/json');
+    xmlhttp.send(JSON.stringify(data));
+}
+
+a = new CloudWinterstoreConnection("rbryanben","password25")
+</script>
+</html>
