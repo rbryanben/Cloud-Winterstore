@@ -11,5 +11,6 @@ urlpatterns = [
     path('remove-keys/',views.removeKeys), #remove users with keys
     path('give-key/',views.giveKey), #remove users with keys
     path('get-deleted-files/',views.getDeletedObjectsForProject), #get deleted files
+    path('download/<str:slug>',views.download), #to download a file
 ]
 

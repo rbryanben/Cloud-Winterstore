@@ -232,7 +232,7 @@ def mongoUploadFile(file,key,filename,owner):
 
     #put file 
     referenceObject = gridFSConnection.put(file,filename=filename)
-
+    
     #store reference object in db 
     mongoClient = MongoClient()
     db = mongoClient["Winterstore"]

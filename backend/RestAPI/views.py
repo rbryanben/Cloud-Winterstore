@@ -1,6 +1,7 @@
 from distutils.util import strtobool
 from math import trunc
 from os import name
+import re
 from pymongo.common import BaseObject
 from rest_framework.exceptions import NotFound
 from Console.views import console
@@ -21,6 +22,7 @@ from django.forms.models import model_to_dict
 from SharedApp import serializers
 from django.contrib.auth.models import User
 from django.core import exceptions
+from  SharedApp.mongohelper import mongoGetFile
 
 
 #
@@ -85,6 +87,29 @@ def getDeletedObjectsForProject(request):
     print(serializerObject.data)
     
     return JsonResponse(serializerObject.data,safe=False)
+
+@login_required(login_url='/console/login-required')
+def download(request,slug):
+    #get file SQL object
+    indexObject = None
+    try: 
+        indexObject = IndexObject.objects.get(id=slug)
+        bsonDocumentKey  = indexObject.fileReference
+    except exceptions.ObjectDoesNotExist:
+        return HttpResponse("not found")
+    except:
+        return HttpResponse("500")
+
+    #check user is allowed to download the file
+    if (not checkPemmission(request,indexObject,"read")):
+        return HttpResponse("denied")
+
+    #get file from mongo 
+    try:
+        returnedFile = mongoGetFile(bsonDocumentKey)
+        return HttpResponse(returnedFile.read(),content_type='application/octet-stream')  
+    except:
+        return HttpResponse("500")
 
 
 @login_required(login_url='/console/login-required')
@@ -399,3 +424,5 @@ def checkPemmission(request,IndexFile,method):
 
     #no permission at all
     return False
+
+
