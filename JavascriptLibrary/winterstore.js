@@ -5,7 +5,7 @@ let CloudWinterstoreConnection = class {
         this.authenticate()
     }
 
-    static WinterstoreURL = "http://192.168.1.6"
+    static WinterstoreURL = "http://127.0.0.1:8000"
     
     //test connection
     testConnection(){
@@ -28,19 +28,25 @@ let CloudWinterstoreConnection = class {
 
 
     //download file
-    downloadFile(key){
-        PostToCloudWinterstoreBlob("/console/get-file",{"id" : key},(response)=>{
-            
-            a = document.createElement('a');
-                a.href = window.URL.createObjectURL(response);
-                console.warn(a.href)
-                // Give filename you wish to download
-                a.download = "file";
-                a.style.display = 'none';
-                document.body.appendChild(a);
-                a.click();
+    downloadFile(filekey,filename){
+        key = filekey
+        PostToCloudWinterstoreBlob("/api/download/"+key,{"id" : key},(response)=>{
+            var blob = new Blob([response],null)
+            var downloadURL = URL.createObjectURL(blob)
+            var fileToDownload = document.createElement("a");
+            fileToDownload.href = downloadURL
+            fileToDownload.download = filename
+            document.body.appendChild(fileToDownload)
+            fileToDownload.click()
         })
     }
+
+
+    //insert file into element 
+    setMediaOfElement(element,filekey){
+        element.src = '/api/download/'+filekey
+    }
+
 }
 
 
