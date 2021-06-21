@@ -1,7 +1,7 @@
 {% for object in data %}
 <div class="folder-categorizer item" onclick="handleSingleClick(this)" ondblclick="loadIndexObject(event,'{{object.objectType}}','{{object.id}}','{{object.name}}')" oncontextmenu="handleRightClick(event,'{{object.id}}','{{object.objectType}}','{{object.name}}','{{object.size}}','{{object.created}}',this)">
     <div class=""><input type="checkbox" class="filesCheckboxBox" onclick="markFile('{{object.id}}',this)"></div>
-    <div class="categorizer-text">
+    <div class="categorizer-text" style="padding-left: 1px;">
         <!-- object type-->
         {% if object.objectType == 'FD' %}
             <i class="fas fa-folder"></i>
@@ -16,6 +16,7 @@
         {% endif %}
         {{object.name}}</div>
     <div class="categorizer-text hide-mobile ">{{object.size}}</div>
-    <div class="categorizer-text hide-mobile ">{{object.created}}</div>
+    <div class="categorizer-text hide-mobile " style="padding-left: 2px;">{{object.created}}</div>
+    <div class="categorizer-text hide-mobile "> <span onclick="fallbackCopyTextToClipboard('{{object.id}}')"><i class="far fa-copy"></i></span></div>
 </div>
 {% endfor  %}

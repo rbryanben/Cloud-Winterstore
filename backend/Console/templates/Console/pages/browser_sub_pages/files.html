@@ -48,7 +48,7 @@
         margin-top: 30px;
         display: grid;
         padding-left: 20px;
-        grid-template-columns: 10% 40% 20% 40%;
+        grid-template-columns: 10% 29.3% 20% 30% 10%;
     }
 
 
@@ -73,6 +73,7 @@
         padding-left: 20px;
         padding-top: 10px;
         padding-bottom: 10px;
+        grid-template-columns: 10% 30% 20% 30% 10%;
         border-bottom: solid 1px rgba(235, 235, 235, 0.685);
         transition: all 0.1s ease;
     }
@@ -582,8 +583,8 @@
                         <div class="folder-categorizer item">
                             <div class=""><input type="checkbox" class="accountKeyCheckBox" onclick="addSelectedAccountToCheckedList('${element['user']['email']}',this)"></div>
                             <div class="categorizer-text">${element['user']['email']}</div>
-                            <div class="categorizer-text hide-mobile "><i class="fas fa-envelope" style="color: gray;"></i></div>
-                            <div class="categorizer-text hide-mobile ">${element['dateObtained']}</div>
+                            <div class="categorizer-text hide-mobile " style="padding-left:8px;"><i class="fas fa-envelope" style="color: gray;"></i></div>
+                            <div class="categorizer-text hide-mobile " style="padding-left:11px;">${element['dateObtained']}</div>
                         </div>` 
                 bodyToPlace.innerHTML += element
             });
