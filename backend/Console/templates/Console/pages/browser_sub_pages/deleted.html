@@ -3,17 +3,25 @@
         display: none;
     }
 
+    /* page toolbar */
+    .browser-deleted-page .top-toolbar {
+        margin-top: 20px;
+        margin-left: 20px;
+    }
 
-    /* for a demo */
-    #bodyDeletedFiles {
-        padding-left: 20px;
+    .browser-deleted-page > .top-toolbar>.top-toolbar-search {
+        
     }
 
 
 </style>
 
 <div class="browser-deleted-page">
-    <div id="bodyDeletedFiles" class=""> hello there</div>
+    <div class="top-toolbar">
+        <div class="top-toolbar-search">
+            Search for deleted file
+        </div>
+    </div>
 </div>
 
 <script>
@@ -46,7 +54,7 @@
             else{
                 deletedObjectArray = JSON.parse(responce)
                 deletedObjectArray.forEach(element => {
-                    bodyToShow.innerHTML += `<div>${JSON.stringify(element)}</div>`
+                    //bodyToShow.innerHTML += `<div>${JSON.stringify(element)}</div>`
                 });
             }
         })
