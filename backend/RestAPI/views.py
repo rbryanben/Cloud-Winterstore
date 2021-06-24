@@ -379,6 +379,50 @@ def download(request,slug):
     except:
         return HttpResponse("500")
 
+
+@api_view(['POST'])
+@csrf_exempt
+@permission_classes([IsAuthenticated])
+def getFileWithName(request):
+    pathMap = None
+    try:
+        pathMap = receivedJSON = json.loads(request.body)["path"].split("/")
+    except:
+        return HttpResponse("Does'nt seem like the json we need")
+    
+    #store the current directory
+    currentDirectory = None
+
+    #iterate the path in pathMap till we get an index object that if not a folder
+    for indexItem in pathMap:
+        #the root directory is made of 2 variable the <username>.<project>
+        #here if the currentDirectory is none that mean we need to assign current derectory to the root folder of 
+        #the given project. This is because the root directory name is not the project name
+        try:
+            if (currentDirectory == None):
+                #get the root directory for supplied project
+                currentDirectory = IndexObject.objects.get(name=f"{request.user.username}.{indexItem}")
+            else:
+                currentDirectory = IndexObject.objects.get(name=indexItem)
+        except:
+            return HttpResponse("not found")  
+
+    #check pemmissions to the currentDirectory 
+    if (not checkPemmission(request,currentDirectory,"read")):
+        return HttpResponse("denied")
+
+    #if final directoryObject is a folder return msg
+    if (currentDirectory.objectType == "FD"):
+        return HttpResponse("This is a directory")  
+    
+    #get file from mongo 
+    try:
+        returnedFile = mongoGetFile(currentDirectory.fileReference)
+        return HttpResponse(returnedFile.read(),content_type='application/octet-stream')  
+    except:
+        return HttpResponse("500")
+
+
 #helpers
 
 def deleteFolder(folder,request):
