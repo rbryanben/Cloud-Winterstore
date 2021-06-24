@@ -3,6 +3,7 @@ from . import views
 
 urlpatterns = [
     path('gateway/', views.gateway), #gateway
+    path('get-token/',views.getToken), #gets token
     path('delete/', views.deleteIndexObject), #delete
     path('new-folder/', views.newFolder), #new folder
     path('rename-object/', views.renameIndexObject), #rename folder

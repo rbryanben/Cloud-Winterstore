@@ -23,11 +23,20 @@ from SharedApp import serializers
 from django.contrib.auth.models import User
 from django.core import exceptions
 from  SharedApp.mongohelper import mongoGetFile
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth import authenticate
+
+#rest framework permmisions
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authtoken.models import Token
+
 
 
 #
 # Gateway to chech if the server is online 
 #
+@csrf_exempt
 def gateway(request):
     #for system information
     import platform 
@@ -41,6 +50,7 @@ def gateway(request):
 
     #return
     return JsonResponse(response)
+
 
 @login_required(login_url='/console/login-required')
 def getPeopleWithKey(request):
@@ -88,28 +98,6 @@ def getDeletedObjectsForProject(request):
     
     return JsonResponse(serializerObject.data,safe=False)
 
-@login_required(login_url='/console/login-required')
-def download(request,slug):
-    #get file SQL object
-    indexObject = None
-    try: 
-        indexObject = IndexObject.objects.get(id=slug)
-        bsonDocumentKey  = indexObject.fileReference
-    except exceptions.ObjectDoesNotExist:
-        return HttpResponse("not found")
-    except:
-        return HttpResponse("500")
-
-    #check user is allowed to download the file
-    if (not checkPemmission(request,indexObject,"read")):
-        return HttpResponse("denied")
-
-    #get file from mongo 
-    try:
-        returnedFile = mongoGetFile(bsonDocumentKey)
-        return HttpResponse(returnedFile.read(),content_type='application/octet-stream')  
-    except:
-        return HttpResponse("500")
 
 
 @login_required(login_url='/console/login-required')
@@ -342,6 +330,56 @@ def deleteIndexObject(request):
         deleteFolder(objectToDelete,request)
 
     return HttpResponse("200")
+
+
+####################################################################################
+##### Used by 3rd party software 
+@api_view(['POST'])
+@csrf_exempt
+def getToken(request):
+    try:
+        receivedJSON = json.loads(request.body)
+    except:
+        return HttpResponse("Does'nt seem like JSON")
+    
+    #attempt login
+    #try:
+    user = authenticate(username=receivedJSON["username"], password=receivedJSON["password"])
+    if (user is not None):
+        return HttpResponse(Token.objects.get(user=user).key)
+    else:
+        return HttpResponse("500")
+    #except:
+        # HttpResponse("500")
+
+
+
+@api_view(['POST'])
+@csrf_exempt
+@permission_classes([IsAuthenticated])
+def download(request,slug):
+    #get file SQL object
+    indexObject = None
+    try: 
+        indexObject = IndexObject.objects.get(id=slug)
+        bsonDocumentKey  = indexObject.fileReference
+    except exceptions.ObjectDoesNotExist:
+        return HttpResponse("not found")
+    except:
+        return HttpResponse("500")
+
+    #check user is allowed to download the file
+    if (not checkPemmission(request,indexObject,"read")):
+        return HttpResponse("denied")
+
+    #get file from mongo 
+    try:
+        returnedFile = mongoGetFile(bsonDocumentKey)
+        return HttpResponse(returnedFile.read(),content_type='application/octet-stream')  
+    except:
+        return HttpResponse("500")
+
+#helpers
 
 def deleteFolder(folder,request):
     childObject = IndexObject.objects.filter(parent=folder)

@@ -13,6 +13,10 @@ from django.contrib.auth.models import User
 from django.db.models.query import FlatValuesListIterable
 import random
 import string
+from django.conf import settings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from rest_framework.authtoken.models import Token
 
 from datetime import datetime
 
@@ -251,3 +255,12 @@ class FileKey(models.Model):
         self.file = file 
         self.user = user
         self.save()
+
+
+#Tokens 
+@receiver(post_save, sender=User, dispatch_uid="create_user_token")
+def update_stock(sender, instance, **kwargs):
+    try:
+        Token.objects.create(user=instance)
+    except:    
+        pass
