@@ -8,7 +8,7 @@ from Console.views import console
 import json
 from django import http
 from django.http import response
-from django.http.response import HttpResponse, JsonResponse
+from django.http.response import HttpResponse, JsonResponse, StreamingHttpResponse
 from django.shortcuts import render
 from datetime import datetime
 from SharedApp.models import Developer, IndexObject, Project, TeamCollaboration ,FileKey , deletedFile
@@ -30,6 +30,9 @@ from django.contrib.auth import authenticate
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
+
+#storage 
+from django.core.files.storage import FileSystemStorage
 
 
 
@@ -354,7 +357,35 @@ def getToken(request):
 
 
 
-@api_view(['POST'])
+@api_view(['POST','GET'])
+@csrf_exempt
+@permission_classes([IsAuthenticated])
+def stream(request,slug):
+    #get file SQL object
+    indexObject = None
+    try: 
+        indexObject = IndexObject.objects.get(id=slug)
+        bsonDocumentKey  = indexObject.fileReference
+    except exceptions.ObjectDoesNotExist:
+        return HttpResponse("not found")
+    except:
+        return HttpResponse("500")
+
+    #check user is allowed to download the file
+    if (not checkPemmission(request,indexObject,"read")):
+        return HttpResponse("denied")
+
+    #get file from mongo 
+    try:
+        returnedFile = mongoGetFile(bsonDocumentKey)
+        #create streamable object
+        fs = FileSystemStorage()
+        fs.save("test.mp4",returnedFile)
+        return HttpResponse("200")
+    except:
+        return HttpResponse("500")
+
+@api_view(['POST','GET'])
 @csrf_exempt
 @permission_classes([IsAuthenticated])
 def download(request,slug):
@@ -375,7 +406,7 @@ def download(request,slug):
     #get file from mongo 
     try:
         returnedFile = mongoGetFile(bsonDocumentKey)
-        return HttpResponse(returnedFile.read(),content_type='application/octet-stream')  
+        return StreamingHttpResponse(returnedFile.read(),content_type='application/octet-stream')  
     except:
         return HttpResponse("500")
 

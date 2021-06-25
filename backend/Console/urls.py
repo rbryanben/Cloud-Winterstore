@@ -19,4 +19,5 @@ urlpatterns = [
     ###############
     ############### Fallback 
     path("login-required",views.loginRequired), #login required
+    path("ds",views.login_required), #test reload
 ]
