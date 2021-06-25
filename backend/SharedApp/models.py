@@ -177,7 +177,6 @@ class StorageSettings(models.Model):
         self.allowAccessControl = allowAccessControl
 
 
-
 #storage classes
 
 class IndexObject(models.Model):

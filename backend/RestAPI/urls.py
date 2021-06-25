@@ -14,6 +14,5 @@ urlpatterns = [
     path('get-deleted-files/',views.getDeletedObjectsForProject), #get deleted files
     path('download/<str:slug>',views.download), #to download a file
     path('get-file/',views.getFileWithName), #gets the file using a path
-    path('stream/<str:slug>',views.stream), #stream files
 ]
 
