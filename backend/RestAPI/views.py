@@ -25,6 +25,7 @@ from django.core import exceptions
 from  SharedApp.mongohelper import mongoGetFile
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate
+from django.db.models import Q
 
 #rest framework permmisions
 from rest_framework.decorators import api_view, permission_classes
@@ -99,6 +100,33 @@ def getDeletedObjectsForProject(request):
 
     #get 1000 deleted projects 
     deletedFiles = deletedFile.objects.filter(project=project)[:1000]
+    serializerObject = serializers.DeletedFileSerializer(deletedFiles,many=True)
+
+    return JsonResponse(serializerObject.data,safe=False)
+
+
+@login_required(login_url='/console/login-required')
+def getDeletedObjectsForProjectWithCriteria(request):
+    project = None
+    criteria = None
+
+    try:
+        receivedJSON = json.loads(request.body)
+        project = Project.objects.get(owner=request.user,name=receivedJSON['project'])
+        criteria = receivedJSON['criteria']
+    except exceptions.ObjectDoesNotExist:
+        return HttpResponse("not found")
+    except:
+        return HttpResponse("500")
+
+
+    #check permmissions
+    if (not isAdministrator(request,project)):
+        return HttpResponse("denied")
+
+    #get 1000 deleted projects 
+    deletedFiles = deletedFile.objects.filter(project=project,fileID=criteria)
+
     serializerObject = serializers.DeletedFileSerializer(deletedFiles,many=True)
 
     return JsonResponse(serializerObject.data,safe=False)
