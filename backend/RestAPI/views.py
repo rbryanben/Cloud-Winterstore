@@ -93,12 +93,14 @@ def getDeletedObjectsForProject(request):
     except:
         return HttpResponse("500")
 
-    #get 200 deleted projects 
-    deletedFiles = deletedFile.objects.filter(project=project)
-    print(deletedFiles)
+    #check permmissions
+    if (not isAdministrator(request,project)):
+        return HttpResponse("denied")
+
+    #get 1000 deleted projects 
+    deletedFiles = deletedFile.objects.filter(project=project)[:1000]
     serializerObject = serializers.DeletedFileSerializer(deletedFiles,many=True)
-    print(serializerObject.data)
-    
+
     return JsonResponse(serializerObject.data,safe=False)
 
 
@@ -461,6 +463,22 @@ def destroyIndexObject(object,request):
     newDeletedFile.create(objectToDelete.name,request.user.username,objectToDelete.owner.username,objectToDelete.id,objectToDelete.project)
     object.delete()
 
+
+def isAdministrator(request,project):
+    #check if owner
+    if (project.owner == request.user):
+        return True
+    
+    #if not the owner check if the user is collborating in the project
+    try:
+        TeamCollaboration.objects.get(developer=Developer.objects.get(user=request.user),project=project)
+        return True
+    except:
+        pass
+    
+    return False
+
+
 def checkPemmission(request,IndexFile,method):
     #check if owner of project 
     projectFileObjectBelong =  IndexFile.project
@@ -474,6 +492,12 @@ def checkPemmission(request,IndexFile,method):
         return True
     except:
         pass
+
+    #check if permmision is admin
+    #the above checks, check if a user is an administrator
+    if (method == "admin"):
+        return False
+    
 
     #from here person is a normal user
     userHasKey = False
