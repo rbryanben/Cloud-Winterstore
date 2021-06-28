@@ -356,8 +356,6 @@ def getToken(request):
         # HttpResponse("500")
 
 
-
-
 @api_view(['POST','GET'])
 @csrf_exempt
 @permission_classes([IsAuthenticated])
@@ -382,7 +380,6 @@ def download(request,slug):
         return StreamingHttpResponse(returnedFile.read(),content_type='application/octet-stream')  
     except:
         return HttpResponse("500")
-
 
 @api_view(['POST'])
 @csrf_exempt
@@ -426,9 +423,7 @@ def getFileWithName(request):
     except:
         return HttpResponse("500")
 
-
 #helpers
-
 def deleteFolder(folder,request):
     childObject = IndexObject.objects.filter(parent=folder)
     for object in childObject:
@@ -510,5 +505,3 @@ def checkPemmission(request,IndexFile,method):
 
     #no permission at all
     return False
-
-

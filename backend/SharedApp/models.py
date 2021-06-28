@@ -132,9 +132,6 @@ class DeletedIntegration(models.Model):
         self.save()
 
 
-
-
-
 class DownloadStat(models.Model):
     file = models.TextField(null=False)
     accessed = models.DateTimeField(auto_now=True,null=False)
