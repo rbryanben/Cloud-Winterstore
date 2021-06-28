@@ -88,7 +88,11 @@ def getDeletedObjectsForProject(request):
 
     try:
         receivedJSON = json.loads(request.body)
-        project = Project.objects.get(owner=request.user,name=receivedJSON['project'])
+        #trim the project to get the project name itself
+        projectName = receivedJSON['project'].split(".")[1]
+        #get the project owner
+        owner = User.objects.get(username=receivedJSON['project'].split(".")[0])
+        project = Project.objects.get(owner=owner,name=projectName)
     except exceptions.ObjectDoesNotExist:
         return HttpResponse("not found")
     except:
@@ -112,7 +116,12 @@ def getDeletedObjectsForProjectWithCriteria(request):
 
     try:
         receivedJSON = json.loads(request.body)
-        project = Project.objects.get(owner=request.user,name=receivedJSON['project'])
+        #trim the project to get the project name itself
+        projectName = receivedJSON['project'].split(".")[1]
+        #get the project owner
+        owner = User.objects.get(username=receivedJSON['project'].split(".")[0])
+        project = Project.objects.get(owner=owner,name=projectName)
+        #get criteria
         criteria = receivedJSON['criteria']
     except exceptions.ObjectDoesNotExist:
         return HttpResponse("not found")
@@ -130,7 +139,6 @@ def getDeletedObjectsForProjectWithCriteria(request):
     serializerObject = serializers.DeletedFileSerializer(deletedFiles,many=True)
 
     return JsonResponse(serializerObject.data,safe=False)
-
 
 
 @login_required(login_url='/console/login-required')
@@ -309,7 +317,7 @@ def newFolder(request):
     
     #if parent object is root
     if (parentID == "root"):
-        parentObject = IndexObject.objects.get(name=f"{request.user.username}.{projectName}")
+        parentObject = IndexObject.objects.get(name=projectName)
 
     #check if similar name exists in parent
     try:
@@ -411,6 +419,8 @@ def download(request,slug):
     except:
         return HttpResponse("500")
 
+
+#this method is invalid
 @api_view(['POST'])
 @csrf_exempt
 @permission_classes([IsAuthenticated])

@@ -102,13 +102,11 @@
     var downloadStatsButton;
     var deletedHistoryButton;
 
-    //hide all options modal
-    function hideOptionsModals(){
-        hideOptionsModal()
-        hideBrowserOptionsPage()
-    }
+    
     //entry
     function showBrowser(){
+
+        //function to post to server
         function postToServer(url, data, callback) {
             var xmlhttp = new XMLHttpRequest();
             xmlhttp.onreadystatechange = function() {
@@ -117,11 +115,14 @@
                 }
             }
 
+
             xmlhttp.open("POST", serverURL + url)
             xmlhttp.setRequestHeader('Content-Type', 'application/json');
             xmlhttp.send(JSON.stringify(data));
 
         }
+
+        
 
         //browserPageLoading()
         allFilesButton = document.getElementById("allFilesButton ")
@@ -157,6 +158,13 @@
         hideBrowserDownloadPage()
         hideBrowserFilePage()
         hideBrowserDeletedPage()
+    }
+
+
+    //hide all options modal
+    function hideOptionsModals(){
+        hideOptionsModal()
+        hideBrowserOptionsPage()
     }
 
     //functions

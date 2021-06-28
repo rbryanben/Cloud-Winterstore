@@ -69,6 +69,7 @@ def uploadFile(request):
     except:
         return HttpResponse("woahh - does'nt seem like the data we need")
     
+
     #check if folder contains unwanted charectors
     special_characters = "'""!@#$%^&*+?=,<>/""'"
     if any(c in special_characters for c in name):
@@ -78,7 +79,7 @@ def uploadFile(request):
     parentIndexObject = None
     try:
         if (parent == "root"):
-            parentIndexObject = IndexObject.objects.get(name=f"{request.user.username}.{project}")
+            parentIndexObject = IndexObject.objects.get(name=project)
         else:
             parentIndexObject = IndexObject.objects.get(id=parent)
     except:
@@ -166,7 +167,7 @@ def getFolder(request):
         folder = None
         try:
             if (folderID == "root"):
-                folder = IndexObject.objects.get(name=f"{request.user.username}.{projectName}")
+                folder = IndexObject.objects.get(name=projectName)
             else:
                 folder = IndexObject.objects.get(id=folderID)
 

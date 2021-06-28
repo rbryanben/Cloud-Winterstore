@@ -142,29 +142,29 @@
         <div class="" style="margin-bottom: 20px; margin-top: 10px; font-size: xx-small; padding-right: 40px;">Excluding Collaorating Projects, you can only create a maximum of 5 Projects.</div>
         
         {% for project in projects %}
-        <!--projects-->
-        <div class="projects-modal-body-item" onclick="loadProject('{{project.name}}')">
-                <div class="projects-modal-body-item-left div-flex center">
-                    <i class="fas fa-cloud"></i>
-                </div>
-                <div class="projects-modal-body-item-right div-flex start">
-                    {{project.name}}
-                </div>
-                <!-- user is the owner of the project -->
-                <div class="div-flex center">
-                    <i class="fas fa-key" style="color: rgb(153, 153, 153);"></i>
-                </div>
-        </div>
+            <!--projects-->
+            <div class="projects-modal-body-item" onclick="loadProject('{{project.owner.username}}.{{project.name}}')">
+                    <div class="projects-modal-body-item-left div-flex center">
+                        <i class="fas fa-cloud"></i>
+                    </div>
+                    <div class="projects-modal-body-item-right div-flex start">
+                        {{project.name}} 
+                    </div>
+                    <!-- user is the owner of the project -->
+                    <div class="div-flex center">
+                        <i class="fas fa-key" style="color: rgb(153, 153, 153);"></i>
+                    </div>
+            </div>
         {% endfor %}
 
         {% for project in collaboratingProjects %}
             <!--projects-->
-            <div class="projects-modal-body-item">
+            <div class="projects-modal-body-item" onclick="loadProject('{{project.owner.username}}.{{project.name}}')">
                 <div class="projects-modal-body-item-left div-flex center">
                     <i class="fas fa-cloud"></i>
                 </div>
                 <div class="projects-modal-body-item-right div-flex start">
-                    {{project.name}}
+                    {{project.name}} 
                 </div>
             </div>
         {% endfor %}
@@ -210,6 +210,8 @@
     let createProjectModalProjectName;
     let inputPasses = false
 
+
+    //entry point
     window.addEventListener("DOMContentLoaded",()=>{
         //local variables
         projectsModal = document.getElementById("projectsModal")
@@ -242,6 +244,7 @@
 
     })
 
+    //create modal
     function showCreateProjectModal(){
         if (!projectsModal.classList.contains("hide")){
             projectsModal.classList.add("hide")
@@ -257,15 +260,25 @@
     }
 
 
+    //load project
     function loadProject(name){
         var thisModal = document.querySelector(".projects-modal")
+
+        //set the selected porject
         localStorage.setItem("working-project",name)
+
+        //show browser
         showBrowser()
+
+        //hide self
         thisModal.classList.add("hide")
+
+        //release lock on upload and download modal
         lockUploadAndDownloadModal = false
     }
 
 
+    //method create a project
     function createProject(){
         if (inputPasses){
             text = document.getElementById("createProjectModalProjectName").value
@@ -301,9 +314,6 @@
         element.getElementsByClassName("pass")[0].style.visibility = "visible"
         element.getElementsByClassName("error")[0].style.visibility = "hidden"
     }
-
-
-
 
     //document 
 
