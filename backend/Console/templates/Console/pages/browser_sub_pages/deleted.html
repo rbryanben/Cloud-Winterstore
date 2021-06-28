@@ -62,7 +62,7 @@
     </div>
 
     <!-- deleted items -->
-    <div class="deleted-files-list">
+    <div id="bodyDeletedFiles" class="deleted-files-list">
 
         <!-- deleted file item-->
         <div class="deleted-file-item">
@@ -80,6 +80,33 @@
 <script>
     var deletedPageBrowser 
     let deletedObjectArray 
+
+    //classes 
+    let deletedFile = class {
+        constructor(jsonObject){
+            this.id = jsonObject["fileID"]
+            this.name = jsonObject["name"]
+            this.deleted_by = jsonObject["deletedBy"]
+            this.deleted = jsonObject["deleted"]
+
+            //trim name 
+            this.trimName()
+        }
+
+        trimName(){
+            if (this.name.length > 25){
+                this.name =  this.name.substring(0, 25) + "..."
+            }
+        }
+
+        trimID(){
+            var frontPart = this.id.substring(0, 15) + "..."
+            var backPart =  this.id.substring(0, 15)
+            alert(backPart)
+        }
+
+        
+    }
 
 
     window.addEventListener("DOMContentLoaded",()=>{
@@ -106,8 +133,25 @@
             if (responce == "500" || responce == "not found"){}
             else{
                 deletedObjectArray = JSON.parse(responce)
+
+                //iterate objects
                 deletedObjectArray.forEach(element => {
-                    //bodyToShow.innerHTML += `<div>${JSON.stringify(element)}</div>`
+                    //new deleted file object
+                    var newDeletedFile = new deletedFile(element)
+
+                    //frame to add to UI
+                    var frame = `
+                    <div class="deleted-file-item">
+                        <div class=""><input  type="checkbox"></div>
+                        <div class="categorizer-text">OA4S39AO6RZGH3...89MNPBV9ZW6</div>
+                        <div class="categorizer-text">${newDeletedFile.name}</div>
+                        <div class="categorizer-text hide-mobile ">${newDeletedFile.deleted_by}</div>
+                        <div class="categorizer-text hide-mobile ">${newDeletedFile.deleted}</div>
+                    </div>
+                    `
+
+                    //add to UI
+                    bodyToShow.innerHTML += frame ;
                 });
             }
         })
