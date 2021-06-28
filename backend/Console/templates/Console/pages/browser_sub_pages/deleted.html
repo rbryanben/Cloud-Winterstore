@@ -64,15 +64,6 @@
     <!-- deleted items -->
     <div id="bodyDeletedFiles" class="deleted-files-list">
 
-        <!-- deleted file item-->
-        <div class="deleted-file-item">
-            <div class=""><input  type="checkbox"></div>
-            <div class="categorizer-text">OA4S39AO6RZGH3...89MNPBV9ZW6</div>
-            <div class="categorizer-text">Name</div>
-            <div class="categorizer-text hide-mobile ">Deleted-by</div>
-            <div class="categorizer-text hide-mobile ">Deleted</div>
-        </div>
-
     </div>
 
 </div>
@@ -88,9 +79,11 @@
             this.name = jsonObject["name"]
             this.deleted_by = jsonObject["deletedBy"]
             this.deleted = jsonObject["deleted"]
+            this.trimedID = jsonObject["fileID"]
 
             //trim name 
             this.trimName()
+            this.trimID()
         }
 
         trimName(){
@@ -100,9 +93,7 @@
         }
 
         trimID(){
-            var frontPart = this.id.substring(0, 15) + "..."
-            var backPart =  this.id.substring(0, 15)
-            alert(backPart)
+           this.trimedID = this.id.substring(0, 8) + "..." + this.id.substring(49, 64)
         }
 
         
@@ -143,7 +134,7 @@
                     var frame = `
                     <div class="deleted-file-item">
                         <div class=""><input  type="checkbox"></div>
-                        <div class="categorizer-text">OA4S39AO6RZGH3...89MNPBV9ZW6</div>
+                        <div class="categorizer-text">${newDeletedFile.trimedID}</div>
                         <div class="categorizer-text">${newDeletedFile.name}</div>
                         <div class="categorizer-text hide-mobile ">${newDeletedFile.deleted_by}</div>
                         <div class="categorizer-text hide-mobile ">${newDeletedFile.deleted}</div>
