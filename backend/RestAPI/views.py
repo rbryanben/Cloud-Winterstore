@@ -26,6 +26,7 @@ from  SharedApp.mongohelper import mongoGetFile
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate
 from django.db.models import Q
+from Console.models import FileDownloadInstance
 
 #rest framework permmisions
 from rest_framework.decorators import api_view, permission_classes
@@ -416,7 +417,11 @@ def download(request,slug):
     #get file from mongo 
     try:
         returnedFile = mongoGetFile(bsonDocumentKey)
-        print("returned file")
+        
+        #create a new downloadInstance
+        newDownloadInstance = FileDownloadInstance()
+        newDownloadInstance.create(indexObject,request.user,indexObject.project)
+
         return StreamingHttpResponse(returnedFile.read(),content_type='application/octet-stream')  
     except:
         return HttpResponse("500")

@@ -1,3 +1,7 @@
+from SharedApp import serializers
+from django.contrib.auth.models import User
+from django.core import exceptions
+from Console.models import FileDownloadInstance
 from hashlib import new
 import json
 from math import trunc
@@ -12,6 +16,7 @@ from django.views.decorators.http import require_http_methods
 from pymongo.mongo_client import MongoClient
 from distutils.util import strtobool
 from SharedApp.models import Developer, Project , TeamCollaboration, IndexObject
+from .serializers import FileDownloadInstanceSerializer
 
 
 @login_required(login_url='/')
@@ -125,6 +130,39 @@ def uploadFile(request):
     except:
         return HttpResponse("Boss man! something is seriously wrong")
 
+
+
+@login_required(login_url='/console/login-required')
+@require_http_methods(["POST",])
+def getDownloadStats(request):
+    #get project name
+    project = None
+    try:
+        receivedJSON = json.loads(request.body)
+        #get the user
+        projectData = receivedJSON["project"].split(".")
+        #user 
+        user = User.objects.get(username=projectData[0])
+        projectName = projectData[1]
+        #assign the project
+        project = Project.objects.get(owner=user,name=projectName)
+    except exceptions.ObjectDoesNotExist:
+        return HttpResponse("not found")
+    except:
+        return HttpResponse("500")
+
+    #check pemmisions
+    if (not isAdministrator(request,project)):
+        return HttpResponse("denied")
+
+    #get objects
+    downloadObjects = FileDownloadInstance.objects.filter(project=project)
+    
+    #serialize the data
+    serializer = FileDownloadInstanceSerializer(downloadObjects,many=True)
+    return JsonResponse(serializer.data,safe=False)
+    
+
 # Create Project API
 @require_http_methods(["POST",])
 @csrf_exempt
@@ -205,6 +243,11 @@ def getFile(request):
 
         #get file from mongo 
         returnedFile = mongoGetFile(bsonDocumentKey)
+
+        #create a new downloadInstance
+        newDownloadInstance = FileDownloadInstance()
+        newDownloadInstance.create(indexObject,request.user,indexObject.project)
+
         return HttpResponse(returnedFile,content_type='application/octet-stream')  
     except:
         return HttpResponse("500") 
@@ -262,6 +305,21 @@ def routineNewProject(request,newProject):
     newDemoDocument = IndexObject()
     gettingStartedKey = "HYU789IUJ87YHUYT67YGVCFDSER456YTGVBNMKJIKJJ8UUY76TTTFDSER543EFRT"
     newDemoDocument.create(request.user,"FL","getting-started.pdf",newProject,newDemoFolder,size=34231,fileType="pdf",fileReference="HYU789IUJ87YHUYT67YGVCFDSER456YTGVBNMKJIKJJ8UUY76TTTFDSER543EFRT")
+
+def isAdministrator(request,project):
+    #check if owner
+    if (project.owner == request.user):
+        return True
+    
+    #if not the owner check if the user is collborating in the project
+    try:
+        TeamCollaboration.objects.get(developer=Developer.objects.get(user=request.user),project=project)
+        return True
+    except:
+        pass
+    
+    return False
+
 
 def checkProjectName(request,name):
     if (len(name) < 6):

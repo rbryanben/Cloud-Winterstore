@@ -38,7 +38,7 @@
         padding-top: 10px;
         padding-bottom: 10px;
         display: grid;
-        grid-template-columns: 40% 20% 15% 15% 15%;
+        grid-template-columns: 40% 20% 12% 12% 12%;
         border-bottom: solid 1px rgba(235, 235, 235, 0.685);
         transition: all 0.1s ease;
     }
@@ -67,7 +67,15 @@
 
     <!-- download items -->
     <div id="bodydownloadFiles" class="download-files-list">
-
+        <!-- download file-->
+        <div class="download-file-item">
+            <div class="categorizer-text">VJGPVZSINZBPRCYYDZNHCVCN8...UWSKTXTEGHSSS6VR2X</div>
+            <div class="categorizer-text">demo.webm</div>
+            <div class="categorizer-text hide-mobile ">rbryanben</div>
+            <div class="categorizer-text hide-mobile ">23-06-21 13:23</div>
+            <div class="categorizer-text hide-mobile ">6754</div>
+        </div>
+    
     </div>
 </div>
 <script>
@@ -79,10 +87,42 @@
 
     function showBrowserDownloadPage(){
         downloadsPageBrowser.style.display = "block"
+        getDownloadStats()
     }
 
     function hideBrowserDownloadPage(){
         downloadsPageBrowser.style.display = "none"
+    }
+
+    let downloadStat = class {
+        constructor(jsonObject){
+             /// id name username data and downloads
+        }
+    }
+
+    //objects 
+    function getDownloadStats(){
+        //data to post
+        data = {
+            "project" : localStorage.getItem("working-project")
+        }
+        postToServer("/console/get-download-stats", data, function(responce) {
+            if (responce == "500" || responce == "not found" || responce == "denied") {
+                ShowWarning("Fetch Objects Failed")
+            } else {
+                //make json objects
+                downloadedFilesArray = JSON.parse(responce)
+
+                //for objects
+                downloadedFilesArray.forEach(object => {
+                    console.log(object['user']['username']);
+                    console.log(object['file']['id']);
+                    console.log(object['file']['name']);
+                    console.log(object['downloaded']);
+                });
+            }
+        })
+
     }
 
 </script>
