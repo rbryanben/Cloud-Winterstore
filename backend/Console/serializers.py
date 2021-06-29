@@ -22,5 +22,5 @@ class FileDownloadInstanceSerializer(serializers.ModelSerializer):
     file = IndexObjectSerializer()
     class Meta:
         model = FileDownloadInstance
-        fields = ['id','user','downloaded','file']
+        fields = ['id','user','downloaded','file','totalDownloads']
     

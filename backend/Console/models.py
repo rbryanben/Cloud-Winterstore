@@ -1,6 +1,7 @@
 from hashlib import new
 from os import stat
 from django.db import models
+from django.db.models.fields import AutoField
 from SharedApp.models import IndexObject, Project
 from django.contrib.auth.models import User
 
@@ -23,7 +24,6 @@ class FileDownloadInstance(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
     downloaded = models.DateTimeField(auto_now=True)
     project = models.ForeignKey(Project,on_delete=models.CASCADE,default=None)
-    #stat = models.ForeignKey(FileDownloadObjectStat,on_delete=models.CASCADE,bla)
     
     def create(self,file,user,project):
         self.file = file
@@ -38,8 +38,11 @@ class FileDownloadInstance(models.Model):
             newStatsObject = FileDownloadObjectStat()
             newStatsObject.create(self.file)
     
-    def getStat(self):
-        return FileDownloadObjectStat.objects.get(IndexObject=self.file)
-           
-
-
+    @property
+    def totalDownloads(self):
+        try:
+            return FileDownloadObjectStat.objects.get(indexObject=self.file).download
+        except:
+            return "Error"
+    
+    
