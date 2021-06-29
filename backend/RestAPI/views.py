@@ -411,7 +411,7 @@ def download(request,slug):
         return HttpResponse("500")
 
     #check user is allowed to download the file
-    #if (not checkPemmission(request,indexObject,"read")):
+    if (not checkPemmission(request,indexObject,"read")):
         return HttpResponse("denied")
 
     #get file from mongo 
