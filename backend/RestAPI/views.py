@@ -394,6 +394,7 @@ def getToken(request):
         # HttpResponse("500")
 
 
+#this method is invalid
 @api_view(['POST','GET'])
 @csrf_exempt
 @permission_classes([IsAuthenticated])
@@ -409,12 +410,13 @@ def download(request,slug):
         return HttpResponse("500")
 
     #check user is allowed to download the file
-    if (not checkPemmission(request,indexObject,"read")):
+    #if (not checkPemmission(request,indexObject,"read")):
         return HttpResponse("denied")
 
     #get file from mongo 
     try:
         returnedFile = mongoGetFile(bsonDocumentKey)
+        print("returned file")
         return StreamingHttpResponse(returnedFile.read(),content_type='application/octet-stream')  
     except:
         return HttpResponse("500")

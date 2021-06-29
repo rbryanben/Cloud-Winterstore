@@ -146,6 +146,10 @@
 
 
     function searchDeletedFile(event){
+        if (document.getElementById("deletedFileSearchInput").value == ""){
+            getDeletedFiles()
+            return
+        }
         if (event.keyCode === 13) {
             var bodyToShow = document.getElementById("bodyDeletedFiles")
         
