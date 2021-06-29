@@ -12,7 +12,7 @@
 
     .top-toolbar-search {
         background-color: rgba(223, 223, 223, 0.555);
-        width: 580px;
+        width: 600px;
         padding: 13px;
         font-size: small;
         border: none;
@@ -47,7 +47,9 @@
 
 <div class="browser-downloads-page">
     <div class="top-toolbar" style="margin-left: 20px;">
-        <input id="downloadFileSearchInput" class="top-toolbar-search" placeholder="Search file by id" type="search">
+        <form autocomplete="off" method="dialog">
+            <input id="downloadFileSearchInput"  autocomplete="off" onkeyup="searchDownloadStats(event)"  class="top-toolbar-search" placeholder="Search file by id" type="search">
+        </form>
     </div>
 
     <!-- categorizer -->
@@ -157,6 +159,91 @@
             }
         })
 
+    }
+
+
+    //objects 
+    function getDownloadStats(){
+
+        //body to add 
+        var bodyToAdd = document.getElementById("bodydownloadFiles")
+        bodyToAdd.innerHTML = ""
+        //data to post
+        data = {
+            "project" : localStorage.getItem("working-project")
+        }
+        postToServer("/console/get-download-stats", data, function(responce) {
+            if (responce == "500" || responce == "not found" || responce == "denied") {
+                ShowWarning("Fetch Objects Failed")
+            } else {
+                //make json objects
+                downloadedFilesArray = JSON.parse(responce)
+
+                //for objects
+                downloadedFilesArray.forEach(object => {
+                    //frame
+                    var downloadItem = new downloadStat(object)
+                    //frame
+                    var frame = 
+                    `
+                    <!-- download file-->
+                    <div class="download-file-item">
+                        <div class="categorizer-text">${downloadItem.id}</div>
+                        <div class="categorizer-text">${downloadItem.name}</div>
+                        <div class="categorizer-text hide-mobile ">${downloadItem.username}</div>
+                        <div class="categorizer-text hide-mobile ">${downloadItem.date}</div>
+                        <div class="categorizer-text hide-mobile ">${downloadItem.total}</div>
+                    </div>
+                    `
+                    bodyToAdd.innerHTML += frame
+                });
+            }
+        })
+
+    }
+
+    function searchDownloadStats(event){
+        if (document.getElementById("downloadFileSearchInput").value == ""){
+            getDownloadStats()
+        }
+        if (event.keyCode != 13){
+            return
+        }
+        //body to add 
+        var bodyToAdd = document.getElementById("bodydownloadFiles")
+        bodyToAdd.innerHTML = ""
+        //data to post
+        data = {
+            "project" : localStorage.getItem("working-project"),
+            "criteria" : document.getElementById("downloadFileSearchInput").value
+        }
+        postToServer("/console/search-download-stats", data, function(responce) {
+            if (responce == "500" || responce == "not found" || responce == "denied") {
+                //Do nothing
+            } else {
+                //make json objects
+                downloadedFilesArray = JSON.parse(responce)
+
+                //for objects
+                downloadedFilesArray.forEach(object => {
+                    //frame
+                    var downloadItem = new downloadStat(object)
+                    //frame
+                    var frame = 
+                    `
+                    <!-- download file-->
+                    <div class="download-file-item">
+                        <div class="categorizer-text">${downloadItem.id}</div>
+                        <div class="categorizer-text">${downloadItem.name}</div>
+                        <div class="categorizer-text hide-mobile ">${downloadItem.username}</div>
+                        <div class="categorizer-text hide-mobile ">${downloadItem.date}</div>
+                        <div class="categorizer-text hide-mobile ">${downloadItem.total}</div>
+                    </div>
+                    `
+                    bodyToAdd.innerHTML += frame
+                });
+            }
+        })
     }
 
 </script>

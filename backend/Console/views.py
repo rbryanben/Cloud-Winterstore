@@ -161,6 +161,45 @@ def getDownloadStats(request):
     #serialize the data
     serializer = FileDownloadInstanceSerializer(downloadObjects,many=True)
     return JsonResponse(serializer.data,safe=False)
+
+
+@login_required(login_url='/console/login-required')
+@require_http_methods(["POST",])
+def searchDownloadStats(request):
+    #get project name
+    project = None
+    criteria = None
+    try:
+        receivedJSON = json.loads(request.body)
+        #criteria
+        criteria = receivedJSON["criteria"]
+        #get the user
+        projectData = receivedJSON["project"].split(".")
+        #user 
+        user = User.objects.get(username=projectData[0])
+        projectName = projectData[1]
+        #assign the project
+        project = Project.objects.get(owner=user,name=projectName)
+    except exceptions.ObjectDoesNotExist:
+        return HttpResponse("not found")
+    except:
+        return HttpResponse("500")
+
+    #check pemmisions
+    if (not isAdministrator(request,project)):
+        return HttpResponse("denied")
+
+    downloadObjects = []
+    #get objects
+    try:
+        downloadObjects = FileDownloadInstance.objects.filter(project=project,file=IndexObject.objects.get(id=criteria))
+    except:
+        return HttpResponse("not found")
+    
+    
+    #serialize the data
+    serializer = FileDownloadInstanceSerializer(downloadObjects,many=True)
+    return JsonResponse(serializer.data,safe=False)
     
 
 # Create Project API

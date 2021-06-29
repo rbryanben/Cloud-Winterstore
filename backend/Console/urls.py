@@ -15,9 +15,10 @@ urlpatterns = [
     path("get-file",views.getFile), #gets a file
     path("upload-file",views.uploadFile), #uploads file
     path("get-download-stats",views.getDownloadStats), #to get download stats
+    path("search-download-stats",views.searchDownloadStats), #to get download stats
 
     ###############
     ############### Fallback 
     path("login-required",views.loginRequired), #login required
-    path("ds",views.login_required), #test reload
+    
 ]

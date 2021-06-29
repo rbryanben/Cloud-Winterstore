@@ -12,7 +12,7 @@
 
     .top-toolbar-search {
         background-color: rgba(223, 223, 223, 0.555);
-        width: 580px;
+        width: 600px;
         padding: 13px;
         font-size: small;
         border: none;
@@ -48,7 +48,9 @@
 
 <div class="browser-deleted-page">
     <div class="top-toolbar">
-        <input id="deletedFileSearchInput" onkeyup="searchDeletedFile(event)" class="top-toolbar-search" placeholder="Search for deleted file" type="search">
+        <form autocomplete="off" method="dialog">
+            <input id="deletedFileSearchInput" onkeyup="searchDeletedFile(event)" class="top-toolbar-search" placeholder="Search for deleted file" type="search">
+        </form>
     </div>
 
     <!-- categorizer -->
@@ -143,10 +145,8 @@
         deletedPageBrowser .style.display = "none"
     }
 
-
-
     function searchDeletedFile(event){
-        if (document.getElementById("deletedFileSearchInput").value = ""){
+        if (document.getElementById("deletedFileSearchInput").value == ""){
             getDeletedFiles()
             return
         }
