@@ -66,16 +66,8 @@
    </div>
 
     <!-- download items -->
-    <div id="bodydownloadFiles" class="download-files-list">
-        <!-- download file-->
-        <div class="download-file-item">
-            <div class="categorizer-text">VJGPVZSINZBPRCYYDZNHCVCN8...UWSKTXTEGHSSS6VR2X</div>
-            <div class="categorizer-text">demo.webm</div>
-            <div class="categorizer-text hide-mobile ">rbryanben</div>
-            <div class="categorizer-text hide-mobile ">23-06-21 13:23</div>
-            <div class="categorizer-text hide-mobile ">6754</div>
-        </div>
-    
+    <div id="bodydownloadFiles" class="download-files-list" >
+        
     </div>
 </div>
 <script>
@@ -95,13 +87,44 @@
     }
 
     let downloadStat = class {
-        constructor(jsonObject){
-             /// id name username data and downloads
+        constructor(object){
+            /// id name username data and downloads
+            this.username = (object['user']['username']);
+            this.id = (object['file']['id']);
+            this.name = (object['file']['name']);
+            this.date = (object['downloaded']);
+            this.total = (object['totalDownloads']);
+
+            //trimmers 
+            this.trimName()
+            this.trimID()
+            this.convertDate()
         }
+
+        trimName(){
+            if (this.name.length > 25){
+                this.name =  this.name.substring(0, 25) + "..."
+            }
+        }
+
+        trimID(){
+           this.id = this.id.substring(0, 25) + "..." + this.id.substring(46, 64)
+        }
+
+        convertDate(){
+            this.date = new Date(this.date);
+            this.date = (this.date.getDate() + "-" + this.date.getMonth() + "-" + this.date.getFullYear() + " " + 
+                this.date.getHours()+":"+this.date.getMinutes()); 
+        }
+
     }
 
     //objects 
     function getDownloadStats(){
+
+        //body to add 
+        var bodyToAdd = document.getElementById("bodydownloadFiles")
+        bodyToAdd.innerHTML = ""
         //data to post
         data = {
             "project" : localStorage.getItem("working-project")
@@ -115,10 +138,21 @@
 
                 //for objects
                 downloadedFilesArray.forEach(object => {
-                    console.log(object['user']['username']);
-                    console.log(object['file']['id']);
-                    console.log(object['file']['name']);
-                    console.log(object['downloaded']);
+                    //frame
+                    var downloadItem = new downloadStat(object)
+                    //frame
+                    var frame = 
+                    `
+                    <!-- download file-->
+                    <div class="download-file-item">
+                        <div class="categorizer-text">${downloadItem.id}</div>
+                        <div class="categorizer-text">${downloadItem.name}</div>
+                        <div class="categorizer-text hide-mobile ">${downloadItem.username}</div>
+                        <div class="categorizer-text hide-mobile ">${downloadItem.date}</div>
+                        <div class="categorizer-text hide-mobile ">${downloadItem.total}</div>
+                    </div>
+                    `
+                    bodyToAdd.innerHTML += frame
                 });
             }
         })
