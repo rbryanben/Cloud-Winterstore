@@ -43,6 +43,19 @@
         transition: all 0.1s ease;
     }
 
+    
+@media only screen and (max-width: 600px) {
+    .hide-mobile {
+        display: none;
+    }
+
+    .top-toolbar-search {
+        width: auto;
+        margin-right: 5px;
+    }
+}
+
+
 
 </style>
 
@@ -55,7 +68,7 @@
 
     <!-- categorizer -->
     <div class="deleted-categorizer">
-        <div class="categorizer-text">Identification</div>
+        <div class="categorizer-text hide-mobile">Identification</div>
         <div class="categorizer-text">Name</div>
         <div class="categorizer-text hide-mobile ">Deleted-by</div>
         <div class="categorizer-text hide-mobile ">Deleted</div>
@@ -173,7 +186,7 @@
                     //frame to add to UI
                     var frame = `
                     <div class="deleted-file-item">
-                        <div class="categorizer-text">${newDeletedFile.trimedID}</div>
+                        <div class="categorizer-text hide-mobile">${newDeletedFile.trimedID}</div>
                         <div class="categorizer-text">${newDeletedFile.name}</div>
                         <div class="categorizer-text hide-mobile ">${newDeletedFile.deleted_by}</div>
                         <div class="categorizer-text hide-mobile ">${newDeletedFile.date}</div>
@@ -216,7 +229,7 @@
                     //frame to add to UI
                     var frame = `
                     <div class="deleted-file-item">
-                        <div class="categorizer-text">${newDeletedFile.trimedID}</div>
+                        <div class="categorizer-text hide-mobile">${newDeletedFile.trimedID}</div>
                         <div class="categorizer-text">${newDeletedFile.name}</div>
                         <div class="categorizer-text hide-mobile ">${newDeletedFile.deleted_by}</div>
                         <div class="categorizer-text hide-mobile ">${newDeletedFile.date}</div>

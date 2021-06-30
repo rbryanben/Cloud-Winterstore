@@ -43,6 +43,13 @@
         transition: all 0.1s ease;
     }
 
+
+    @media only screen and (max-width: 600px) {
+        .download-file-item {
+        grid-template-columns: 100%
+    }
+    }
+
 </style>
 
 <div class="browser-downloads-page">
@@ -54,7 +61,7 @@
 
     <!-- categorizer -->
     <div class="download-categorizer">
-        <div class="categorizer-text">Identification</div>
+        <div class="categorizer-text hide-mobile">Identification</div>
         <div class="categorizer-text">Name</div>
         <div class="categorizer-text hide-mobile ">Download-by</div>
         <div class="categorizer-text hide-mobile ">Downloaded</div>
@@ -121,45 +128,6 @@
 
     }
 
-    //objects 
-    function getDownloadStats(){
-
-        //body to add 
-        var bodyToAdd = document.getElementById("bodydownloadFiles")
-        bodyToAdd.innerHTML = ""
-        //data to post
-        data = {
-            "project" : localStorage.getItem("working-project")
-        }
-        postToServer("/console/get-download-stats", data, function(responce) {
-            if (responce == "500" || responce == "not found" || responce == "denied") {
-                ShowWarning("Fetch Objects Failed")
-            } else {
-                //make json objects
-                downloadedFilesArray = JSON.parse(responce)
-
-                //for objects
-                downloadedFilesArray.forEach(object => {
-                    //frame
-                    var downloadItem = new downloadStat(object)
-                    //frame
-                    var frame = 
-                    `
-                    <!-- download file-->
-                    <div class="download-file-item">
-                        <div class="categorizer-text">${downloadItem.id}</div>
-                        <div class="categorizer-text">${downloadItem.name}</div>
-                        <div class="categorizer-text hide-mobile ">${downloadItem.username}</div>
-                        <div class="categorizer-text hide-mobile ">${downloadItem.date}</div>
-                        <div class="categorizer-text hide-mobile ">${downloadItem.total}</div>
-                    </div>
-                    `
-                    bodyToAdd.innerHTML += frame
-                });
-            }
-        })
-
-    }
 
 
     //objects 
@@ -188,7 +156,7 @@
                     `
                     <!-- download file-->
                     <div class="download-file-item">
-                        <div class="categorizer-text">${downloadItem.id}</div>
+                        <div class="categorizer-text hide-mobile">${downloadItem.id}</div>
                         <div class="categorizer-text">${downloadItem.name}</div>
                         <div class="categorizer-text hide-mobile ">${downloadItem.username}</div>
                         <div class="categorizer-text hide-mobile ">${downloadItem.date}</div>
