@@ -13,6 +13,7 @@ from django.core import exceptions
 import smtplib, ssl
 from email.mime.text import MIMEText
 import json
+import os
 import uuid
 from .models import UnverifiedUser ,RecoveryObject , EnhancedSubscription
 from SharedApp.models import Developer, Project ,IndexObject
@@ -311,7 +312,7 @@ def sendEmail(email,code):
     msg['From'] = sender
     msg['To'] = ','.join(receivers)
     s = smtplib.SMTP_SSL(host = 'smtp.gmail.com', port = 465)
-    s.login(user = 'cloudwinterstore@gmail.com', password = 'mayday2018')
+    s.login(user = 'cloudwinterstore@gmail.com', password="nones")
     s.sendmail(sender, receivers, msg.as_string())
     s.quit()
 
