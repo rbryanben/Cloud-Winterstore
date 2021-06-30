@@ -275,6 +275,12 @@
 
         //release lock on upload and download modal
         lockUploadAndDownloadModal = false
+
+        //show recommendation modal if this is a mobile device
+        if (window.innerWidth <= 600){
+            showDesktopRecommemdation();
+        }
+        
     }
 
 

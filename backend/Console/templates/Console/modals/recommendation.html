@@ -1,0 +1,91 @@
+<style>
+    .recommendation-modal {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-20%);
+        height: auto;
+        width: 75%;
+        border-radius: 4px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        background-color: white;
+        z-index: 101;
+        padding: 20px;
+        visibility: hidden;
+        transition: all 0.1s ease-in;
+        opacity: 0.9;
+    }
+
+    .recommendation-modal.show{
+        visibility: visible;
+        opacity: 1;
+    }
+
+    .recommendation-modal>.header{
+        font-weight: 600;
+        font-size: medium;
+        text-align: center;
+        margin-top: 40px;
+        font-size: large;
+        text-align: center;
+        color: rgba(56, 56, 56, 0.801);
+    }
+
+    .recommendation-modal>.body{
+        text-align: center;
+        font-size: small;
+        margin-top: 20px;
+        color: gray;
+    }
+    
+    .recommendation-modal>.continue-button{
+        background-color: rgba(2, 87, 83, 0.801);
+        height: 60px;
+        margin-top: 20px;
+        border-radius: 6px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+    }
+
+    .continue-button:hover{
+        opacity: 0.8;
+    }
+
+</style>
+
+<!-- body -->
+<div id="desktopRecommendationModal" class="recommendation-modal">
+    <div class="header">
+        SEEMS LIKE YOU ARE USING CONSOLE ON A MOBILE DEVICE
+    </div>
+    <div class="body">
+        We recommend you use Console on your Desktop as some features are not included in the mobile version. Features like Access Contol Modal and File Download.  
+    </div>
+    <div class="continue-button" onclick="hideDesktopRecommemdationModal()">
+        Got it
+    </div>
+</div>
+
+
+<script>
+    function showDesktopRecommemdation(){
+        setTimeout(showDesktopRecommemdationModal,1000);
+    }
+
+
+    function showDesktopRecommemdationModal(){
+        var modal = document.getElementById("desktopRecommendationModal")
+        if (!modal.classList.contains("show")){
+            modal.classList.add("show")
+        }
+    }
+
+
+    function hideDesktopRecommemdationModal(){
+        var modal = document.getElementById("desktopRecommendationModal")
+        modal.classList.remove("show")
+    }
+    
+</script>

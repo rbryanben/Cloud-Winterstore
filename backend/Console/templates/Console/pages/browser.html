@@ -62,6 +62,13 @@
     .page-browser {
       grid-template-columns: 40% 60%;
     }
+
+
+    .page-browser-right  {
+        padding-right: 0px;
+        padding-top: 20px;
+        height: 100%;
+    }
 }
 
 @media only screen and (max-width: 500px) {}
@@ -105,7 +112,6 @@
     
     //entry
     function showBrowser(){
-
         //function to post to server
         function postToServer(url, data, callback) {
             var xmlhttp = new XMLHttpRequest();
