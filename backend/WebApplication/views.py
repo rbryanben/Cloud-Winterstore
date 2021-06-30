@@ -18,6 +18,10 @@ import uuid
 from .models import UnverifiedUser ,RecoveryObject , EnhancedSubscription
 from SharedApp.models import Developer, Project ,IndexObject
 
+#emal 
+from django.core.mail import EmailMessage
+from django.conf import settings
+
 
 #Clicking verification link may not work is I am using SSL
 socketSecurity = "http://"
@@ -93,7 +97,7 @@ def enhanced(request):
 
             return HttpResponse("200")
         except:
-            print("Json not supplied")
+            return HttpResponse("Json not supplied")
     return render(request,"WebApplication/Signup/enhanced.html")
 
 
@@ -187,7 +191,6 @@ def verifyUser(request,link):
         newDeveloper.create(newUser)
 
         #login user
-        print(newUser.username,receivedUser.password)
         user = authenticate(username=newUser.username,password=receivedUser.password)
         if user is not None:
             login(request, user)
@@ -303,30 +306,18 @@ def NewFreeUserAccount(request):
         return HttpResponse("500")
 
 def sendEmail(email,code):
-    print("send email ", email)
-    body_of_email =   "Your verification code is " + str(code)
-    sender = 'cloudwinterstore@gmail.com'
-    receivers = [email]
-    msg = MIMEText(body_of_email, 'html')
-    msg['Subject'] = "Winterstore Verification"
-    msg['From'] = sender
-    msg['To'] = ','.join(receivers)
-    s = smtplib.SMTP_SSL(host = 'smtp.gmail.com', port = 465)
-    s.login(user = 'cloudwinterstore@gmail.com', password="nones")
-    s.sendmail(sender, receivers, msg.as_string())
-    s.quit()
+    #send email
+    email = EmailMessage(
+        'subject',
+        f'Your verification code is {code}',
+        'cloudwinterstore@gmail.com',
+        [email],    
+    )
 
-def sendEmailCustomEmail(email,body_of_email):
-    sender = 'cloudwinterstore@gmail.com'
-    receivers = [email]
-    msg = MIMEText(body_of_email, 'html')
-    msg['Subject'] = "Winterstore Verification"
-    msg['From'] = sender
-    msg['To'] = ','.join(receivers)
-    s = smtplib.SMTP_SSL(host = 'smtp.gmail.com', port = 465)
-    s.login(user = 'cloudwinterstore@gmail.com', password = 'mayday2018')
-    s.sendmail(sender, receivers, msg.as_string())
-    s.quit()
+    email.fail_silently=False
+    email.send()
+
+
 
 def random_with_N_digits(n):
     range_start = 10**(n-1)
@@ -407,7 +398,5 @@ def NewAccountProcedure(request,user):
     #create demo project
     demoProject = Project()
     demoProject.create("Demo-Project",user)
-
-    print("fired")
     routineNewProject(request,demoProject)
     
