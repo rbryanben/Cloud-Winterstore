@@ -61,8 +61,17 @@
         transition: all 0.1s ease;
     }
 
+    select {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        margin-right: 10px;
+        background-position: 98% 50%;
+        background-size: 12px;
+        background-repeat: no-repeat;
+    }
+
     
-@media only screen and (max-width: 600px) {
+    @media only screen and (max-width: 600px) {
     .clients-file-item{
         grid-template-columns: 100%;
     }
@@ -71,11 +80,40 @@
         width: auto;
         margin-right: 5px;
     }
-}
+    }
 
 
 
 </style>
+
+<!-- add client account modal -extends folder modal  -->
+<div id="renameFolderModal" class="name-folder-modal show">
+    <form method="dialog" autocomplete="off">
+        <div class="name-folder-modal-header" >Add a client Account</div>
+        <div class="name-folder-modal-subtext" style="font-size: small; margin-top: 20px;">Intergration</div>
+        <div id="projectNameNew" class="input-frame" style="position: relative;">
+            <select class="projects-modal-body-item plain-input no-anime" style="width: 302px; padding-right: 5px; cursor: text; font-size: small;">
+                <option value="volvo">Volvo</option>
+                <option value="saab">Saab</option>
+                <option value="mercedes">Mercedes</option>
+                <option value="audi">Audi</option>
+            </select>
+        </div>
+        <div class="name-folder-modal-subtext" style="font-size: small;">Client Provider</div>
+        <div id="projectNameNew" class="input-frame" style="position: relative;">
+            <input class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;font-size: small;">
+        </div>
+        <div class="folder-namer-buttons" style="margin-top: 5px;">
+            <div class="cancel-folder-button" >
+                Cancel
+            </div>
+            <div id="createFolderButton" class="create-folder-button"> 
+                Add
+            </div>
+        </div>
+</form>
+</div>
+
 
 <div id="client-accounts" class="client-accounts">
 
