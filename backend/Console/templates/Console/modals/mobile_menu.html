@@ -63,8 +63,8 @@
     <div class="mobile-menu-close">
         <i class="fas fa-times" onclick="hideMobileMenuModal()"></i>
     </div>
-    <div class="mobile-menu-items">
-        <div class="mobile-menu-item">
+    <div  class="mobile-menu-items">
+        <div  id="mobileStorageButton" class="mobile-menu-item">
             <div class="div">
                 <div class="div-flex center mobile-menu-icon">
                     <i  class="fas fa-folder fa-2x"></i>
@@ -74,7 +74,7 @@
                 </div>
             </div>
         </div>
-        <div class="mobile-menu-item">
+        <div id="mobileAccountsButton" class="mobile-menu-item">
             <div class="div">
                 <div class="div-flex center mobile-menu-icon">
                     <i class="fas fa-user fa-2x"></i>
@@ -119,11 +119,34 @@
 
 <script>
 
+    //Listener for when storage is click
+    document.getElementById("mobileStorageButton").addEventListener("click",()=>{
+        //hide modal
+        hideMobileMenuModal()
+        hideNavBarPages()
+
+        //show page
+        showBrowser()
+    })
+
+
+    //Listener for when accounts is clicked
+    document.getElementById("mobileAccountsButton").addEventListener("click",()=>{
+        //hide modal
+        hideMobileMenuModal()
+        hideNavBarPages()
+
+        //show page
+        showAccountsPage()
+    })
+
+
     function showMobileMenuModal(){
         var mobileMenuModal = document.getElementById("mobileMenuModal") 
         if (!mobileMenuModal.classList.contains("show")){
             mobileMenuModal.classList.add("show")
-        } 
+        }
+
     }
 
 

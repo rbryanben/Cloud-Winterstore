@@ -6,6 +6,7 @@
         grid-template-columns: 20% 90%;
         z-index: 102;
         cursor: pointer;
+        display: none;
     }
 
     .page-browser> .page-browser-left{
@@ -79,7 +80,7 @@
 
 </style>
 
-<div class="page-browser">
+<div id="page-browser" class="page-browser">
     <div class="page-browser-left">
         <div class="page-browser-left-item selected" id="allFilesButton ">
             <div class="div-flex center" > <i  class="fas fa-folder page-item-icon"></i></div>
@@ -109,9 +110,12 @@
     var downloadStatsButton;
     var deletedHistoryButton;
 
-    
+
     //entry
     function showBrowser(){
+        //make visible
+        document.getElementById("page-browser").style.display = "grid"
+
         //function to post to server
         function postToServer(url, data, callback) {
             var xmlhttp = new XMLHttpRequest();
@@ -159,6 +163,14 @@
         })
  
     }
+
+
+    
+    function hideBrowser(){
+        //make visible
+        document.getElementById("page-browser").style.display = "none"
+    }
+    
 
     function hideOtherSubPages(){
         hideBrowserDownloadPage()

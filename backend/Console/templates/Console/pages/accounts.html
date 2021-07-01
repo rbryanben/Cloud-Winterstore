@@ -1,0 +1,37 @@
+<style>
+
+    .accounts-page {
+        display: grid;
+        height: 100%;
+        grid-template-columns: 20% 90%;
+        z-index: 102;
+        cursor: pointer;
+        background-color: white;
+        border-radius: inherit;
+        display: none;
+    }
+
+
+</style>
+
+<!-- html body-->
+<div id="accounts-page" class="accounts-page">
+    Hello there Ryan
+</div>
+
+<!-- script -->
+<script>
+
+    //function to show the page
+    function showAccountsPage(){
+        document.getElementById("accounts-page").style.display = "grid" ;
+    }
+
+    //function to hide the page
+    function hideAccountsPage(){
+        document.getElementById("accounts-page").style.display = "none" ;
+      
+    }
+
+
+</script>

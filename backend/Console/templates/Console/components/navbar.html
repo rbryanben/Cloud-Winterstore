@@ -158,29 +158,37 @@
         cloud = document.getElementById("navCloud")
         settings = document.getElementById("navSettings")
         //position marker of folder 
-        loadPage(folders)
+        setMarkerOn(folders)
         
         //listeners
         accounts.addEventListener("click",()=>{
-            loadPage(accounts)
+            setMarkerOn(accounts)
+
+            //show the page
+            hideNavBarPages()
+            showAccountsPage()
         })
 
 
         cloud.addEventListener("click",()=>{
-            loadPage(cloud)
+            setMarkerOn(cloud)
         })
 
         folders.addEventListener("click",()=>{
-            loadPage(folders)
+            setMarkerOn(folders)
+
+            //show the page
+            hideNavBarPages()
+            showBrowser()
         })
 
         settings.addEventListener('click',()=>{
-            loadPage(settings)
+            setMarkerOn(settings)
         })
     })
 
 
-    function loadPage(element){
+    function setMarkerOn(element){
         //remove all selected classes
         elementSelected = document.querySelector(".navbar-icon.selected")
         elementSelected.classList.remove("selected")
@@ -188,8 +196,17 @@
         element.classList.add("selected")
         selectedElement = element
         positionMarkerOn(element)
+
     }
 
+
+    //this function will hide all the navbar pages
+    function hideNavBarPages(){
+        
+        //uses function from browser.html
+        hideBrowser()
+        hideAccountsPage()
+    }
 
     function positionMarkerOn(element){
         var marker = document.getElementById("pagerMarker")
