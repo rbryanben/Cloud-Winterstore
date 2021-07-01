@@ -5,17 +5,25 @@
     
 </style>
 
-<div id="client_accounts" class="admin-accounts">
+<div id="admin-accounts" class="admin-accounts">
     This is client accounts
 </div>
 
 <script>
     function showAdminAccounts(){
         //page
-        var pageClientAccounts = document.getElementById("admin-accounts")
+        var pageAdminAccounts = document.getElementById("admin-accounts")
 
         //show
-        pageClientAccounts.style.display = "grid"
+        pageAdminAccounts.style.display = "grid"
+    }
+
+    function hideAdminAccounts(){
+        //page
+        var pageAdminAccounts = document.getElementById("admin-accounts")
+
+        //show
+        pageAdminAccounts.style.display = "none"
     }
 
 

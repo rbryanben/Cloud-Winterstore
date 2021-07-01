@@ -2,10 +2,10 @@
     .client-accounts {
         display: none;
     }
-    
+
 </style>
 
-<div id=client_accounts class="client-accounts">
+<div id=client-accounts class="client-accounts">
     This is client accounts
 </div>
 
@@ -16,6 +16,14 @@
 
         //show
         pageClientAccounts.style.display = "grid"
+    }
+
+    function hideClientAccounts(){
+        //page
+        var pageClientAccounts = document.getElementById("client-accounts")
+
+        //show
+        pageClientAccounts.style.display = "none"
     }
 
 
