@@ -67,7 +67,7 @@ def recovery(request):
             newRecoveryObject.create(userToRecover,random_with_N_digits(6),my_random_string())
 
             #send recovery code
-            sendEmailCustomEmail(userToRecover.email,"Your recovery code is "+str(newRecoveryObject.code))
+            sendEmail(userToRecover.email,"Recovery", f"Your recovery code is {newRecoveryObject.code} ")
             
             return HttpResponse(newRecoveryObject.slug)
         except:
@@ -300,16 +300,20 @@ def NewFreeUserAccount(request):
     try:
         newUnverifiedUser = UnverifiedUser()
         newUnverifiedUser.create(receivedJSON["username"],receivedJSON["email"],receivedJSON["password"],random_with_N_digits(6),my_random_string())
-        sendEmail(newUnverifiedUser.email,newUnverifiedUser.verificationCode)
+        
+        #send email
+        sendEmail(newUnverifiedUser.email,"Account Verification", f"Your verification code is {newUnverifiedUser.verificationCode}")
+    
         return HttpResponse(newUnverifiedUser.verificationLink)
     except:
         return HttpResponse("500")
 
-def sendEmail(email,code):
+
+def sendEmail(email,subject,msg):
     #send email
     email = EmailMessage(
-        'subject',
-        f'Your verification code is {code}',
+        subject,
+        msg,
         'cloudwinterstore@gmail.com',
         [email],    
     )
@@ -329,7 +333,6 @@ def my_random_string(string_length=128):
     random = str(uuid.uuid4()) # Convert UUID format to a Python string.
     random = random.replace("-","") # Remove the UUID '-'.
     return random[0:string_length] # Return the random string.
-
 
 def strongPasswordChecker(s):
       missing_type = 3
