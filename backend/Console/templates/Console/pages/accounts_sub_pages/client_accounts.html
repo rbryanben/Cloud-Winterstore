@@ -35,7 +35,6 @@
     .add-client-account {
         margin-left: auto;
         margin-right: 40px;
-        margin-bottom: 10px;
         color: gray;
     }
 
@@ -95,11 +94,11 @@
 </style>
 
 <!-- add client account modal -extends folder modal  -->
-<div id="renameFolderModal" class="console-modal">
+<div id="addClientAccount" class="console-modal">
     <form method="dialog" autocomplete="off">
         <!-- cancel  modal-->
         <div class="modal-cancel">
-            <i class="fas fa-times"></i>
+            <i class="fas fa-times" onclick="hideAddClientModal()"></i>
         </div>
 
         <div class="console-modal-subtext" style="font-size: small; margin-top: 20px;">Intergration</div>
@@ -130,16 +129,16 @@
         <form autocomplete="off" method="dialog">
             <input class="top-toolbar-search" placeholder="Search for client" type="search">
         </form>
-        <span class="add-client-account"><i class="fas fa-plus"></i></span>
+        <span class="add-client-account"><i class="fas fa-plus" onclick="showAddClientModal()"></i></span>
     </div>
 
     <!-- categorizer -->
     <div class="clients-categorizer">
-        <div class="categorizer-text hide-mobile">Identification</div>
+        <div class="categorizer-text ">Identification</div>
         <div class="categorizer-text hide-mobile ">Created</div>
         <div class="categorizer-text hide-mobile ">Last login</div>
         <div class="categorizer-text hide-mobile ">Access Token</div>
-        <div class="categorizer-text">Controls</div>
+        <div class="categorizer-text hide-mobile">Controls</div>
     </div>
 
 
@@ -205,18 +204,18 @@
                     var developerClientNew = new DeveloperClient(developerClient)
                     frame = `
                     <div class="client-item">
-                        <div class="categorizer-text hide-mobile">${developerClientNew.identification}</div>
+                        <div class="categorizer-text">${developerClientNew.identification}</div>
                         <div class="categorizer-text hide-mobile ">${developerClientNew.date_joined}</div>
                         <div class="categorizer-text hide-mobile ">${developerClientNew.last_login}</div>
                         <div class="categorizer-text hide-mobile ">${developerClientNew.token}</div>
-                        <div class="categorizer-text controls-client-accounts">
-                                <div class="barn-client">
+                        <div class="categorizer-text controls-client-accounts hide-mobile">
+                                <div class="barn-client hide-mobile">
                                     <i class="fas fa-ban"></i>
                                 </div>
-                                <div class="delete-client">
+                                <div class="delete-client hide-mobile">
                                     <i class="fas fa-edit"></i>         
                                 </div>
-                                <div class="edit-client">
+                                <div class="edit-client hide-mobile">
                                     <i class="fas fa-trash"></i>
                                 </div>
                             </div>
@@ -284,6 +283,18 @@
 
     }
 
+    function showAddClientModal(){
+        var modal = document.getElementById("addClientAccount")
+        if (!modal.classList.contains("show")){
+            modal.classList.add("show")
+        }
+
+    }
+
+    function hideAddClientModal(){
+        var modal = document.getElementById("addClientAccount")
+        modal.classList.remove("show")
+    }
 
 
 
