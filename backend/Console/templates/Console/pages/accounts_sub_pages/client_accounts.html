@@ -64,6 +64,7 @@
     select {
         -webkit-appearance: none;
         -moz-appearance: none;
+        border: none;
         margin-right: 10px;
         background-position: 98% 50%;
         background-size: 12px;
@@ -87,34 +88,33 @@
 </style>
 
 <!-- add client account modal -extends folder modal  -->
-<form method="dialog" autocomplete="off"></form>
-<div id="renameFolderModal" class="console-modal show">
-    
+<div id="renameFolderModal" class="console-modal">
+    <form method="dialog" autocomplete="off">
         <!-- cancel  modal-->
         <div class="modal-cancel">
             <i class="fas fa-times"></i>
         </div>
 
         <div class="console-modal-subtext" style="font-size: small; margin-top: 20px;">Intergration</div>
-        <div id="projectNameNew" class="input-frame" style="position: relative;">
+        
+        <div  class="input-frame" style="position: relative;">
             <select id="addClientIntegrations" class="projects-modal-body-item plain-input no-anime" style="width: 302px; padding-right: 5px; cursor: text; font-size: small;">
                 <!-- integrations come here -->
-
-
+                
             </select>
         </div>
         <div class="console-modal-subtext" style="font-size: small;">Client Provider</div>
-        <div id="projectNameNew" class="input-frame" style="position: relative;">
+        <div  class="input-frame" style="position: relative;">
             <input class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;font-size: small;">
         </div>
         <div class="folder-namer-buttons" style="margin-top: 5px;">
-            <div id="createFolderButton" class="create-folder-button" style="font-size: small;"> 
+            <div  class="create-folder-button" style="font-size: small;"> 
                 Add
             </div>
         </div>
-
+    </form>
 </div>
-</form>
+
 
 
 <div id="client-accounts" class="client-accounts">
@@ -161,7 +161,11 @@
     let Intergration = class {
         
         constructor(jsonObject){
-
+            this.identifier = jsonObject["identifier"]
+            this.enabled = jsonObject["enabled"]  
+            this.created = ["created"]  
+            this.integrationKey = ["integrationKey"] 
+            this.platform = ["platform"]["name"] 
         }
 
     }
@@ -189,7 +193,8 @@
 
     function getIntegrations(){
         //body to display 
-        bodyToDisplay = document.getElementById("clients-accounts-list")
+        var bodyToDisplay = document.getElementById("addClientIntegrations")
+        bodyToDisplay.innerHTML = ""
 
         //data 
         data = {
@@ -202,7 +207,18 @@
                 ShowWarning("Error Fetching Objects")
             }
             else{
-                console.log();
+                //array
+                IntegrationObjectList = JSON.parse(responce)
+
+                IntegrationObjectList.forEach(jsonObject => {
+                    intergration = new Intergration(jsonObject)
+                    frame = `
+                        <option value="${intergration.identifier}">${intergration.identifier}</option>
+                    `
+
+                    bodyToDisplay.innerHTML += frame ;
+                });
+
             }
         })
 
