@@ -16,8 +16,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from pymongo.mongo_client import MongoClient
 from distutils.util import strtobool
-from SharedApp.models import Developer, Project , TeamCollaboration, IndexObject , Integration
-from .serializers import FileDownloadInstanceSerializer, IntegrationSerializer
+from SharedApp.models import Developer, DeveloperClient, Project , TeamCollaboration, IndexObject , Integration
+from .serializers import FileDownloadInstanceSerializer, IntegrationSerializer , DeveloperClientSerializer
 
 
 @login_required(login_url='/')
@@ -264,7 +264,32 @@ def integrations(request):
 
     return JsonResponse(serializer.data,safe=False)
 
+@require_http_methods(["POST","PUT"])
+@csrf_exempt
+@login_required
+def developerClient(request):
+    if (request.method == "POST"):
+        #get project
+        project = None
 
+        #assign project
+        try:
+            receivedJSON = json.loads(request.body)["project"].split(".")
+            projectOwnerUsername = receivedJSON[0]
+            projectName = receivedJSON[1]
+            #get project 
+            project = Project.objects.get(owner=User.objects.get(username=projectOwnerUsername),name=projectName)
+        except exceptions.ObjectDoesNotExist:
+            return HttpResponse("not found")
+        except:
+            return HttpResponse("Does'nt seem like the JSON we need")
+        
+        #get developer clients
+        developerClients = DeveloperClient.objects.filter(project=project)
+
+        serializer = DeveloperClientSerializer(developerClients,many=True)
+
+        return JsonResponse(serializer.data,safe=False)
 
 #gets files a folder
 @require_http_methods(["POST",])

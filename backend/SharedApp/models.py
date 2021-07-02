@@ -20,9 +20,6 @@ from rest_framework.authtoken.models import Token
 
 from datetime import datetime
 
-# The following classes are  store on the SQL Database
-
-
 #class helper methods
 def string_generator(size=6, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
@@ -38,28 +35,12 @@ class Project(models.Model):
         self.owner = owner
         self.save()
 
-
 class Developer(models.Model):
     user = models.OneToOneField(User,null=False,on_delete=models.CASCADE,primary_key=True)
 
     def create(self,user):
         self.user = user
         self.save()
-
-
-
-class DeveloperClient(models.Model):
-    user = models.ForeignKey(User,null=False,on_delete=models.CASCADE)
-
-
-
-class BarnedDeveloperClient(models.Model):
-    project = models.ForeignKey(Project,null=False,on_delete=models.CASCADE)
-    client = models.ForeignKey(DeveloperClient,null=False,on_delete=models.CASCADE)
-
-    def create(self,project,client):
-        self.project = project
-        self.client = client
 
 
 class TeamCollaboration(models.Model):
@@ -74,7 +55,6 @@ class TeamCollaboration(models.Model):
             self.project = project
             self.developer = developer
             self.save()
-
 
 
 #System classes 
@@ -173,6 +153,29 @@ class StorageSettings(models.Model):
         self.allowUserWrite = allowUserWrite
         self.allowAccessControl = allowAccessControl
 
+
+#accounts 
+class DeveloperClient(models.Model):
+    integration = models.ForeignKey(Integration,on_delete=models.CASCADE,default=None)
+    project = models.ForeignKey(Project,on_delete=models.CASCADE)
+    identification = models.TextField(default=None)
+    user = models.OneToOneField(User,null=False,on_delete=models.CASCADE)
+    last_login = models.DateTimeField(null=True,auto_now=True)
+
+    @property
+    def token(self):
+        try:
+            return Token.objects.get(user=self.user).key
+        except:
+            return None
+
+class BarnedDeveloperClient(models.Model):
+    project = models.ForeignKey(Project,null=False,on_delete=models.CASCADE)
+    client = models.ForeignKey(DeveloperClient,null=False,on_delete=models.CASCADE)
+
+    def create(self,project,client):
+        self.project = project
+        self.client = client
 
 #storage classes
 

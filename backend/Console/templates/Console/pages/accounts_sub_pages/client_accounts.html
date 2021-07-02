@@ -46,7 +46,7 @@
         padding-top: 10px;
         padding-bottom: 10px;
         display: grid;
-        grid-template-columns: 25% 15% 15% 15% 30%;
+        grid-template-columns: 25%  15% 15% 30% 15%;
         border-bottom: solid 1px rgba(235, 235, 235, 0.685);
     }
 
@@ -56,7 +56,7 @@
         padding-top: 10px;
         padding-bottom: 10px;
         display: grid;
-        grid-template-columns: 25% 15% 15% 15% 30%;
+        grid-template-columns: 25%  15% 15% 30% 15%;
         border-bottom: solid 1px rgba(235, 235, 235, 0.685);
         transition: all 0.1s ease;
     }
@@ -69,6 +69,13 @@
         background-position: 98% 50%;
         background-size: 12px;
         background-repeat: no-repeat;
+    }
+
+
+    .controls-client-accounts {
+        display: grid;
+        padding-right: 10px;
+        grid-template-columns: 30px 30px 30px;
     }
 
     
@@ -129,10 +136,10 @@
     <!-- categorizer -->
     <div class="clients-categorizer">
         <div class="categorizer-text hide-mobile">Identification</div>
-        <div class="categorizer-text">Provider</div>
         <div class="categorizer-text hide-mobile ">Created</div>
         <div class="categorizer-text hide-mobile ">Last login</div>
         <div class="categorizer-text hide-mobile ">Access Token</div>
+        <div class="categorizer-text">Controls</div>
     </div>
 
 
@@ -144,14 +151,6 @@
     <!-- clients items -->
     <div id="clients-accounts-list" class="clients-accounts-list">
 
-        <!-- client item -->
-        <div class="client-item">
-            <div class="categorizer-text hide-mobile">rbryanben@gmail.com</div>
-            <div class="categorizer-text">Provider</div>
-            <div class="categorizer-text hide-mobile ">20-05-2021</div>
-            <div class="categorizer-text hide-mobile ">01-07-2021</div>
-            <div class="categorizer-text hide-mobile ">43733c61c47d519e4eb56a38fb32fd26bfccc63</div>
-        </div>
     </div>
 </div>
 
@@ -170,7 +169,67 @@
 
     }
 
+    //developer client class
+    let DeveloperClient = class{
+        constructor(developerClient){
+            this.user = developerClient["user"]
+            this.identification =  developerClient["identification"]
+            this.date_joined =  developerClient["user"]["date_joined"]
+            this.last_login =  developerClient["last_login"]
+            this.token =  developerClient["token"]
+            this.date_joined = convertDate(this.date_joined)
+            this.last_login = convertDate(this.last_login)
+        }
+    }
 
+
+    function getDeveloperClients(){
+        //body to display
+        bodyToDisplay = document.getElementById("clients-accounts-list")
+        bodyToDisplay.innerHTML = ""
+
+        data = {
+            "project" : localStorage.getItem("working-project")
+        }
+
+        //requests
+        postToServer("/console/developer-clients", data, function(responce) {
+            if (responce == "not found" || responce == "Does'nt seem like the JSON we need"){
+                ShowWarning("Error Fetching Objects")
+            }
+            else {
+                //array
+                developerClientsArray = JSON.parse(responce)
+
+                developerClientsArray.forEach(developerClient => {
+                    var developerClientNew = new DeveloperClient(developerClient)
+                    frame = `
+                    <div class="client-item">
+                        <div class="categorizer-text hide-mobile">${developerClientNew.identification}</div>
+                        <div class="categorizer-text hide-mobile ">${developerClientNew.date_joined}</div>
+                        <div class="categorizer-text hide-mobile ">${developerClientNew.last_login}</div>
+                        <div class="categorizer-text hide-mobile ">${developerClientNew.token}</div>
+                        <div class="categorizer-text controls-client-accounts">
+                                <div class="barn-client">
+                                    <i class="fas fa-ban"></i>
+                                </div>
+                                <div class="delete-client">
+                                    <i class="fas fa-edit"></i>         
+                                </div>
+                                <div class="edit-client">
+                                    <i class="fas fa-trash"></i>
+                                </div>
+                            </div>
+                        </div>
+                    `
+                    
+                    bodyToDisplay.innerHTML += frame
+                });
+                
+            }
+        })
+
+    }
 
     function showClientAccounts(){
         //page
@@ -181,6 +240,7 @@
 
         //get integrations
         getIntegrations()
+        getDeveloperClients()
     }
 
     function hideClientAccounts(){

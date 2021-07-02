@@ -30,6 +30,25 @@ function disableScrolling() {
 }
 
 
+//date converter
+function convertDate(dateToConvert){
+    if (dateToConvert == null){
+        return "No Value"
+    }
+    try {
+        var date = new Date(dateToConvert);
+        result  = (date.getDate() + "-" + date.getMonth() + "-" + date.getFullYear() + " " + 
+        date.getHours()+":"+date.getMinutes()); 
+        return result
+    }
+    catch(error) {
+        return "No Value"
+    }
+    
+}
+
+
+
 
 ///keys global
 let lockUploadAndDownloadModal = true
