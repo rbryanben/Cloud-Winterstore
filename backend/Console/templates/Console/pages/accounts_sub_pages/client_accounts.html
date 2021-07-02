@@ -87,29 +87,34 @@
 </style>
 
 <!-- add client account modal -extends folder modal  -->
-<div id="renameFolderModal" class="name-folder-modal show">
-    <form method="dialog" autocomplete="off">
-        <div class="name-folder-modal-header" >Add a client Account</div>
-        <div class="name-folder-modal-subtext" style="font-size: small; margin-top: 20px;">Intergration</div>
+<form method="dialog" autocomplete="off"></form>
+<div id="renameFolderModal" class="console-modal show">
+    
+        <!-- cancel  modal-->
+        <div class="modal-cancel">
+            <i class="fas fa-times"></i>
+        </div>
+
+        <div class="console-modal-subtext" style="font-size: small; margin-top: 20px;">Intergration</div>
         <div id="projectNameNew" class="input-frame" style="position: relative;">
             <select id="addClientIntegrations" class="projects-modal-body-item plain-input no-anime" style="width: 302px; padding-right: 5px; cursor: text; font-size: small;">
                 <!-- integrations come here -->
+
+
             </select>
         </div>
-        <div class="name-folder-modal-subtext" style="font-size: small;">Client Provider</div>
+        <div class="console-modal-subtext" style="font-size: small;">Client Provider</div>
         <div id="projectNameNew" class="input-frame" style="position: relative;">
             <input class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;font-size: small;">
         </div>
         <div class="folder-namer-buttons" style="margin-top: 5px;">
-            <div class="cancel-folder-button" >
-                Cancel
-            </div>
-            <div id="createFolderButton" class="create-folder-button"> 
+            <div id="createFolderButton" class="create-folder-button" style="font-size: small;"> 
                 Add
             </div>
         </div>
-</form>
+
 </div>
+</form>
 
 
 <div id="client-accounts" class="client-accounts">
@@ -137,7 +142,7 @@
    </div>
 
     <!-- clients items -->
-    <div class="clients-files-list">
+    <div id="clients-accounts-list" class="clients-accounts-list">
 
         <!-- client item -->
         <div class="client-item">
@@ -151,12 +156,27 @@
 </div>
 
 <script>
+    
+    //integration class 
+    let Intergration = class {
+        
+        constructor(jsonObject){
+
+        }
+
+    }
+
+
+
     function showClientAccounts(){
         //page
         var pageClientAccounts = document.getElementById("client-accounts")
 
         //show
         pageClientAccounts.style.display = "grid"
+
+        //get integrations
+        getIntegrations()
     }
 
     function hideClientAccounts(){
@@ -166,6 +186,29 @@
         //show
         pageClientAccounts.style.display = "none"
     }
+
+    function getIntegrations(){
+        //body to display 
+        bodyToDisplay = document.getElementById("clients-accounts-list")
+
+        //data 
+        data = {
+            "project" : localStorage.getItem("working-project") 
+        }
+
+        //request
+        postToServer("/console/integrations", data, function(responce) {
+            if (responce == "not found" || responce == "Does'nt seem like the JSON we need"){
+                ShowWarning("Error Fetching Objects")
+            }
+            else{
+                console.log();
+            }
+        })
+
+    }
+
+
 
 
 

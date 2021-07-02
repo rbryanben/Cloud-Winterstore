@@ -129,13 +129,13 @@
     .folder-toolbar {
         height: 100%;
     }
-    .name-folder-modal-subtext {
+    .console-modal-subtext {
         margin-top: 10px;
         font-size: x-small;
     }
 
     /* name folder modal  */
-    .name-folder-modal {
+    .console-modal {
         position: fixed;
         z-index: 102;
         top: 50%;
@@ -147,25 +147,26 @@
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
         visibility: hidden;
         opacity: 0;
+        font-size: small;
         transition: all 0.1s ease-in;
     }
 
-    .name-folder-modal.show{
+    .console-modal.show{
         visibility: visible;
         opacity: 1;
         transform: translate(-50%,-50%);
     }
 
-    .name-folder-modal-header {
+    .console-modal div {
         font-size: small;
     }
 
     .create-folder-button {
         padding: 15px 20px;
-        font-size: x-small;
         background-color: #8594E3;
         color: white;
         text-align: center;
+        font-size: small;
         margin-top: 10px;
         border-radius: 6px;
         width: 80px;
@@ -177,20 +178,15 @@
         transform: scale(1.02);
     }
 
-    .cancel-folder-button {
-        padding: 15px 20px;
-        font-size: x-small;
-        background-color: white;
-        border: solid 1px gray;
-        text-align: center;
-        margin-top: 10px;
-        border-radius: 6px;
-        width: 80px;
+    .modal-cancel {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        color: gray;
     }
 
     .folder-namer-buttons {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
+        margin-left: 10px;
     }
 
     @media only screen and (max-width: 750px) {
@@ -327,39 +323,47 @@
         </div>
 
         <!-- rename folder modal  -->
-        <div id="renameFolderModal" class="name-folder-modal">
-            <div class="name-folder-modal-header">Rename</div>
-            <div class="name-folder-modal-subtext">Enter new name</div>
-            <div id="projectNameNew" class="input-frame" style="position: relative;">
-                <input id="renameText" class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;">
-            </div>
-            <div class="folder-namer-buttons">
-                <div class="cancel-folder-button" onclick="hideRenameModal()" >
-                    Cancel
+        <div id="renameFolderModal" class="console-modal">
+            <form method="dialog" autocomplete="off">
+                <!-- cancel  modal-->
+                <div class="modal-cancel">
+                    <i class="fas fa-times" onclick="hideRenameModal()"></i>
                 </div>
-                <div id="createFolderButton" class="create-folder-button" onclick="sendRenameRequest()"> 
-                    Rename
+                <div class="console-modal-subtext" style="margin-top: 20px;" >Enter new name</div>
+                <div id="projectNameNew" class="input-frame" style="position: relative;">
+                    <input id="renameText" class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;">
                 </div>
-            </div>
+                <div class="folder-namer-buttons">
+                    <div id="createFolderButton" class="create-folder-button" onclick="sendRenameRequest()"> 
+                        Rename
+                    </div>
+                </div>
+            </form>
         </div>
+
+        
        
         <!-- access control add account modal -->
-        <!-- rename folder modal  -->
-        <div id="accountKeyAddModal" class="name-folder-modal">
-            <div class="name-folder-modal-header">Give key to account</div>
-            <div class="name-folder-modal-subtext">Enter account id</div>
-            <div id="projectNameNew" class="input-frame" style="position: relative;">
-                <input id="accountKeyIDText" class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;">
-            </div>
-            <div class="folder-namer-buttons">
-                <div class="cancel-folder-button" onclick="hideAddAccountKey()" >
-                    Cancel
+
+        <!-- give key modal-->
+        <div id="accountKeyAddModal" class="console-modal">
+            <form method="dialog" autocomplete="off">
+                <!-- cancel  modal-->
+                <div class="modal-cancel">
+                    <i class="fas fa-times" onclick="hideAddAccountKey()"></i>
                 </div>
-                <div id="createFolderButton" class="create-folder-button" onclick=" giveKeyToAccountHTTP()"> 
-                    Give Key
+                <div class="console-modal-subtext" style="margin-top: 20px;">Enter account id</div>
+                <div id="projectNameNew" class="input-frame" style="position: relative;">
+                    <input id="accountKeyIDText" class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;">
                 </div>
-            </div>
+                <div class="folder-namer-buttons">
+                    <div id="createFolderButton" class="create-folder-button" onclick=" giveKeyToAccountHTTP()"> 
+                        Give Key
+                    </div>
+                </div>
+            </form>
         </div>
+
         <!-- access control modal -->
         <div id="accessControlModal" class="file-access-control-modal">
             <!-- cancel -->
@@ -408,20 +412,22 @@
             </div>
         </div>
         <!-- name folder modal  -->
-        <div id="nameFolderModal" class="name-folder-modal">
-            <div class="name-folder-modal-header">Folder Name</div>
-            <div class="name-folder-modal-subtext">Enter new folder name</div>
-            <div id="projectNameNew" class="input-frame" style="position: relative;">
-                <input id="newFolderName" class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;">
-            </div>
-            <div class="folder-namer-buttons">
-                <div class="cancel-folder-button" onclick="hideNameFolderModal()">
-                    Cancel
+        <div id="nameFolderModal" class="console-modal">
+            <form method="dialog" autocomplete="off">
+                <!-- cancel  modal-->
+                <div class="modal-cancel">
+                    <i class="fas fa-times" onclick="hideNameFolderModal()"></i>
                 </div>
-                <div id="createFolderButton" onclick="createNewFolder()" class="create-folder-button">
-                    Create Folder
+                <div class="console-modal-subtext" style="margin-top: 20px;">Enter new folder name</div>
+                <div id="projectNameNew" class="input-frame" style="position: relative;">
+                    <input id="newFolderName" class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;">
                 </div>
-            </div>
+                <div class="folder-namer-buttons">
+                    <div id="createFolderButton" onclick="createNewFolder()" class="create-folder-button">
+                        Create Folder
+                    </div>
+                </div>
+            </form>
         </div>
 
         <!-- file menu modal-->
