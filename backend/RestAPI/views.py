@@ -309,6 +309,8 @@ def newFolder(request):
         return HttpResponse("500")
     
 
+
+
     #parent object container
     parentObject = None
     
@@ -329,7 +331,11 @@ def newFolder(request):
     
     #at this point create an index object 
     newFolder = IndexObject()
-    newFolder.create(request.user,"FD",folderName,Project.objects.get(owner=request.user,name=projectName),parentObject)
+
+    #get project name
+    project = projectName.split(".")[1]
+
+    newFolder.create(request.user,"FD",folderName,Project.objects.get(owner=request.user,name=project),parentObject)
 
     return HttpResponse("200")
 
