@@ -205,6 +205,7 @@ def searchDownloadStats(request):
 # Create Project API
 @require_http_methods(["POST",])
 @csrf_exempt
+@login_required
 def createProject(request):
     try:
         receivedJSON = json.loads(request.body)
@@ -228,6 +229,20 @@ def createProject(request):
         return HttpResponse("200")
     except:
         return HttpResponse("500")
+
+
+
+# Create Project API
+@require_http_methods(["POST","GET"])
+@csrf_exempt
+@login_required
+def integrations(request):
+    if (request.method == "GET"):
+        return HttpResponse("Get integrations")
+    if (request.method == "POST"):
+        return HttpResponse("Post integrations")
+
+
 
 #gets files a folder
 @require_http_methods(["POST",])
