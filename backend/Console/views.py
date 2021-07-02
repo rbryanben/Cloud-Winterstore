@@ -1,3 +1,4 @@
+from django import http
 from SharedApp import serializers
 from django.contrib.auth.models import User
 from django.core import exceptions
@@ -15,8 +16,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from pymongo.mongo_client import MongoClient
 from distutils.util import strtobool
-from SharedApp.models import Developer, Project , TeamCollaboration, IndexObject
-from .serializers import FileDownloadInstanceSerializer
+from SharedApp.models import Developer, Project , TeamCollaboration, IndexObject , Integration
+from .serializers import FileDownloadInstanceSerializer, IntegrationSerializer
 
 
 @login_required(login_url='/')
@@ -233,14 +234,35 @@ def createProject(request):
 
 
 # Create Project API
-@require_http_methods(["POST","GET"])
+@require_http_methods(["POST"])
 @csrf_exempt
 @login_required
 def integrations(request):
-    if (request.method == "GET"):
-        return HttpResponse("Get integrations")
-    if (request.method == "POST"):
-        return HttpResponse("Post integrations")
+    project = None
+
+    try:
+        receivedJSONData = json.loads(request.body)['project'].split(".")
+        #project name and user
+        username = receivedJSONData[0]
+        projectName = receivedJSONData[1]
+        project = Project.objects.get(owner=User.objects.get(username=username),name=projectName)
+    except exceptions.ObjectDoesNotExist:
+        return HttpResponse("not found")
+    except:
+        return HttpResponse("Does'nt seem like the JSON we need")
+
+
+    #check if the request is an administrator
+    if (not isAdministrator(request,project)):
+        return HttpResponse("denied")
+
+    #get integrations
+    integrations = Integration.objects.filter(project=project)
+
+    #serialize
+    serializer = IntegrationSerializer(integrations,many=True)
+
+    return JsonResponse(serializer.data,safe=False)
 
 
 

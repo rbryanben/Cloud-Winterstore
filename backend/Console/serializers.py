@@ -1,7 +1,7 @@
 from os import stat
 from rest_framework import fields, serializers
 from SharedApp import models
-from SharedApp.models import IndexObject
+from SharedApp.models import IndexObject , Integration , Platform
 from django.contrib.auth.models import User
 from .models import FileDownloadInstance , FileDownloadObjectStat
 
@@ -23,4 +23,16 @@ class FileDownloadInstanceSerializer(serializers.ModelSerializer):
     class Meta:
         model = FileDownloadInstance
         fields = ['id','user','downloaded','file','totalDownloads']
-    
+
+
+class PlatformSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Platform
+        fields = ["name"]
+
+class IntegrationSerializer(serializers.ModelSerializer):
+    platform = PlatformSerializer()
+    class Meta:
+        model = Integration
+        fields = ["identifier","enabled","created","integrationKey","platform"]
+
