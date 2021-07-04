@@ -1,8 +1,11 @@
 from distutils.util import strtobool
+from io import BytesIO
 from math import trunc
 from os import name
-import re
+from typing import Sized
+from bson.binary import UUID_REPRESENTATION_NAMES
 from pymongo.common import BaseObject
+from pymongo.message import _randint
 from rest_framework.exceptions import NotFound
 from Console.views import console
 import json
@@ -36,6 +39,47 @@ from rest_framework.authtoken.models import Token
 #storage 
 from django.core.files.storage import FileSystemStorage
 
+
+#streaming 
+import os
+import re
+import mimetypes
+from wsgiref.util import FileWrapper
+from django.http.response import StreamingHttpResponse
+import uuid
+
+
+#streaming class
+range_re = re.compile(r'bytes\s*=\s*(\d+)\s*-\s*(\d*)', re.I)
+class RangeFileWrapper(object):
+    def __init__(self, filelike, blksize=8192, offset=0, length=None):
+        self.filelike = filelike
+        self.filelike.seek(offset, os.SEEK_SET)
+        self.remaining = length
+        self.blksize = blksize
+
+    def close(self):
+        if hasattr(self.filelike, 'close'):
+            self.filelike.close()
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self.remaining is None:
+            # If remaining is None, we're reading the entire file.
+            data = self.filelike.read(self.blksize)
+            if data:
+                return data
+            raise StopIteration()
+        else:
+            if self.remaining <= 0:
+                raise StopIteration()
+            data = self.filelike.read(min(self.remaining, self.blksize))
+            if not data:
+                raise StopIteration()
+            self.remaining -= len(data)
+            return data
 
 
 #
@@ -401,6 +445,140 @@ def getToken(request):
         # HttpResponse("500")
 
 
+
+@api_view(['POST','GET'])
+@csrf_exempt
+@permission_classes([IsAuthenticated])
+def streamFile(request,slug):
+    #get file SQL object
+    indexObject = None
+    bsonDocumentKey = None
+    try: 
+        indexObject = IndexObject.objects.get(id=slug)
+        bsonDocumentKey  = indexObject.fileReference
+    except exceptions.ObjectDoesNotExist:
+        
+        return HttpResponse("not found")
+    except:
+        return HttpResponse("500")
+
+    
+
+    #check user is allowed to download the file
+    if (not checkPemmission(request,indexObject,"read")):
+        return HttpResponse("denied")
+
+    
+    #get the file
+    fileToStream = None
+    try:
+        fileToStream = mongoGetFile(bsonDocumentKey)
+        #create a new downloadInstance
+        newDownloadInstance = FileDownloadInstance()
+        newDownloadInstance.create(indexObject,request.user,indexObject.project)
+    except:
+        return HttpResponse("not found")
+
+
+    #stream the file
+    filename = indexObject.name 
+    range_header = request.META.get('HTTP_RANGE', '').strip()
+    range_match = range_re.match(range_header)
+
+    #create temporary file
+    try:
+        os.mkdir('temporary_files')
+    except:
+        pass
+    temporaryFile = open('temporary_files/' + indexObject.fileReference,'wb')
+    temporaryFile.write(fileToStream.read())
+    temporaryFile.close()
+
+    fileToStream.seek(0,2)
+    size = fileToStream.tell()
+    content_type, encoding = mimetypes.guess_type(filename)
+    content_type = content_type or 'application/octet-stream'
+    if range_match:
+        first_byte, last_byte = range_match.groups()
+        first_byte = int(first_byte) if first_byte else 0
+        last_byte = int(last_byte) if last_byte else size - 1
+        if last_byte >= size:
+            last_byte = size - 1
+        length = last_byte - first_byte + 1
+        resp = StreamingHttpResponse(RangeFileWrapper(open('temporary_files/' + indexObject.fileReference,'rb'), offset=first_byte, length=length), status=206, content_type=content_type)
+        resp['Content-Length'] = str(length)
+        resp['Content-Range'] = 'bytes %s-%s/%s' % (first_byte, last_byte, size)
+    else:
+        resp = StreamingHttpResponse(FileWrapper(open('temporary_files/' + indexObject.fileReference,'rb')), content_type=content_type)
+        resp['Content-Length'] = str(size)
+    resp['Accept-Ranges'] = 'bytes'
+    return resp
+
+
+
+@api_view(['POST','GET'])
+@csrf_exempt
+def openStream(request,slug):
+    #get file SQL object
+    indexObject = None
+    bsonDocumentKey = None
+    try: 
+        indexObject = IndexObject.objects.get(id=slug)
+        bsonDocumentKey  = indexObject.fileReference
+    except exceptions.ObjectDoesNotExist:
+        
+        return HttpResponse("not found")
+    except:
+        return HttpResponse("500")
+
+    
+    
+    #get the file
+    fileToStream = None
+    try:
+        fileToStream = mongoGetFile(bsonDocumentKey)
+    except:
+        return HttpResponse("not found")
+
+
+    #stream the file
+    filename = indexObject.name 
+    range_header = request.META.get('HTTP_RANGE', '').strip()
+    range_match = range_re.match(range_header)
+
+    #create temporary file
+    try:
+        os.mkdir('temporary_files')
+    except:
+        pass
+    temporaryFile = open('temporary_files/' + indexObject.fileReference,'wb')
+    temporaryFile.write(fileToStream.read())
+    temporaryFile.close()
+
+    fileToStream.seek(0,2)
+    size = fileToStream.tell()
+    content_type, encoding = mimetypes.guess_type(filename)
+    content_type = content_type or 'application/octet-stream'
+    if range_match:
+        first_byte, last_byte = range_match.groups()
+        first_byte = int(first_byte) if first_byte else 0
+        last_byte = int(last_byte) if last_byte else size - 1
+        if last_byte >= size:
+            last_byte = size - 1
+        length = last_byte - first_byte + 1
+        resp = StreamingHttpResponse(RangeFileWrapper(open('temporary_files/' + indexObject.fileReference,'rb'), offset=first_byte, length=length), status=206, content_type=content_type)
+        resp['Content-Length'] = str(length)
+        resp['Content-Range'] = 'bytes %s-%s/%s' % (first_byte, last_byte, size)
+    else:
+        resp = StreamingHttpResponse(FileWrapper(open('temporary_files/' + indexObject.fileReference,'rb')), content_type=content_type)
+        resp['Content-Length'] = str(size)
+    resp['Accept-Ranges'] = 'bytes'
+    return resp
+
+
+    
+
+
 #this method is invalid
 @api_view(['POST','GET'])
 @csrf_exempt
@@ -408,6 +586,7 @@ def getToken(request):
 def download(request,slug):
     #get file SQL object
     indexObject = None
+    bsonDocumentKey = None
     try: 
         indexObject = IndexObject.objects.get(id=slug)
         bsonDocumentKey  = indexObject.fileReference
@@ -420,6 +599,7 @@ def download(request,slug):
     if (not checkPemmission(request,indexObject,"read")):
         return HttpResponse("denied")
 
+    
     #get file from mongo 
     try:
         returnedFile = mongoGetFile(bsonDocumentKey)
@@ -428,7 +608,7 @@ def download(request,slug):
         newDownloadInstance = FileDownloadInstance()
         newDownloadInstance.create(indexObject,request.user,indexObject.project)
 
-        return StreamingHttpResponse(returnedFile.read(),content_type='application/octet-stream')  
+        return StreamingHttpResponse(returnedFile,content_type='application/octet-stream')  
     except:
         return HttpResponse("500")
 
@@ -580,3 +760,9 @@ def checkPemmission(request,IndexFile,method):
 
     #no permission at all
     return False
+
+def my_random_string(string_length=128):
+    """Returns a random string of length string_length."""
+    random = str(uuid.uuid4()) # Convert UUID format to a Python string.
+    random = random.replace("-","") # Remove the UUID '-'.
+    return random[0:string_length] # Return the random string.

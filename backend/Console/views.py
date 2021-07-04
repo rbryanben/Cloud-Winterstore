@@ -348,7 +348,7 @@ def getFile(request):
         #create a new downloadInstance
         newDownloadInstance = FileDownloadInstance()
         newDownloadInstance.create(indexObject,request.user,indexObject.project)
-
+        
         return HttpResponse(returnedFile,content_type='application/octet-stream')  
     except:
         return HttpResponse("500") 
