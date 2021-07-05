@@ -133,7 +133,7 @@
             <input id="accountToBarnIdentificationSpan" readonly class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;font-size: small;">
         </div>
         <div class="folder-namer-buttons" style="margin-top: 5px;">
-            <div  class="create-folder-button" style="font-size: small; background-color: rgba(53, 53, 53, 0.685);"> 
+            <div onclick="barnClientAccountHttpRequest()"  class="create-folder-button" style="font-size: small; background-color: rgba(53, 53, 53, 0.685);"> 
                 Barn
             </div>
         </div>
@@ -286,6 +286,20 @@
         modal.classList.remove("show")
     }
 
+    function barnClientAccountHttpRequest(){
+        account_to_barn = {
+            "identification" : document.getElementById("accountToBarnIdentificationSpan").value,
+            "project" : localStorage.getItem("working-project")
+        }
+        postToServer("/console/barn-client-account", account_to_barn, function(responce) {
+            if (responce == "500" || responce == "not found") {
+                ShowWarning("Client Not Found")
+            } else {
+                ShowSuccess("Barn Successful")
+                hideBarnAccountModal()
+            }
+        })
+    }
 
     //add client modal
 
