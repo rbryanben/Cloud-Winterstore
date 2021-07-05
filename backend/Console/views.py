@@ -131,8 +131,6 @@ def uploadFile(request):
     except:
         return HttpResponse("Boss man! something is seriously wrong")
 
-
-
 @login_required(login_url='/console/login-required')
 @require_http_methods(["POST",])
 def getDownloadStats(request):
@@ -162,7 +160,6 @@ def getDownloadStats(request):
     #serialize the data
     serializer = FileDownloadInstanceSerializer(downloadObjects,many=True)
     return JsonResponse(serializer.data,safe=False)
-
 
 @login_required(login_url='/console/login-required')
 @require_http_methods(["POST",])
@@ -202,7 +199,6 @@ def searchDownloadStats(request):
     serializer = FileDownloadInstanceSerializer(downloadObjects,many=True)
     return JsonResponse(serializer.data,safe=False)
     
-
 # Create Project API
 @require_http_methods(["POST",])
 @csrf_exempt
@@ -230,8 +226,6 @@ def createProject(request):
         return HttpResponse("200")
     except:
         return HttpResponse("500")
-
-
 
 # Create Project API
 @require_http_methods(["POST"])
@@ -420,7 +414,6 @@ def isAdministrator(request,project):
         pass
     
     return False
-
 
 def checkProjectName(request,name):
     if (len(name) < 6):

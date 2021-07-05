@@ -121,6 +121,28 @@
     </form>
 </div>
 
+<!-- barn account modal -->
+<div id="barnClientAccountModal" class="console-modal show">
+    <form method="dialog" autocomplete="off">
+        <!-- cancel  modal-->
+        <div class="modal-cancel">
+            <i class="fas fa-times" onclick="hideAddClientModal()"></i>
+        </div>
+        <div class="console-modal-subtext" style="font-size: small;">Barn Account</div>
+        <div  class="input-frame" style="position: relative;">
+            <spn class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;font-size: small;">
+        </div>
+        <div class="folder-namer-buttons" style="margin-top: 5px;">
+            <div  class="create-folder-button" style="font-size: small; background-color: rgba(53, 53, 53, 0.685);"> 
+                Barn
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
+
 
 
 <div id="client-accounts" class="client-accounts">
@@ -181,7 +203,6 @@
         }
     }
 
-
     function getDeveloperClients(){
         //body to display
         bodyToDisplay = document.getElementById("clients-accounts-list")
@@ -230,6 +251,8 @@
 
     }
 
+
+    //client accounts
     function showClientAccounts(){
         //page
         var pageClientAccounts = document.getElementById("client-accounts")
@@ -250,6 +273,7 @@
         pageClientAccounts.style.display = "none"
     }
 
+    //barn client account
     function getIntegrations(){
         //body to display 
         var bodyToDisplay = document.getElementById("addClientIntegrations")

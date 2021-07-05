@@ -109,6 +109,13 @@
             this.trimName()
             this.trimID()
             this.convertDate()
+            this.trimDeletedBy()
+        }
+
+        trimDeletedBy(){
+            if (this.deleted_by.length > 25){
+                this.deleted_by =  this.deleted_by.substring(0,16) + "..."
+            }
         }
 
         trimName(){

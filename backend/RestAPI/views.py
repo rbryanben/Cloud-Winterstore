@@ -100,7 +100,6 @@ def gateway(request):
     #return
     return JsonResponse(response)
 
-
 @login_required(login_url='/console/login-required')
 def getPeopleWithKey(request):
     indexObject = None
@@ -153,7 +152,6 @@ def getDeletedObjectsForProject(request):
 
     return JsonResponse(serializerObject.data,safe=False)
 
-
 @login_required(login_url='/console/login-required')
 def getDeletedObjectsForProjectWithCriteria(request):
     project = None
@@ -184,7 +182,6 @@ def getDeletedObjectsForProjectWithCriteria(request):
     serializerObject = serializers.DeletedFileSerializer(deletedFiles,many=True)
 
     return JsonResponse(serializerObject.data,safe=False)
-
 
 @login_required(login_url='/console/login-required')
 def giveKey(request):
@@ -408,16 +405,28 @@ def deleteIndexObject(request):
     if(not checkPemmission(request,objectToDelete,"write")):
         return HttpResponse("denied")
 
+    #check if person who deleted file was a client 
+    developerClient = None
+    try:
+        developerClient = DeveloperClient.objects.get(user=request.user).identification
+    except:
+        pass
+
     #if file delete the file and respind with 200
     if (objectToDelete.objectType == "FL"):
         if (objectToDelete.fileReference == "HUJDKMEBEJN2G456SGTYINGHT6782HBCDHETYUSHJTIONH7890IFHGR678HNGJOT"or objectToDelete.fileReference == "HYU789IUJ87YHUYT67YGVCFDSER456YTGVBNMKJIKJJ8UUY76TTTFDSER543EFRT"):
             #keep record of deleted record 
             newDeletedFile = deletedFile()
-            newDeletedFile.create(objectToDelete.name,request.user.username,objectToDelete.owner.username,objectToDelete.id,objectToDelete.project)
+            #decides who deleted file developer or client
+            if (developerClient != None):
+                newDeletedFile.create(objectToDelete.name,developerClient,developerClient,objectToDelete.id,objectToDelete.project)
+            else:
+                newDeletedFile.create(objectToDelete.name,request.user.username,objectToDelete.owner.username,objectToDelete.id,objectToDelete.project)
+            
             objectToDelete.delete()
             return HttpResponse("200")
 
-        destroyIndexObject(objectToDelete,request)
+        destroyIndexObject(objectToDelete,request,developerClient=developerClient)
         return HttpResponse("200")
 
     #if folder delete object cause it has no file in Mongo
@@ -447,8 +456,6 @@ def getToken(request):
         return HttpResponse("500")
     #except:
         # HttpResponse("500")
-
-
 
 @api_view(['POST','GET'])
 @csrf_exempt
@@ -518,8 +525,6 @@ def streamFile(request,slug):
     resp['Accept-Ranges'] = 'bytes'
     return resp
 
-
-
 @api_view(['POST','GET'])
 @csrf_exempt
 def openStream(request,slug):
@@ -578,9 +583,6 @@ def openStream(request,slug):
         resp['Content-Length'] = str(size)
     resp['Accept-Ranges'] = 'bytes'
     return resp
-
-
-    
 
 
 #this method is invalid
@@ -670,12 +672,17 @@ def deleteFolder(folder,request):
             destroyIndexObject(object,request)
     folder.delete()
 
-def destroyIndexObject(object,request):
+def destroyIndexObject(object,request, developerClient=None):
     #prevent deletion of startup files
     objectToDelete = object
     if (objectToDelete.fileReference == "HUJDKMEBEJN2G456SGTYINGHT6782HBCDHETYUSHJTIONH7890IFHGR678HNGJOT"or objectToDelete.fileReference == "HYU789IUJ87YHUYT67YGVCFDSER456YTGVBNMKJIKJJ8UUY76TTTFDSER543EFRT"):
         newDeletedFile = deletedFile()
-        newDeletedFile.create(objectToDelete.name,request.user.username,objectToDelete.owner.username,objectToDelete.id,objectToDelete.project)
+        #check who deleted file developer or client
+        if (developerClient != None):
+            newDeletedFile.create(objectToDelete.name,developerClient,developerClient,objectToDelete.id,objectToDelete.project)
+        else:
+            newDeletedFile.create(objectToDelete.name,request.user.username,objectToDelete.owner.username,objectToDelete.id,objectToDelete.project)
+        #delete object
         object.delete()
         return
 
@@ -695,7 +702,14 @@ def destroyIndexObject(object,request):
 
     #delete the indexObject from SQL
     newDeletedFile = deletedFile()
-    newDeletedFile.create(objectToDelete.name,request.user.username,objectToDelete.owner.username,objectToDelete.id,objectToDelete.project)
+
+    #check who deleted file developer or client
+    if (developerClient != None):
+        newDeletedFile.create(objectToDelete.name,developerClient,developerClient,objectToDelete.id,objectToDelete.project)
+    else:
+        newDeletedFile.create(objectToDelete.name,request.user.username,objectToDelete.owner.username,objectToDelete.id,objectToDelete.project)
+    
+    #delete object
     object.delete()
 
 
