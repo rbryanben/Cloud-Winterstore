@@ -47,6 +47,6 @@ class DeveloperClientSerializer(serializers.ModelSerializer):
     user = UserSerializer()
     class Meta:
         model = DeveloperClient
-        fields = ["integration","identification","user","project","token","last_login"]
+        fields = ["integration","identification","user","project","token","last_login","isBarned"]
 
 

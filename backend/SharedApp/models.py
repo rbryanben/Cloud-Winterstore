@@ -171,6 +171,14 @@ class DeveloperClient(models.Model):
         except:
             return None
 
+    @property
+    def isBarned(self):
+        try:
+            BarnedDeveloperClient.objects.get(client=self)
+            return True
+        except:
+            return False
+
 class BarnedDeveloperClient(models.Model):
     project = models.ForeignKey(Project,null=False,on_delete=models.CASCADE)
     client = models.OneToOneField(DeveloperClient,null=False,on_delete=models.CASCADE)

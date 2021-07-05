@@ -261,8 +261,43 @@ def barnClient(request):
         barn.create(PROJECT,CLIENT_TO_BARN)
     except:
         pass
-    
+
     return HttpResponse("200")
+
+
+@require_http_methods(["POST",])
+@csrf_exempt
+@login_required
+def removeBarnForClient(request):
+    CLIENT_TO_REMOVE_BARN = None
+    PROJECT = None
+
+    #get account to barn
+    try: 
+        receivedJSON = json.loads(request.body)
+        #get project to barn from
+        project_to_remove_barn_from_data = receivedJSON['project'].split(".")
+        project_to__remove_barn_from_owner = User.objects.get(username=project_to_remove_barn_from_data[0])
+        project_to_remove_barn_from_name = project_to_remove_barn_from_data[1]
+        PROJECT = Project.objects.get(owner= project_to__remove_barn_from_owner,name=project_to_remove_barn_from_name)
+        
+        #client to barn
+        client_to_remove_barn_identification = receivedJSON['identification']
+        CLIENT_TO_REMOVE_BARN = DeveloperClient.objects.get(identification=client_to_remove_barn_identification,project=PROJECT)
+    except exceptions.ObjectDoesNotExist:
+        return HttpResponse("not found")
+    except:
+        return HttpResponse("500")
+
+    #check pemmissions to carry out task 
+    if (not isAdministrator(request,PROJECT)):
+        return HttpResponse("denied")
+
+    # Barn user account
+    BarnedDeveloperClient.objects.get(client=CLIENT_TO_REMOVE_BARN).delete()
+
+    return HttpResponse("200")
+
     
 # Create Project API
 @require_http_methods(["POST"])

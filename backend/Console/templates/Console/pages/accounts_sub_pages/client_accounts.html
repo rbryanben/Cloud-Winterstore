@@ -89,7 +89,9 @@
     }
     }
 
-
+    .barned > div{
+        color: rgba(255, 0, 0, 0.651) !important;
+    }
 
 </style>
 
@@ -140,6 +142,25 @@
     </form>
 </div>
 
+
+
+<div id="removeBarnClientAccountModal" class="console-modal">
+    <form method="dialog" autocomplete="off">
+        <!-- cancel  modal-->
+        <div class="modal-cancel">
+            <i class="fas fa-times" onclick="hideRemoveBarnAccountModal()"></i>
+        </div>
+        <div class="console-modal-subtext" style="font-size: small;">Barn Account</div>
+        <div  class="input-frame" style="position: relative;">
+            <input id="accountToRemoveBarnIdentificationInput" readonly class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;font-size: small;">
+        </div>
+        <div class="folder-namer-buttons" style="margin-top: 5px;">
+            <div onclick="removeBarnClientAccountHttpRequest()"  class="create-folder-button" style="font-size: small; background-color: rgba(53, 53, 53, 0.685);"> 
+                Remove Barn
+            </div>
+        </div>
+    </form>
+</div>
 
 
 <div id="client-accounts" class="client-accounts">
@@ -197,6 +218,7 @@
             this.token =  developerClient["token"]
             this.date_joined = convertDate(this.date_joined)
             this.last_login = convertDate(this.last_login)
+            this.isBarned = developerClient["isBarned"]
         }
     }
 
@@ -220,27 +242,56 @@
 
                 developerClientsArray.forEach(developerClient => {
                     var developerClientNew = new DeveloperClient(developerClient)
-                    frame = `
-                    <div class="client-item">
-                        <div class="categorizer-text">${developerClientNew.identification}</div>
-                        <div class="categorizer-text hide-mobile ">${developerClientNew.date_joined}</div>
-                        <div class="categorizer-text hide-mobile ">${developerClientNew.last_login}</div>
-                        <div class="categorizer-text hide-mobile ">${developerClientNew.token}</div>
-                        <div class="categorizer-text controls-client-accounts hide-mobile">
-                                <div class="barn-client hide-mobile">
-                                    <i class="fas fa-ban" onclick="showBarnAccountModal('${developerClientNew.identification}')"></i>
-                                </div>
-                                <div class="delete-client hide-mobile">
-                                    <i class="fas fa-edit"></i>         
-                                </div>
-                                <div class="edit-client hide-mobile">
-                                    <i class="fas fa-trash"></i>
+                    
+                    //frame unbarned
+                    frameUnbanned = `
+                        <div class="client-item">
+                            <div class="categorizer-text">${developerClientNew.identification}</div>
+                            <div class="categorizer-text hide-mobile ">${developerClientNew.date_joined}</div>
+                            <div class="categorizer-text hide-mobile ">${developerClientNew.last_login}</div>
+                            <div class="categorizer-text hide-mobile ">${developerClientNew.token}</div>
+                            <div class="categorizer-text controls-client-accounts hide-mobile">
+                                    <div class="barn-client hide-mobile">
+                                        <i class="fas fa-ban" onclick="showBarnAccountModal('${developerClientNew.identification}')"></i>
+                                    </div>
+                                    <div class="delete-client hide-mobile">
+                                        <i class="fas fa-edit"></i>         
+                                    </div>
+                                    <div class="edit-client hide-mobile">
+                                        <i class="fas fa-trash"></i>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
                     `
+
+                    //frame barned
+                    frameBanned = `
+                        <div class="client-item barned">
+                            <div class="categorizer-text">${developerClientNew.identification}</div>
+                            <div class="categorizer-text hide-mobile ">${developerClientNew.date_joined}</div>
+                            <div class="categorizer-text hide-mobile ">${developerClientNew.last_login}</div>
+                            <div class="categorizer-text hide-mobile ">${developerClientNew.token}</div>
+                            <div class="categorizer-text controls-client-accounts hide-mobile">
+                                    <div class="barn-client hide-mobile">
+                                        <i class="fas fa-ban" onclick="showRemoveBarnModal('${developerClientNew.identification}')"></i>
+                                    </div>
+                                    <div class="delete-client hide-mobile">
+                                        <i class="fas fa-edit"></i>         
+                                    </div>
+                                    <div class="edit-client hide-mobile">
+                                        <i class="fas fa-trash"></i>
+                                    </div>
+                                </div>
+                            </div>
+                    `
+
+                    if (developerClientNew.isBarned){
+                        bodyToDisplay.innerHTML += frameBanned
+                    }
+                    else{
+                        bodyToDisplay.innerHTML += frameUnbanned
+                    }
                     
-                    bodyToDisplay.innerHTML += frame
                 });
                 
             }
@@ -297,9 +348,44 @@
             } else {
                 ShowSuccess("Barn Successful")
                 hideBarnAccountModal()
+                getDeveloperClients()
             }
         })
     }
+
+    //remove barn 
+    function showRemoveBarnModal(identification){
+        var modal = document.getElementById("removeBarnClientAccountModal")
+        if (!modal.classList.contains("show")){
+            modal.classList.add("show")
+        }
+
+        //set the identification
+        document.getElementById("accountToRemoveBarnIdentificationInput").value = identification
+    }
+
+
+    function hideRemoveBarnAccountModal(){
+        var modal = document.getElementById("removeBarnClientAccountModal")
+        modal.classList.remove("show")
+    }
+
+    function removeBarnClientAccountHttpRequest(){
+        account_to_remove_barn = {
+            "identification" : document.getElementById("accountToRemoveBarnIdentificationInput").value,
+            "project" : localStorage.getItem("working-project")
+        }
+        postToServer("/console/remove-barn-client-account", account_to_remove_barn, function(responce) {
+            if (responce == "500" || responce == "not found") {
+                ShowWarning("Client Not Found")
+            } else {
+                ShowSuccess("Barn Remmoved")
+                hideBarnAccountModal()
+                getDeveloperClients()
+            }
+        })
+    }
+
 
     //add client modal
 
