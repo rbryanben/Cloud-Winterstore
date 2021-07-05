@@ -122,15 +122,15 @@
 </div>
 
 <!-- barn account modal -->
-<div id="barnClientAccountModal" class="console-modal show">
+<div id="barnClientAccountModal" class="console-modal">
     <form method="dialog" autocomplete="off">
         <!-- cancel  modal-->
         <div class="modal-cancel">
-            <i class="fas fa-times" onclick="hideAddClientModal()"></i>
+            <i class="fas fa-times" onclick="hideBarnAccountModal()"></i>
         </div>
         <div class="console-modal-subtext" style="font-size: small;">Barn Account</div>
         <div  class="input-frame" style="position: relative;">
-            <spn class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;font-size: small;">
+            <input id="accountToBarnIdentificationSpan" readonly class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;font-size: small;">
         </div>
         <div class="folder-namer-buttons" style="margin-top: 5px;">
             <div  class="create-folder-button" style="font-size: small; background-color: rgba(53, 53, 53, 0.685);"> 
@@ -139,9 +139,6 @@
         </div>
     </form>
 </div>
-
-
-
 
 
 
@@ -231,7 +228,7 @@
                         <div class="categorizer-text hide-mobile ">${developerClientNew.token}</div>
                         <div class="categorizer-text controls-client-accounts hide-mobile">
                                 <div class="barn-client hide-mobile">
-                                    <i class="fas fa-ban"></i>
+                                    <i class="fas fa-ban" onclick="showBarnAccountModal('${developerClientNew.identification}')"></i>
                                 </div>
                                 <div class="delete-client hide-mobile">
                                     <i class="fas fa-edit"></i>         
@@ -274,6 +271,24 @@
     }
 
     //barn client account
+    function showBarnAccountModal(identifier){
+        var modal = document.getElementById("barnClientAccountModal")
+        if (!modal.classList.contains("show")){
+            modal.classList.add("show")
+        }
+
+        var accountToBarnIdentificationSpan = document.getElementById("accountToBarnIdentificationSpan")
+        accountToBarnIdentificationSpan.value = identifier
+    }
+
+    function hideBarnAccountModal(){
+        var modal = document.getElementById("barnClientAccountModal")
+        modal.classList.remove("show")
+    }
+
+
+    //add client modal
+
     function getIntegrations(){
         //body to display 
         var bodyToDisplay = document.getElementById("addClientIntegrations")
