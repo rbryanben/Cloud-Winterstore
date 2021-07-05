@@ -11,10 +11,9 @@ class UserSerializer(serializers.ModelSerializer):
 
 class FileKeySerializer(serializers.ModelSerializer):
     user = UserSerializer()
-
     class Meta:
         model = FileKey
-        fields = ['id','user','dateObtained'] 
+        fields = ['id','user','dateObtained','developerIdentification'] 
     
 class DeletedFileSerializer(serializers.ModelSerializer):
     class Meta:

@@ -14,7 +14,7 @@ from django.http import response
 from django.http.response import HttpResponse, JsonResponse, StreamingHttpResponse
 from django.shortcuts import redirect, render
 from datetime import datetime
-from SharedApp.models import Developer, IndexObject, Project, TeamCollaboration ,FileKey , deletedFile
+from SharedApp.models import Developer, DeveloperClient, IndexObject, Project, TeamCollaboration ,FileKey , deletedFile
 from django.contrib.admin.utils import NestedObjects
 from django.db import router
 from pymongo import MongoClient
@@ -193,7 +193,9 @@ def giveKey(request):
 
     try:
         receivedJSON = json.loads(request.body)
-        account = User.objects.get(email=receivedJSON['account'])
+        #get developer
+        clientToGiveKey = DeveloperClient.objects.get(identification=receivedJSON['account'])
+        account = clientToGiveKey.user
         indexObject = IndexObject.objects.get(id=receivedJSON['file'])
     except exceptions.ObjectDoesNotExist:
         return HttpResponse("not found")
@@ -293,7 +295,9 @@ def removeKeys(request):
     #delete users
     for email in userList:
         try:
-            FileKey.objects.filter(file=indexObject,user=User.objects.get(email=email)).delete()
+            #get developer client user
+            userToRemove = DeveloperClient.objects.get(identification=email).user
+            FileKey.objects.filter(file=indexObject,user=userToRemove).delete()
         except:
             pass
     

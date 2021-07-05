@@ -42,7 +42,6 @@ class Developer(models.Model):
         self.user = user
         self.save()
 
-
 class TeamCollaboration(models.Model):
     project = models.ForeignKey(Project,null=False,on_delete=models.CASCADE)
     developer = models.ForeignKey(Developer,null=False,on_delete=models.CASCADE)
@@ -55,7 +54,6 @@ class TeamCollaboration(models.Model):
             self.project = project
             self.developer = developer
             self.save()
-
 
 #System classes 
 
@@ -71,12 +69,10 @@ class Notification(models.Model):
         self.body = body
         self.save()
 
-
 #Integrations classes 
 
 class Platform(models.Model):
     name = models.TextField(null=False,primary_key=True)
-
 
 class Integration(models.Model):
     identifier = models.CharField(max_length=25,null=False)
@@ -111,7 +107,6 @@ class DeletedIntegration(models.Model):
         self.integration = integration
         self.save()
 
-
 class DownloadStat(models.Model):
     file = models.TextField(null=False)
     accessed = models.DateTimeField(auto_now=True,null=False)
@@ -122,6 +117,15 @@ class DownloadStat(models.Model):
         self.accessed = accessed
         self.accessedBy = accessedBy
         self.save()
+
+    # A developer client may be the one that downloaded the file
+    @property
+    def developerClient(self):
+        try:
+            devClient = DeveloperClient.objects.get(user=self.user)
+            return devClient.identification
+        except:
+            return None
 
 
 class deletedFile(models.Model):
@@ -140,7 +144,6 @@ class deletedFile(models.Model):
         self.project = project
         self.save()
 
-
 class StorageSettings(models.Model):
     project = models.OneToOneField(Project,null=False,primary_key=True,on_delete=models.CASCADE)
     allowUserRead = models.BooleanField(null=False,default=True)
@@ -152,7 +155,6 @@ class StorageSettings(models.Model):
         self.allowUserRead = allowUserRead
         self.allowUserWrite = allowUserWrite
         self.allowAccessControl = allowAccessControl
-
 
 #accounts 
 class DeveloperClient(models.Model):
@@ -178,7 +180,6 @@ class BarnedDeveloperClient(models.Model):
         self.client = client
 
 #storage classes
-
 class IndexObject(models.Model):
     id = models.CharField(null=False,max_length=128,primary_key=True)
     project = models.ForeignKey(Project,null=False,on_delete=models.CASCADE)
@@ -243,7 +244,6 @@ class IndexObject(models.Model):
         self.allowKeyUsersWrite =allowKeyUsersWrite
         self.save()
 
-
 #User Key
 class FileKey(models.Model):
     file = models.ForeignKey(IndexObject,on_delete=models.CASCADE,null=False)
@@ -255,6 +255,13 @@ class FileKey(models.Model):
         self.user = user
         self.save()
 
+    @property
+    def developerIdentification(self):
+        try:
+            developerClient = DeveloperClient.objects.get(user=self.user)
+            return developerClient.identification
+        except:
+            return None
 
 #Tokens 
 @receiver(post_save, sender=User, dispatch_uid="create_user_token")

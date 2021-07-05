@@ -587,8 +587,8 @@
             JSON.parse(responce).forEach(element => {
                 element = `<!-- item frame -->
                         <div class="folder-categorizer item">
-                            <div class=""><input type="checkbox" class="accountKeyCheckBox" onclick="addSelectedAccountToCheckedList('${element['user']['email']}',this)"></div>
-                            <div class="categorizer-text">${element['user']['email']}</div>
+                            <div class=""><input type="checkbox" class="accountKeyCheckBox" onclick="addSelectedAccountToCheckedList('${element['developerIdentification']}',this)"></div>
+                            <div class="categorizer-text">${element['developerIdentification']}</div>
                             <div class="categorizer-text hide-mobile " style="padding-left:8px;"><i class="fas fa-envelope" style="color: gray;"></i></div>
                             <div class="categorizer-text hide-mobile " style="padding-left:11px;">${element['dateObtained']}</div>
                         </div>` 
