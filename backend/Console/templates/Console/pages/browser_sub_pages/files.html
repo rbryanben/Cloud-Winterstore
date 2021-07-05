@@ -515,8 +515,15 @@
     //function to show browser page
     function showBrowserFilePage(){
         filesPageBrowser.style.display = "block"
+        //reset map 
+        resetBrowserNavigation()
         //load files in the root directory 
         loadFiles("root")
+    }
+
+    function resetBrowserNavigation(){
+        browserNavigationMap = []
+        document.getElementById("dirMapper").innerHTML = ""
     }
 
     function hideBrowserFilePage(){
