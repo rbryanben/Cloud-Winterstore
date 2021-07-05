@@ -104,6 +104,14 @@
             this.date = (object['downloaded']);
             this.total = (object['totalDownloads']);
 
+            //check if the file was downloaded 
+            //rather by a client
+            if (object["developerClient"] != null){
+                this.username = object["developerClient"];
+                this.username = this.username.substring(0,this.username.indexOf("@") - 1);
+            }
+            
+
             //trimmers 
             this.trimName()
             this.trimID()

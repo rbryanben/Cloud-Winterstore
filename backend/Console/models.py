@@ -2,7 +2,7 @@ from hashlib import new
 from os import stat
 from django.db import models
 from django.db.models.fields import AutoField
-from SharedApp.models import IndexObject, Project
+from SharedApp.models import IndexObject, Project , DeveloperClient
 from django.contrib.auth.models import User
 
 
@@ -44,5 +44,16 @@ class FileDownloadInstance(models.Model):
             return FileDownloadObjectStat.objects.get(indexObject=self.file).download
         except:
             return "Error"
+    
+
+    # A developer client may be the one that downloaded the file
+    @property
+    def developerClient(self):
+        try:
+            devClient = DeveloperClient.objects.get(user=self.user)
+            return devClient.identification
+        except:
+            return None
+
     
     
