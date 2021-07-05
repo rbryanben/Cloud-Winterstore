@@ -16,7 +16,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from pymongo.mongo_client import MongoClient
 from distutils.util import strtobool
-from SharedApp.models import Developer, DeveloperClient, Project , TeamCollaboration, IndexObject , Integration
+from SharedApp.models import Developer, DeveloperClient, Project , TeamCollaboration, IndexObject , Integration , BarnedDeveloperClient
 from .serializers import FileDownloadInstanceSerializer, IntegrationSerializer , DeveloperClientSerializer
 
 
@@ -227,6 +227,43 @@ def createProject(request):
     except:
         return HttpResponse("500")
 
+@require_http_methods(["POST",])
+@csrf_exempt
+@login_required
+def barnClient(request):
+    CLIENT_TO_BARN = None
+    PROJECT = None
+
+    #get account to barn
+    try: 
+        receivedJSON = json.loads(request.body)
+        #get project to barn from
+        project_to_barn_from_data = receivedJSON['project'].split(".")
+        project_to_barn_from_owner = User.objects.get(username=project_to_barn_from_data[0])
+        project_to_barn_from_name = project_to_barn_from_data[1]
+        PROJECT = Project.objects.get(owner=project_to_barn_from_owner,name=project_to_barn_from_name)
+        
+        #client to barn
+        client_to_barn_identification = receivedJSON['identification']
+        CLIENT_TO_BARN = DeveloperClient.objects.get(identification=client_to_barn_identification,project=PROJECT)
+    except exceptions.ObjectDoesNotExist:
+        return HttpResponse("not found")
+    except:
+        return HttpResponse("500")
+
+    #check pemmissions to carry out task 
+    if (not isAdministrator(request,PROJECT)):
+        return HttpResponse("denied")
+
+    # Barn user account
+    try:
+        barn = BarnedDeveloperClient()
+        barn.create(PROJECT,CLIENT_TO_BARN)
+    except:
+        pass
+    
+    return HttpResponse("200")
+    
 # Create Project API
 @require_http_methods(["POST"])
 @csrf_exempt

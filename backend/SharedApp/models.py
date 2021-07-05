@@ -173,11 +173,12 @@ class DeveloperClient(models.Model):
 
 class BarnedDeveloperClient(models.Model):
     project = models.ForeignKey(Project,null=False,on_delete=models.CASCADE)
-    client = models.ForeignKey(DeveloperClient,null=False,on_delete=models.CASCADE)
+    client = models.OneToOneField(DeveloperClient,null=False,on_delete=models.CASCADE)
 
     def create(self,project,client):
         self.project = project
         self.client = client
+        self.save()
 
 #storage classes
 class IndexObject(models.Model):

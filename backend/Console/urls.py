@@ -18,6 +18,7 @@ urlpatterns = [
     path("search-download-stats",views.searchDownloadStats), #to get download stats
     path("integrations",views.integrations), #integrations
     path("developer-clients",views.developerClient), #developer clients
+    path("barn-client-account",views.barnClient), #barn client
 
     ###############
     ############### Fallback 

@@ -14,7 +14,7 @@ from django.http import response
 from django.http.response import HttpResponse, JsonResponse, StreamingHttpResponse
 from django.shortcuts import redirect, render
 from datetime import datetime
-from SharedApp.models import Developer, DeveloperClient, IndexObject, Project, TeamCollaboration ,FileKey , deletedFile
+from SharedApp.models import BarnedDeveloperClient, Developer, DeveloperClient, IndexObject, Project, TeamCollaboration ,FileKey , deletedFile
 from django.contrib.admin.utils import NestedObjects
 from django.db import router
 from pymongo import MongoClient
@@ -729,6 +729,15 @@ def isAdministrator(request,project):
 
 
 def checkPemmission(request,IndexFile,method):
+    #check barn
+    try:
+        developer_client_to_check_barn = DeveloperClient.objects.get(user=request.user)
+        project_to_check_barn = IndexFile.project
+        BarnedDeveloperClient.objects.get(project=project_to_check_barn,client=developer_client_to_check_barn)
+        return False
+    except:
+        pass
+    
     #check if owner of project 
     projectFileObjectBelong =  IndexFile.project
     if (projectFileObjectBelong.owner == request.user):
