@@ -108,15 +108,22 @@
         <div  class="input-frame" style="position: relative;">
             <select id="addClientIntegrations" class="projects-modal-body-item plain-input no-anime" style="width: 302px; padding-right: 5px; cursor: text; font-size: small;">
                 <!-- integrations come here -->
-                
             </select>
         </div>
+        <!-- client identification-->
         <div class="console-modal-subtext" style="font-size: small;">Client Provider</div>
         <div  class="input-frame" style="position: relative;">
-            <input class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;font-size: small;">
+            <input id="newClientAccountIdentification" placeholder="Identifier" class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;font-size: small;">
+        </div>
+        <!-- client password-->
+        <div class="console-modal-subtext" style="font-size: small;">Client Password</div>
+        <div  class="input-frame" style="position: relative;">
+            <form autocomplete="off" method="dialog">
+                <input type="password" placeholder="Password" id="newClientPasswordinput" class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;font-size: small;">
+            </form>
         </div>
         <div class="folder-namer-buttons" style="margin-top: 5px;">
-            <div  class="create-folder-button" style="font-size: small;"> 
+            <div onclick="addClientAccount()" class="create-folder-button" style="font-size: small;"> 
                 Add
             </div>
         </div>
@@ -304,6 +311,52 @@
 
     }
 
+    //add client account
+    function addClientAccount(){
+
+        //check integration existance
+        if (document.getElementById("addClientIntegrations").value == ""){
+            ShowWarning("No Integration Selected")
+            return
+        }
+
+        //check username length 
+        if (document.getElementById("newClientAccountIdentification").value.length < 6){
+            ShowWarning("Identification Too Short")
+            return
+        }
+
+        //check password
+        if (document.getElementById("newClientPasswordinput").value.length < 6){
+            ShowWarning("Password Too Short")
+            return
+        }
+
+        data = {
+            "integration" : document.getElementById("addClientIntegrations").value,
+            "password" : document.getElementById("newClientPasswordinput").value,
+            "project" : localStorage.getItem("working-project"),
+            "identification" : document.getElementById("newClientAccountIdentification").value
+        }
+
+
+
+        //create the account
+        postToServer("/console/add-developer-client", data, function(responce) {
+            if (responce == "200") {
+                ShowSuccess("Client Account Created")
+                hideAddClientModal()
+                getDeveloperClients()
+            } 
+            else if (responce == "1704"){
+                ShowWarning("Client Account Exists")
+            }
+            else {
+                ShowWarning("Error Creating Account")
+            }
+        })
+
+    }
 
     //client accounts
     function showClientAccounts(){
