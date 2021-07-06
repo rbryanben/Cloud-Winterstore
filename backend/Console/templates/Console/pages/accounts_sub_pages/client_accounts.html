@@ -167,7 +167,7 @@
 
     <div class="top-toolbar">
         <form autocomplete="off" method="dialog">
-            <input class="top-toolbar-search" placeholder="Search for client" type="search">
+            <input id="searchClientInput" class="top-toolbar-search" onkeyup="searchClientAccounts(this)" placeholder="Search for client" type="search">
         </form>
         <span class="add-client-account"><i class="fas fa-plus" onclick="showAddClientModal()"></i></span>
     </div>
@@ -183,7 +183,7 @@
 
 
     <!-- loader -->
-    <div  class="pageLoader" style="transform: scale(0.2);">
+    <div id="clientAccountPageLoader"  class="pageLoader" style="transform: scale(0.2);">
         <div class="loader-console"></div>
    </div>
 
@@ -194,6 +194,8 @@
 </div>
 
 <script>
+
+    let activeClientSearch = false
     
     //integration class 
     let Intergration = class {
@@ -223,6 +225,8 @@
     }
 
     function getDeveloperClients(){
+        ClientPageShowLoading()
+
         //body to display
         bodyToDisplay = document.getElementById("clients-accounts-list")
         bodyToDisplay.innerHTML = ""
@@ -233,6 +237,7 @@
 
         //requests
         postToServer("/console/developer-clients", data, function(responce) {
+            ClientPageCancelLoading()
             if (responce == "not found" || responce == "Does'nt seem like the JSON we need"){
                 ShowWarning("Error Fetching Objects")
             }
@@ -348,6 +353,10 @@
             } else {
                 ShowSuccess("Barn Successful")
                 hideBarnAccountModal()
+                if (activeClientSearch){
+                    searchClientAccounts(document.getElementById("searchClientInput"))
+                    return
+                }
                 getDeveloperClients()
             }
         })
@@ -381,11 +390,114 @@
             } else {
                 ShowSuccess("Barn Remmoved")
                 hideBarnAccountModal()
+                if (activeClientSearch){
+                    searchClientAccounts(document.getElementById("searchClientInput"))
+                    return
+                }
                 getDeveloperClients()
             }
         })
     }
 
+    //loading page 
+    function ClientPageShowLoading(){
+        var modal = document.getElementById("clientAccountPageLoader")
+        if (!modal.classList.contains("show")){
+            modal.classList.add("show")
+        }
+    }
+
+    function ClientPageCancelLoading(){
+        var modal = document.getElementById("clientAccountPageLoader")
+        modal.classList.remove("show")
+    }
+
+    //search client account 
+    function searchClientAccounts(object){
+        if (object.value == ""){
+            activeClientSearch = false
+            getDeveloperClients()
+        }
+        else {
+            activeClientSearch =true
+            //search data
+            ClientPageShowLoading()
+
+        //body to display
+            bodyToDisplay = document.getElementById("clients-accounts-list")
+            bodyToDisplay.innerHTML = ""
+
+            data = {
+                "project" : localStorage.getItem("working-project"),
+                'criteria' : object.value
+            }
+
+            //requests
+            postToServer("/console/search-developer-clients", data, function(responce) {
+                ClientPageCancelLoading()
+           
+                //array
+                developerClientsArray = JSON.parse(responce)
+
+                developerClientsArray.forEach(developerClient => {
+                    var developerClientNew = new DeveloperClient(developerClient)
+                    
+                    //frame unbarned
+                    frameUnbanned = `
+                        <div class="client-item">
+                            <div class="categorizer-text">${developerClientNew.identification}</div>
+                            <div class="categorizer-text hide-mobile ">${developerClientNew.date_joined}</div>
+                            <div class="categorizer-text hide-mobile ">${developerClientNew.last_login}</div>
+                            <div class="categorizer-text hide-mobile ">${developerClientNew.token}</div>
+                            <div class="categorizer-text controls-client-accounts hide-mobile">
+                                    <div class="barn-client hide-mobile">
+                                        <i class="fas fa-ban" onclick="showBarnAccountModal('${developerClientNew.identification}')"></i>
+                                    </div>
+                                    <div class="delete-client hide-mobile">
+                                        <i class="fas fa-edit"></i>         
+                                    </div>
+                                    <div class="edit-client hide-mobile">
+                                        <i class="fas fa-trash"></i>
+                                    </div>
+                                </div>
+                            </div>
+                    `
+
+                    //frame barned
+                    frameBanned = `
+                        <div class="client-item barned">
+                            <div class="categorizer-text">${developerClientNew.identification}</div>
+                            <div class="categorizer-text hide-mobile ">${developerClientNew.date_joined}</div>
+                            <div class="categorizer-text hide-mobile ">${developerClientNew.last_login}</div>
+                            <div class="categorizer-text hide-mobile ">${developerClientNew.token}</div>
+                            <div class="categorizer-text controls-client-accounts hide-mobile">
+                                    <div class="barn-client hide-mobile">
+                                        <i class="fas fa-ban" onclick="showRemoveBarnModal('${developerClientNew.identification}')"></i>
+                                    </div>
+                                    <div class="delete-client hide-mobile">
+                                        <i class="fas fa-edit"></i>         
+                                    </div>
+                                    <div class="edit-client hide-mobile">
+                                        <i class="fas fa-trash"></i>
+                                    </div>
+                                </div>
+                            </div>
+                    `
+
+                    if (developerClientNew.isBarned){
+                        bodyToDisplay.innerHTML += frameBanned
+                    }
+                    else{
+                        bodyToDisplay.innerHTML += frameUnbanned
+                    }
+                    
+                });
+         
+            })
+
+        }
+
+    }
 
     //add client modal
 

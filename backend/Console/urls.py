@@ -20,6 +20,7 @@ urlpatterns = [
     path("developer-clients",views.developerClient), #developer clients
     path("barn-client-account",views.barnClient), #barn client
     path("remove-barn-client-account",views.removeBarnForClient), #barn client
+    path("search-developer-clients",views.searchDeveloperClients), #search developer client
 
     ###############
     ############### Fallback 

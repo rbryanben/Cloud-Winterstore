@@ -357,6 +357,38 @@ def developerClient(request):
 
         return JsonResponse(serializer.data,safe=False)
 
+def searchDeveloperClients(request):
+    #get project
+    project = None
+    criteria = None
+
+    #assign project
+    try:
+        receivedJSON = json.loads(request.body)["project"].split(".")
+        projectOwnerUsername = receivedJSON[0]
+        projectName = receivedJSON[1]
+        #criteria
+        criteria = json.loads(request.body)["criteria"]
+
+        #get project 
+        project = Project.objects.get(owner=User.objects.get(username=projectOwnerUsername),name=projectName)
+    except exceptions.ObjectDoesNotExist:
+        return HttpResponse("not found")
+    except:
+        return HttpResponse("Does'nt seem like the JSON we need")
+    
+    if (not isAdministrator(request,project)):
+        return HttpResponse("denied")
+
+    print(criteria)
+    #get developer clients
+    developerClients = DeveloperClient.objects.filter(project=project,identification=criteria)
+    print(developerClients)
+
+    serializer = DeveloperClientSerializer(developerClients,many=True)
+
+    return JsonResponse(serializer.data,safe=False)
+
 #gets files a folder
 @require_http_methods(["POST",])
 @login_required(login_url='/console/login-required')
