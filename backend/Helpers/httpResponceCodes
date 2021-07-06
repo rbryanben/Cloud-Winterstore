@@ -4,4 +4,5 @@
 1701 = Folder Name Exists
 1702 = Folder Name Contains Unwanted Charectors
 1703 = Repeated File Name
-
+1704 = Client Account Exists
+1706 = Supplied String Causes HTML problem

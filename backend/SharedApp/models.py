@@ -164,6 +164,28 @@ class DeveloperClient(models.Model):
     user = models.OneToOneField(User,null=False,on_delete=models.CASCADE)
     last_login = models.DateTimeField(null=True,auto_now=True)
 
+    def create(self,integration,project,identification,password):
+        self.integration = integration
+        self.project = project
+        self.identification = identification
+
+        #create a new user object for 
+        def createDeveloperUser():
+            new_developer_client_user_username = string_generator(size=32)
+            try:
+                User.objects.get(username=new_developer_client_user_username)
+                createDeveloperUser()
+            except:
+                pass
+            user = User.objects.create_user(username=new_developer_client_user_username,
+                                 password=password)
+
+            return user
+        
+        self.user = createDeveloperUser()
+        self.save()
+     
+        
     @property
     def token(self):
         try:

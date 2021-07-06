@@ -380,7 +380,6 @@ def searchDeveloperClients(request):
     if (not isAdministrator(request,project)):
         return HttpResponse("denied")
 
-    print(criteria)
     #get developer clients
     developerClients = DeveloperClient.objects.filter(project=project,identification=criteria)
     print(developerClients)
@@ -388,6 +387,55 @@ def searchDeveloperClients(request):
     serializer = DeveloperClientSerializer(developerClients,many=True)
 
     return JsonResponse(serializer.data,safe=False)
+
+@require_http_methods(["POST"])
+@csrf_exempt
+@login_required
+def addDeveloperClient(request):
+    client_to_add_identification =None
+    client_to_add_password = None
+    project_with_integration = None
+    integration_to_add_to = None
+
+    #get the data
+    try:
+        receivedJSON = json.loads(request.body)
+        client_to_add_identification = receivedJSON["identification"]
+        client_to_add_password = receivedJSON["password"]
+        integration_name = receivedJSON["integration"]
+        #get project
+        data_to_fetch_project = receivedJSON["project"].split(".")
+        owner_of_project = User.objects.get(username=data_to_fetch_project[0])
+        project_with_integration = Project.objects.get(owner=owner_of_project,name=data_to_fetch_project[1])
+
+        #integration
+        integration_to_add_to = Integration.objects.get(project=project_with_integration,identifier=integration_name)
+        print(integration_to_add_to)
+    except:
+        return HttpResponse("500")
+
+
+    #check pemmissions
+    if (not isAdministrator(request,project_with_integration)):
+        return HttpResponse("denied")
+
+    #check if the client exists
+    try:
+        DeveloperClient.objects.get(identification=client_to_add_identification,integration=integration_to_add_to)
+        return HttpResponse("1704")
+    except:
+        pass
+
+
+    #add a new developer client
+    if not meetsHTMLCompatability(client_to_add_identification):
+        return HttpResponse("1706")
+
+    #create a new Developer Client
+    new_developer_client = DeveloperClient()
+    new_developer_client.create(integration_to_add_to,project_with_integration,client_to_add_identification,client_to_add_password)
+
+    return HttpResponse("200")
 
 #gets files a folder
 @require_http_methods(["POST",])
@@ -518,6 +566,10 @@ def isAdministrator(request,project):
         pass
     
     return False
+
+def meetsHTMLCompatability(string):
+    return True
+
 
 def checkProjectName(request,name):
     if (len(name) < 6):
