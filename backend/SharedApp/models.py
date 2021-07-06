@@ -180,6 +180,8 @@ class DeveloperClient(models.Model):
             user = User.objects.create_user(username=new_developer_client_user_username,
                                  password=password)
 
+            print(password)
+
             return user
         
         self.user = createDeveloperUser()

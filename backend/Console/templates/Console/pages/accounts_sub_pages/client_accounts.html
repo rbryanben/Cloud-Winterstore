@@ -130,6 +130,42 @@
     </form>
 </div>
 
+
+<!--  edit client modal  -->
+<div id="editClientAccountModal"  class="console-modal">
+    <form method="dialog" autocomplete="off">
+        <!-- cancel  modal-->
+        <div class="modal-cancel">
+            <i class="fas fa-times" onclick="hideEditClientModal()"></i>
+        </div>
+
+        <div class="console-modal-subtext" style="font-size: small; margin-top: 20px;">Intergration</div>
+        
+        <div  class="input-frame" style="position: relative;">
+            <input id="updateClientIntegrations"  readonly class="projects-modal-body-item plain-input no-anime" placeholder="Integration" style="width: 302px; padding-right: 5px; cursor: text; font-size: small;">
+        </div>
+
+        <!-- client identification-->
+        <div class="console-modal-subtext" style="font-size: small;">Client Provider</div>
+        <div  class="input-frame" style="position: relative;">
+            <input id="updateClientAccountIdentifierInput" readonly  placeholder="Identifier" class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;font-size: small;">
+        </div>
+        <!-- client password-->
+        <div class="console-modal-subtext" style="font-size: small;">Client Password</div>
+        <div  class="input-frame" style="position: relative;">
+            <form autocomplete="off" method="dialog">
+                <input id="updateClientAccountPassword" placeholder="New Password" class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;font-size: small;">
+            </form>
+        </div>
+        <div class="folder-namer-buttons" style="margin-top: 5px;">
+            <div onclick="updateClientHttpRequest()" class="create-folder-button" style="font-size: small;"> 
+                Update Client
+            </div>
+        </div>
+    </form>
+</div>
+
+
 <!-- barn account modal -->
 <div id="barnClientAccountModal" class="console-modal">
     <form method="dialog" autocomplete="off">
@@ -228,6 +264,7 @@
             this.date_joined = convertDate(this.date_joined)
             this.last_login = convertDate(this.last_login)
             this.isBarned = developerClient["isBarned"]
+            this.integration = developerClient["integration"]["identifier"]
         }
     }
 
@@ -267,7 +304,7 @@
                                         <i class="fas fa-ban" onclick="showBarnAccountModal('${developerClientNew.identification}')"></i>
                                     </div>
                                     <div class="delete-client hide-mobile">
-                                        <i class="fas fa-edit"></i>         
+                                        <i class="fas fa-edit" onclick="showEditClientModal('${developerClientNew.identification}','${developerClientNew.integration}')"></i>          
                                     </div>
                                     <div class="edit-client hide-mobile">
                                         <i class="fas fa-trash"></i>
@@ -275,7 +312,7 @@
                                 </div>
                             </div>
                     `
-
+         
                     //frame barned
                     frameBanned = `
                         <div class="client-item barned">
@@ -288,7 +325,7 @@
                                         <i class="fas fa-ban" onclick="showRemoveBarnModal('${developerClientNew.identification}')"></i>
                                     </div>
                                     <div class="delete-client hide-mobile">
-                                        <i class="fas fa-edit"></i>         
+                                        <i class="fas fa-edit" onclick="showEditClientModal('${developerClientNew.identification}','${developerClientNew.integration}')"></i>         
                                     </div>
                                     <div class="edit-client hide-mobile">
                                         <i class="fas fa-trash"></i>
@@ -309,6 +346,67 @@
             }
         })
 
+    }
+
+    //edit client modal
+    function showEditClientModal(identification, integrationClient){
+        var modal = document.getElementById("editClientAccountModal")
+        if (!modal.classList.contains("show")){
+            modal.classList.add("show")
+        }
+        //set identification
+        document.getElementById("updateClientAccountIdentifierInput").value = identification
+        //set integration 
+        
+        document.getElementById("updateClientIntegrations").value = integrationClient
+    }
+
+    function hideEditClientModal(){
+        var modal = document.getElementById("editClientAccountModal")
+        modal.classList.remove("show")
+    }
+
+    function updateClientHttpRequest(){
+
+        //check integration existance
+        if (document.getElementById("updateClientIntegrations").value == ""){
+            ShowWarning("No Integration Selected")
+            return
+        }
+
+        //check username length 
+        if (document.getElementById("updateClientAccountIdentifierInput").value.length < 6){
+            ShowWarning("Identification Too Short")
+            return
+        }
+
+        //check password
+        if (document.getElementById("updateClientAccountPassword").value.length < 6){
+            ShowWarning("Password Too Short")
+            return
+        }
+
+        data = {
+            "integration" : document.getElementById("updateClientIntegrations").value,
+            "password" : document.getElementById("updateClientAccountPassword").value,
+            "project" : localStorage.getItem("working-project"),
+            "identification" : document.getElementById("updateClientAccountIdentifierInput").value
+        }
+
+        //create the account
+        updateToServer("/console/add-developer-client", data, function(responce) {
+            if (responce == "200") {
+                ShowSuccess("Client Account Updated")
+                hideEditClientModal()
+                getDeveloperClients()
+            } 
+            else if (responce == "1704"){
+                ShowWarning("Client Account Exists")
+            }
+            else {
+                ShowWarning("Error Creating Account")
+            }
+        })
     }
 
     //add client account
@@ -425,7 +523,6 @@
         //set the identification
         document.getElementById("accountToRemoveBarnIdentificationInput").value = identification
     }
-
 
     function hideRemoveBarnAccountModal(){
         var modal = document.getElementById("removeBarnClientAccountModal")
@@ -578,7 +675,6 @@
                     frame = `
                         <option value="${intergration.identifier}">${intergration.identifier}</option>
                     `
-
                     bodyToDisplay.innerHTML += frame ;
                 });
 
@@ -593,14 +689,14 @@
             modal.classList.add("show")
         }
 
+        document.getElementById("newClientAccountIdentification").value = ""
+        document.getElementById("newClientPasswordinput").value = ""
+
     }
 
     function hideAddClientModal(){
         var modal = document.getElementById("addClientAccount")
         modal.classList.remove("show")
     }
-
-
-
 
 </script>

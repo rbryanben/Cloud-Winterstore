@@ -388,7 +388,7 @@ def searchDeveloperClients(request):
 
     return JsonResponse(serializer.data,safe=False)
 
-@require_http_methods(["POST"])
+@require_http_methods(["POST","UPDATE"])
 @csrf_exempt
 @login_required
 def addDeveloperClient(request):
@@ -410,7 +410,6 @@ def addDeveloperClient(request):
 
         #integration
         integration_to_add_to = Integration.objects.get(project=project_with_integration,identifier=integration_name)
-        print(integration_to_add_to)
     except:
         return HttpResponse("500")
 
@@ -419,17 +418,30 @@ def addDeveloperClient(request):
     if (not isAdministrator(request,project_with_integration)):
         return HttpResponse("denied")
 
+    
+
+    #add a new developer client
+    if not meetsHTMLCompatability(client_to_add_identification):
+        return HttpResponse("1706")
+
+    
+    #UPDATE if request is update
+    if (request.method == "UPDATE"):
+        try:
+            client_to_update = DeveloperClient.objects.get(integration=integration_to_add_to,identification=client_to_add_identification)
+            client_to_update.user.set_password(client_to_add_password)
+            client_to_update.user.save()
+            return HttpResponse("200")
+        except:
+            return HttpResponse("500")
+    
+    
     #check if the client exists
     try:
         DeveloperClient.objects.get(identification=client_to_add_identification,integration=integration_to_add_to)
         return HttpResponse("1704")
     except:
         pass
-
-
-    #add a new developer client
-    if not meetsHTMLCompatability(client_to_add_identification):
-        return HttpResponse("1706")
 
     #create a new Developer Client
     new_developer_client = DeveloperClient()
