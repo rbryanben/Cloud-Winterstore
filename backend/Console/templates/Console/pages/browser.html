@@ -93,59 +93,50 @@
     var allFilesButton ;
     var downloadStatsButton;
     var deletedHistoryButton;
+    let browserPageInitialized = false
 
 
     //entry
     function showBrowser(){
         //make visible
         document.getElementById("page-browser").style.display = "grid"
-
-        //function to post to server
-        function postToServer(url, data, callback) {
-            var xmlhttp = new XMLHttpRequest();
-            xmlhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    callback(xmlhttp.response);
-                }
-            }
-
-
-            xmlhttp.open("POST", serverURL + url)
-            xmlhttp.setRequestHeader('Content-Type', 'application/json');
-            xmlhttp.send(JSON.stringify(data));
-
-        }
-
         
+        //initialize 
+        if (browserPageInitialized == false){
+            browserPageInitialized = true
+            initialize()
+        }
+    }
 
-        //browserPageLoading()
-        allFilesButton = document.getElementById("allFilesButton ")
-        downloadStatsButton = document.getElementById("downloadStatsButton")
-        deletedHistoryButton = document.getElementById("deletedHistoryButton")
+    //initialization
+    //browserPageLoading()
+    allFilesButton = document.getElementById("allFilesButton ")
+    downloadStatsButton = document.getElementById("downloadStatsButton")
+    deletedHistoryButton = document.getElementById("deletedHistoryButton")
 
-        //show files page first
-        loadBrowserSubPage(allFilesButton)
-        showBrowserFilePage()
-
-        //listeners
-        allFilesButton.addEventListener("click",()=>{
+    //listeners
+    allFilesButton.addEventListener("click",()=>{
             hideOtherSubPages()
             showBrowserFilePage()
             loadBrowserSubPage(allFilesButton)
         })
 
-        downloadStatsButton.addEventListener("click",()=>{
+    downloadStatsButton.addEventListener("click",()=>{
             hideOtherSubPages()
             showBrowserDownloadPage()
             loadBrowserSubPage(downloadStatsButton)
         })
         
-        deletedHistoryButton.addEventListener("click",()=>{
+    deletedHistoryButton.addEventListener("click",()=>{
             hideOtherSubPages()
             showBrowserDeletedPage()
             loadBrowserSubPage(deletedHistoryButton)
         })
- 
+
+    function initialize(){
+        //show files page first
+        loadBrowserSubPage(allFilesButton)
+        showBrowserFilePage()  
     }
 
 
