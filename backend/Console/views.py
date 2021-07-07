@@ -382,8 +382,6 @@ def searchDeveloperClients(request):
 
     #get developer clients
     developerClients = DeveloperClient.objects.filter(project=project,identification=criteria)
-    print(developerClients)
-
     serializer = DeveloperClientSerializer(developerClients,many=True)
 
     return JsonResponse(serializer.data,safe=False)
@@ -439,6 +437,7 @@ def addDeveloperClient(request):
     if (request.method == "DELETE"):
         try:
             client_to_update = DeveloperClient.objects.get(integration=integration_to_add_to,identification=client_to_add_identification)
+            client_to_update.user.delete()
             client_to_update.delete()
             return HttpResponse("200")
         except:
@@ -596,10 +595,8 @@ def meetsHTMLCompatability(string):
 
 def checkProjectName(request,name):
     if (len(name) < 6):
-        print("a")
         return False
     if (" " in name):
-        print("b")
         return False
     try:
         Project.objects.get(owner=request.user,name=name)

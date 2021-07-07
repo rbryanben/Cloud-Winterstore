@@ -40,7 +40,7 @@ function deleteToServer(url, data, callback) {
         }
     }
 
-    xmlhttp.open("UPDATE", serverURL + url)
+    xmlhttp.open("DELETE", serverURL + url)
     xmlhttp.setRequestHeader('Content-Type', 'application/json');
     xmlhttp.send(JSON.stringify(data));
 
