@@ -7,7 +7,7 @@ from django.db import models
 # Create your models here.
 from django.db import models
 from django.db.models import indexes
-from django.db.models.base import Model
+from django.db.models.base import Model, ModelBase
 from datetime import datetime
 from django.contrib.auth.models import User
 from django.db.models.query import FlatValuesListIterable
@@ -45,6 +45,7 @@ class Developer(models.Model):
 class TeamCollaboration(models.Model):
     project = models.ForeignKey(Project,null=False,on_delete=models.CASCADE)
     developer = models.ForeignKey(Developer,null=False,on_delete=models.CASCADE)
+    added = models.DateTimeField(auto_now=True)
 
     def create(self,project,developer):
         try:
@@ -54,6 +55,14 @@ class TeamCollaboration(models.Model):
             self.project = project
             self.developer = developer
             self.save()
+
+    @property
+    def identification(self):
+        return self.developer.user.username
+
+    @property
+    def last_login(self):
+        return self.developer.user.last_login
 
 #System classes 
 
@@ -179,8 +188,6 @@ class DeveloperClient(models.Model):
                 pass
             user = User.objects.create_user(username=new_developer_client_user_username,
                                  password=password)
-
-            print(password)
 
             return user
         

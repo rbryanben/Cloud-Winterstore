@@ -18,6 +18,7 @@ from pymongo.mongo_client import MongoClient
 from distutils.util import strtobool
 from SharedApp.models import Developer, DeveloperClient, Project , TeamCollaboration, IndexObject , Integration , BarnedDeveloperClient
 from .serializers import FileDownloadInstanceSerializer, IntegrationSerializer , DeveloperClientSerializer
+from SharedApp.serializers import TeamCollaboratorSerializer
 
 
 @login_required(login_url='/')
@@ -198,7 +199,36 @@ def searchDownloadStats(request):
     #serialize the data
     serializer = FileDownloadInstanceSerializer(downloadObjects,many=True)
     return JsonResponse(serializer.data,safe=False)
-    
+
+# Create Project API
+@require_http_methods(["POST","GET"])
+@csrf_exempt
+@login_required
+def projectAdminAccounts(request):
+    #POST METHOD
+    if (request.method == "POST"):
+        project_to_fetch_admin_accounts = None
+        try:
+            received_json =  json.loads(request.body)
+            received_project_data = received_json["project"].split(".")
+            received_project_owner  = User.objects.get(username=received_project_data[0])
+            received_project_name = received_project_data[1]
+            project_to_fetch_admin_accounts = Project.objects.get(owner=received_project_owner,name=received_project_name)
+        except:
+            return HttpResponse("500")
+        
+        #check pemmission
+        if (not isAdministrator(request,project_to_fetch_admin_accounts)):
+            return HttpResponse("denied")
+
+        #get collaborations
+        collaborations = TeamCollaboration.objects.filter(project=project_to_fetch_admin_accounts)
+        serializer = TeamCollaboratorSerializer(collaborations,many=True)
+        print(serializer.data)
+        return HttpResponse("hie there")
+    return HttpResponse("200")
+
+
 # Create Project API
 @require_http_methods(["POST",])
 @csrf_exempt
@@ -264,7 +294,6 @@ def barnClient(request):
 
     return HttpResponse("200")
 
-
 @require_http_methods(["POST",])
 @csrf_exempt
 @login_required
@@ -297,8 +326,7 @@ def removeBarnForClient(request):
     BarnedDeveloperClient.objects.get(client=CLIENT_TO_REMOVE_BARN).delete()
 
     return HttpResponse("200")
-
-    
+   
 # Create Project API
 @require_http_methods(["POST"])
 @csrf_exempt

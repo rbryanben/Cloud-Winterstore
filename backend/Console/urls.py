@@ -22,6 +22,7 @@ urlpatterns = [
     path("remove-barn-client-account",views.removeBarnForClient), #barn client
     path("search-developer-clients",views.searchDeveloperClients), #search developer client
     path("add-developer-client",views.addDeveloperClient), #add developer client
+    path("project-admin-clients",views.projectAdminAccounts), #project admin accounts
 
     ###############
     ############### Fallback 

@@ -82,7 +82,6 @@
         <!-- sub-pages -->
         {% include 'Console/pages/accounts_sub_pages/client_accounts.html' %}
         {% include 'Console/pages/accounts_sub_pages/admin_accounts.html' %}
-        {% include 'Console/pages/accounts_sub_pages/deleted_accounts.html' %}
     </div>
 </div>
 
@@ -104,12 +103,14 @@
     //client listener
     document.getElementById("AccountsClientButton").addEventListener("click",()=>{
         hideAllAccountsSubPages()
+        setSelected(document.getElementById("AccountsClientButton"))
         showClientAccounts()
     })
 
     //admin listener
     document.getElementById("AccountsAdminButton").addEventListener("click",()=>{
         hideAllAccountsSubPages();
+        setSelected(document.getElementById("AccountsAdminButton"))
         showAdminAccounts()
     })
     
@@ -127,9 +128,13 @@
     function hideAllAccountsSubPages(){
         hideClientAccounts()
         hideAdminAccounts()
-        hideDeletedAccounts()
+        //hideDeletedAccounts()
     }
 
-
+    function setSelected(object){
+        document.getElementById("AccountsClientButton").classList.remove("selected")
+        document.getElementById("AccountsAdminButton").classList.remove("selected")
+        object.classList.add("selected")
+    }
 
 </script>
