@@ -64,14 +64,14 @@
 </style>
 
 <div id="accounts-page" class="accounts-page">
-    <div class="accounts-page-left">
-        <div class="accounts-page-left-item selected">
+    <div  class="accounts-page-left">
+        <div id="AccountsClientButton" class="accounts-page-left-item selected">
             <div class="div-flex center" > <i class="fas fa-user-alt"></i></div>
             <div class="page-item-text div-flex start">Client Accounts</div>
         </div>
-        <div class="accounts-page-left-item">
+        <div id="AccountsAdminButton" class="accounts-page-left-item">
             <div class="div-flex center" > <i class="fas fa-user-shield"></i></div>
-            <div class="page-item-text div-flex start">Admin Accounts</div>
+            <div  class="page-item-text div-flex start">Admin Accounts</div>
         </div>
         <div class="accounts-page-left-item">
             <div class="div-flex center" ><i class="fas fa-trash-alt"></i></div>
@@ -89,11 +89,32 @@
 
 <!-- script -->
 <script>
+    let pageInitialized = false
 
     //function to show the page
     function showAccountsPage(){
-        document.getElementById("accounts-page").style.display = "grid" ;
+        document.getElementById("accounts-page").style.display = "grid" ;        
+        
+        if (pageInitialized == false){
+            pageInitialized = true
+            intilize()
+        }
+    }
 
+    //client listener
+    document.getElementById("AccountsClientButton").addEventListener("click",()=>{
+        hideAllAccountsSubPages()
+        showClientAccounts()
+    })
+
+    //admin listener
+    document.getElementById("AccountsAdminButton").addEventListener("click",()=>{
+        hideAllAccountsSubPages();
+        showAdminAccounts()
+    })
+    
+    //state management
+    function intilize(){
         //entry point
         showClientAccounts()
     }
@@ -101,7 +122,6 @@
     //function to hide the page
     function hideAccountsPage(){
         document.getElementById("accounts-page").style.display = "none" ;
-      
     }
 
     function hideAllAccountsSubPages(){
