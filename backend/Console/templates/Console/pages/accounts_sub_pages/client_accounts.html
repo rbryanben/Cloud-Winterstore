@@ -231,7 +231,7 @@
 
     <div class="top-toolbar">
         <form autocomplete="off" method="dialog">
-            <input id="searchClientInput" class="top-toolbar-search" onkeyup="searchClientAccounts(this)" placeholder="Search for client" type="search">
+            <input id="searchClientInput" class="top-toolbar-search" onkeyup="searchClientAccounts(this)" placeholder="Search for client" >
         </form>
         <span class="add-client-account"><i class="fas fa-plus" onclick="showAddClientModal()"></i></span>
     </div>
@@ -402,7 +402,9 @@
                 hideDeleteAccountModal()
                 if (!activeClientSearch){
                     getDeveloperClients()
+                    return
                 }
+                searchClientAccounts(document.getElementById("searchClientInput"))
             } 
             else if (responce == "1704"){
                 ShowWarning("Client Doesn't Exists")
@@ -465,7 +467,9 @@
                 hideEditClientModal()
                 if (!activeClientSearch){
                     getDeveloperClients()
+                    return
                 }     
+                searchClientAccounts(document.getElementById("searchClientInput"))
             } 
             else if (responce == "1704"){
                 ShowWarning("Client Does'nt Exists")
