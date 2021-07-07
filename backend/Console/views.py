@@ -388,7 +388,7 @@ def searchDeveloperClients(request):
 
     return JsonResponse(serializer.data,safe=False)
 
-@require_http_methods(["POST","UPDATE"])
+@require_http_methods(["POST","UPDATE","DELETE"])
 @csrf_exempt
 @login_required
 def addDeveloperClient(request):
@@ -434,6 +434,17 @@ def addDeveloperClient(request):
             return HttpResponse("200")
         except:
             return HttpResponse("500")
+
+    #DELET
+    if (request.method == "DELETE"):
+        try:
+            client_to_update = DeveloperClient.objects.get(integration=integration_to_add_to,identification=client_to_add_identification)
+            client_to_update.delete()
+            return HttpResponse("200")
+        except:
+            return HttpResponse("500")
+        
+        
     
     
     #check if the client exists
