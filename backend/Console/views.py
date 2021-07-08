@@ -92,6 +92,10 @@ def uploadFile(request):
     except:
         return HttpResponse("500")
 
+    #check pemmision 
+    if not isAdministrator(request,parentIndexObject.project):
+        return HttpResponse("500")
+
     #check if the filename file exists 
     try:
         IndexObject.objects.get(name=name,parent=parentIndexObject)
@@ -314,9 +318,6 @@ def projectAdminAccounts(request):
         serializer = TeamCollaboratorSerializer(collaborations,many=True)
         
         return JsonResponse(serializer.data,safe=False)
-
-
-
 
 # Create Project API
 @require_http_methods(["POST",])
@@ -601,6 +602,9 @@ def getFolder(request):
         except:
             return HttpResponse("500")
 
+        if (not isAdministrator(request,folder.project)):
+            return HttpResponse("denied")
+
         return render(request,"Console/frames/files.html",context)
     except:
         return HttpResponse("doesn't seem like json data")
@@ -618,14 +622,8 @@ def getFile(request):
         
         #check user is the owner of the project 
         #if not check if the current developer is collaborating in the index object's project
-        if (request.user != indexObject.owner):
-            #check if there is a collaboration
-            try:
-                indexObjectProject = indexObject.project
-                currentDeveloper = Developer.objects.get(user=request.user)
-                TeamCollaboration.objects.get(project=indexObjectProject,developer=currentDeveloper)
-            except:
-                return HttpResponse("denied")
+        if (not isAdministrator(request,indexObject.project)):
+            return HttpResponse("denied")
 
         #get file from mongo 
         returnedFile = mongoGetFile(bsonDocumentKey)
@@ -703,7 +701,7 @@ def isAdministrator(request,project):
         return True
     except:
         pass
-    
+
     return False
 
 def meetsHTMLCompatability(string):
