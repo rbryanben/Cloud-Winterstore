@@ -207,7 +207,24 @@
             "identification" : document.getElementById("newAdminAccountIdentification").value
         }
 
-        alert(data["identification"])
+        //check length 
+        if (data["identification"].length < 6){
+            ShowWarning("Invalid Email")
+            return
+        }
+        
+        putToServer("/console/project-admin-clients", data, function(responce) {
+            if (responce == "200") {
+                ShowSuccess("Account Added")
+                hideAddAdminAccountModal()
+                if (!activeAdminAccountSearch){
+                    getAdminAccounts()
+                }
+            } else {
+                ShowWarning("Request Failed")
+            }
+        })
+
     }
 
     //show delete confirmation 
