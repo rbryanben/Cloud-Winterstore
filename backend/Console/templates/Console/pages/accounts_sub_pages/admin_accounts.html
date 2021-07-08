@@ -185,6 +185,22 @@
         }
     }
 
+    //loading 
+    function adminAccountPageLoading(){
+        var loading = document.getElementById("adminAccountPageLoader")
+        if (!loading.classList.contains("show")){
+            loading.classList.add("show")
+        }
+    }
+
+    function adminAccountPageLoadingCancel(){
+        var loading = document.getElementById("adminAccountPageLoader")
+        if (loading.classList.contains("show")){
+            loading.classList.remove("show")
+        }
+    }
+
+
     //add admin account front 
     function showAddAdminAccountModal(){
         var modal = document.getElementById("addAdminAccountModal")
@@ -257,6 +273,11 @@
                     ShowSuccess("Deleted Account")
                     getAdminAccounts()
                 }
+                else {
+                    document.getElementById("searchadminInput").value == ""
+                    ShowSuccess("Deleted Account")
+                    hideDeleteAdminModal()
+                }
             } else {
                 ShowWarning("Delete Account Failed")
             }
@@ -292,6 +313,7 @@
 
     //get admin accounts
     function getAdminAccounts(){
+        adminAccountPageLoading()
         var bodyToAdd = document.getElementById("admins-accounts-list")
         bodyToAdd.innerHTML = ""
         data = {
@@ -299,6 +321,7 @@
         }
 
         postToServer("/console/project-admin-clients", data, function(responce) {
+            adminAccountPageLoadingCancel()
             if (responce == "500") {
                 ShowWarning("Error Fetching Objects")
             } else {  
@@ -331,6 +354,7 @@
 
     //search admin account
     function searchAdminAccount(){
+        adminAccountPageLoading()
         if (document.getElementById("searchadminInput").value == ""){
             getAdminAccounts()
             activeAdminAccountSearch = false
@@ -345,6 +369,7 @@
         }
 
         patchToServer("/console/project-admin-clients", data, function(responce) {
+            adminAccountPageLoadingCancel()
             if (responce == "500") {
                 ShowWarning("Error Fetching Objects")
             } else {  
