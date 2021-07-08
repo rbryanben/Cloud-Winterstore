@@ -58,7 +58,7 @@ class TeamCollaboration(models.Model):
 
     @property
     def identification(self):
-        return self.developer.user.username
+        return self.developer.user.email
 
     @property
     def last_login(self):

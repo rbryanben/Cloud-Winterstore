@@ -201,7 +201,7 @@ def searchDownloadStats(request):
     return JsonResponse(serializer.data,safe=False)
 
 # Create Project API
-@require_http_methods(["POST","GET"])
+@require_http_methods(["POST","GET","DELETE"])
 @csrf_exempt
 @login_required
 def projectAdminAccounts(request):
@@ -224,9 +224,36 @@ def projectAdminAccounts(request):
         #get collaborations
         collaborations = TeamCollaboration.objects.filter(project=project_to_fetch_admin_accounts)
         serializer = TeamCollaboratorSerializer(collaborations,many=True)
-        print(serializer.data)
-        return HttpResponse("hie there")
-    return HttpResponse("200")
+
+        #return json objects
+        return JsonResponse(serializer.data,safe=False)
+    
+    #POST METHOD
+    if (request.method == "DELETE"):
+        project_to_delete_admin_accounts = None
+        team_collaboration_to_delete = None
+        try:
+            received_json =  json.loads(request.body)
+            received_project_data = received_json["project"].split(".")
+            received_project_owner  = User.objects.get(username=received_project_data[0])
+            received_project_name = received_project_data[1]
+            project_to_delete_admin_accounts = Project.objects.get(owner=received_project_owner,name=received_project_name)
+            #get developer
+            developer_email = received_json['identification']
+            developer = Developer.objects.get(user=User.objects.get(email=developer_email))
+            #get admin account to delete
+            team_collaboration_to_delete = TeamCollaboration.objects.get(project=project_to_delete_admin_accounts,developer=developer)
+        except exceptions.ObjectDoesNotExist:
+            return HttpResponse("not found")
+        except:
+            return HttpResponse("500")
+        
+        #check pemmission
+        if (not isAdministrator(request,project_to_delete_admin_accounts)):
+            return HttpResponse("denied")
+
+        team_collaboration_to_delete.delete()
+        return HttpResponse("200")
 
 
 # Create Project API
