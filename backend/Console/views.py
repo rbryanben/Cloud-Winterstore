@@ -1,4 +1,5 @@
 from django import http
+from rest_framework.serializers import Serializer
 from SharedApp import serializers
 from django.contrib.auth.models import User
 from django.core import exceptions
@@ -165,6 +166,7 @@ def getDownloadStats(request):
     #serialize the data
     serializer = FileDownloadInstanceSerializer(downloadObjects,many=True)
     return JsonResponse(serializer.data,safe=False)
+
 
 @login_required(login_url='/console/login-required')
 @require_http_methods(["POST",])
@@ -416,14 +418,32 @@ def removeBarnForClient(request):
     BarnedDeveloperClient.objects.get(client=CLIENT_TO_REMOVE_BARN).delete()
 
     return HttpResponse("200")
-   
+
+
+# Create Project API
+@require_http_methods(["POST"])
+@csrf_exempt
+@login_required
+def search_update_integration(request):
+    if (request.method == "POST"):
+        project = getProjectFromRequest(request)
+        criteria = getValueOfJSONRequest(request,"criteria")
+
+
+        if (not isAdministrator(request,project)):
+            return HttpResponse("denied")
+       
+        objects = Integration.objects.filter(project=project,identifier=criteria)
+        data = IntegrationSerializer(objects,many=True)
+
+        return JsonResponse(data.data,safe=False)
+
 # Create Project API
 @require_http_methods(["POST"])
 @csrf_exempt
 @login_required
 def integrations(request):
     project = None
-
     try:
         receivedJSONData = json.loads(request.body)['project'].split(".")
         #project name and user
@@ -707,6 +727,40 @@ def isAdministrator(request,project):
 def meetsHTMLCompatability(string):
     return True
 
+def getProjectFromRequest(request):   
+    try:
+        receivedData = json.loads(request.body)
+        project_owner_data = receivedData["project"].split(".")
+        project = Project.objects.get(owner=User.objects.get(username=project_owner_data[0]),name=project_owner_data[1])
+        return project
+    except exceptions.ObjectDoesNotExist:
+        return HttpResponse("not found")
+    except:
+        return HttpResponse("500")
+
+def getProjectOwnerFromRequest(request):
+    try:
+        receivedData = json.loads(request.body)
+        project_owner_data = receivedData["project"].split(".")
+        return User.objects.get(username=project_owner_data[0])
+    except exceptions.ObjectDoesNotExist:
+        return HttpResponse("not found")
+    except:
+        return HttpResponse("500")
+
+def getJSONFromRequest(request):
+    try:
+        receivedData = json.loads(request.body)
+        return receivedData
+    except:
+        return HttpResponse("500")
+
+def getValueOfJSONRequest(request,key):
+    try:
+        receivedData = json.loads(request.body)
+        return receivedData[key]
+    except:
+        return HttpResponse("500")
 
 def checkProjectName(request,name):
     if (len(name) < 6):
