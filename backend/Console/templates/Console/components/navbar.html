@@ -145,13 +145,13 @@
 
     var selectedElement 
 
-
     window.addEventListener("resize",()=>{
         if (window.innerWidth >= 600){
             positionMarkerOn(selectedElement)
         }
     })
 
+    //entry point
     window.addEventListener("DOMContentLoaded",()=>{
         folders = document.getElementById("navFolders")
         accounts = document.getElementById("navAccounts")
@@ -172,6 +172,8 @@
 
         cloud.addEventListener("click",()=>{
             setMarkerOn(cloud)
+            hideNavBarPages()
+            showIntegrationsPage()
         })
 
         folders.addEventListener("click",()=>{
@@ -206,6 +208,7 @@
         //uses function from browser.html
         hideBrowser()
         hideAccountsPage()
+        hideIntegrationsPage()
     }
 
     function positionMarkerOn(element){

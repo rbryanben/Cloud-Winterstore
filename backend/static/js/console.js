@@ -20,7 +20,6 @@ window.document.addEventListener("readystatechange",()=>{
         }
 })
 
-
 //
 //document
 function disableScrolling() {
@@ -28,7 +27,6 @@ function disableScrolling() {
     var y = window.scrollY;
     window.onscroll = function() { window.scrollTo(x, y); };
 }
-
 
 //date converter
 function convertDate(dateToConvert){
@@ -46,9 +44,6 @@ function convertDate(dateToConvert){
     }
     
 }
-
-
-
 
 ///keys global
 let lockUploadAndDownloadModal = true
@@ -115,12 +110,3 @@ function fallbackCopyTextToClipboard(text) {
   
     document.body.removeChild(textArea);
   }
-
-
-
-
-
-
-
-
-

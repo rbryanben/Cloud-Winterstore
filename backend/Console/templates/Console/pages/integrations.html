@@ -1,0 +1,105 @@
+{% load static %}
+<style>
+    .integrations-page {
+        display: grid;
+        height: 100%;
+        grid-template-columns: 20% 90%;
+        z-index: 102;
+        cursor: pointer;
+        display: none;
+    }
+
+    .integrations-page.show{
+        display: grid;
+    }
+
+    .integrations-page> .integrations-page-left{
+        padding-left: 20px;
+        padding-top: 20px;
+        border-right: solid 1px rgba(238, 238, 238, 0.808);
+    }
+
+    .integrations-page-left-item {
+        display: grid;
+        grid-template-columns: 10% 90%;
+        gap: 10px;
+        height: 30px;
+        color: gray;
+        margin-top: 10px;
+        transition: all 0.1s ease-in;
+    }
+
+    .page-item-icon {
+        font-size: 20px;
+    }
+
+    .integrations-page-left-item.selected {
+        color: rgb(77, 77, 77);
+    }
+
+    .page-item-text {
+        font-size: small;
+        height: inherit;
+        margin-top: 3px;
+    }
+
+    .integrations-page-right  {
+        padding-right: 10%;
+        padding-top: 20px;
+        height: 100%;
+    }
+
+    
+/* adaptivenes */
+
+@media only screen and (max-width: 600px) {
+    .integrations-page {
+      grid-template-columns: 40% 60%;
+    }
+
+    .integrations-page-right  {
+        padding-right: 0px;
+        padding-top: 20px;
+        height: 100%;
+    }
+}
+
+
+</style>
+
+<div id="integrations-page" class="integrations-page show">
+    <div  class="integrations-page-left">
+        <div  class="integrations-page-left-item selected">
+            <div class="div-flex center" > <i class="fas fa-user-alt"></i></div>
+            <div class="page-item-text div-flex start">All Integrations</div>
+        </div>
+        <div  class="integrations-page-left-item selected">
+            <div class="div-flex center" > <i class="fas fa-user-alt"></i></div>
+            <div class="page-item-text div-flex start">Deleted Integrations</div>
+        </div>
+    </div>
+    <div class="integrations-page-right" onclick="hideOptionsModals()" >
+        <!-- sub-pages -->
+        {% include 'Console/pages/integrations_sub_pages/integrations.html' %}
+    </div>
+</div>
+
+
+<script>
+
+    //show and hide page
+    function showIntegrationsPage(){
+        var page = document.getElementById("integrations-page")
+        if (!page.classList.contains("show")){
+            page.classList.add("show")
+        }
+    }
+
+    function hideIntegrationsPage(){
+        var page = document.getElementById("integrations-page")
+        if (page.classList.contains("show")){
+            page.classList.remove("show")
+        }
+    }
+
+</script>
