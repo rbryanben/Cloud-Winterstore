@@ -70,11 +70,11 @@
 <div id="integrations-page" class="integrations-page show">
     <div  class="integrations-page-left">
         <div  class="integrations-page-left-item selected">
-            <div class="div-flex center" > <i class="fas fa-user-alt"></i></div>
+            <div class="div-flex center" > <i class="fas fa-project-diagram"></i></div>
             <div class="page-item-text div-flex start">All Integrations</div>
         </div>
-        <div  class="integrations-page-left-item selected">
-            <div class="div-flex center" > <i class="fas fa-user-alt"></i></div>
+        <div  class="integrations-page-left-item">
+            <div class="div-flex center" > <i class="fas fa-trash-alt"></i></div>
             <div class="page-item-text div-flex start">Deleted Integrations</div>
         </div>
     </div>
@@ -87,13 +87,28 @@
 
 <script>
 
+    let integrationsPageInitialized = false
+
     //show and hide page
     function showIntegrationsPage(){
         var page = document.getElementById("integrations-page")
         if (!page.classList.contains("show")){
             page.classList.add("show")
         }
+
+        //initilize page 
+        if (integrationsPageInitialized == false){
+            initializeIntegrationsPage()
+        }
     }
+
+    //initilizer 
+    function initializeIntegrationsPage(){
+        integrationsPageInitialized = true
+        //show the integrations sub page
+        showIntegrationsSubPage()
+    }
+
 
     function hideIntegrationsPage(){
         var page = document.getElementById("integrations-page")
