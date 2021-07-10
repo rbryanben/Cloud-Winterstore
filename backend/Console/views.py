@@ -1,4 +1,6 @@
 from django import http
+from django.utils.translation import activate
+from pymongo.message import update
 from rest_framework.serializers import Serializer
 from SharedApp import serializers
 from django.contrib.auth.models import User
@@ -17,8 +19,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from pymongo.mongo_client import MongoClient
 from distutils.util import strtobool
-from SharedApp.models import Developer, DeveloperClient, Project , TeamCollaboration, IndexObject , Integration , BarnedDeveloperClient
-from .serializers import FileDownloadInstanceSerializer, IntegrationSerializer , DeveloperClientSerializer
+from SharedApp.models import Developer, DeveloperClient, Platform, Project , TeamCollaboration, IndexObject , Integration , BarnedDeveloperClient
+from .serializers import FileDownloadInstanceSerializer, IntegrationSerializer , DeveloperClientSerializer , PlatformSerializer
 from SharedApp.serializers import TeamCollaboratorSerializer
 
 
@@ -439,34 +441,123 @@ def search_update_integration(request):
         return JsonResponse(data.data,safe=False)
 
 # Create Project API
-@require_http_methods(["POST"])
+@require_http_methods(["POST","UPDATE","PATCH","DELETE"])
 @csrf_exempt
 @login_required
 def integrations(request):
-    project = None
-    try:
-        receivedJSONData = json.loads(request.body)['project'].split(".")
-        #project name and user
-        username = receivedJSONData[0]
-        projectName = receivedJSONData[1]
-        project = Project.objects.get(owner=User.objects.get(username=username),name=projectName)
-    except exceptions.ObjectDoesNotExist:
-        return HttpResponse("not found")
-    except:
-        return HttpResponse("Does'nt seem like the JSON we need")
+    if (request.method == "POST"):
+        project = None
+        try:
+            receivedJSONData = json.loads(request.body)['project'].split(".")
+            #project name and user
+            username = receivedJSONData[0]
+            projectName = receivedJSONData[1]
+            project = Project.objects.get(owner=User.objects.get(username=username),name=projectName)
+        except exceptions.ObjectDoesNotExist:
+            return HttpResponse("not found")
+        except:
+            return HttpResponse("Does'nt seem like the JSON we need")
 
 
-    #check if the request is an administrator
+        #check if the request is an administrator
+        if (not isAdministrator(request,project)):
+            return HttpResponse("denied")
+
+        #get integrations
+        integrations = Integration.objects.filter(project=project)
+
+        #serialize
+        serializer = IntegrationSerializer(integrations,many=True)
+
+        return JsonResponse(serializer.data,safe=False)
+
+    if (request.method == "UPDATE"):
+        #get project
+        project = getProjectFromRequest(request)
+        newIntegrationIdentification = getValueOfJSONRequest(request,"identification")
+        newIntegrationPlatform = getValueOfJSONRequest(request,"platform")
+        newIntegrationStatus = getValueOfJSONRequest(request,"status")
+
+        #check pemmissions
+        if (not isAdministrator(request,project)):
+            return HttpResponse("denied")
+        
+        #check if Integration exists
+        try:
+            Integration.objects.get(project=project,identifier=newIntegrationIdentification)
+            return HttpResponse('1705')
+        except:
+            pass
+        
+        newIntegration = Integration()
+        newIntegration.create(newIntegrationIdentification,Platform.objects.get(name=newIntegrationPlatform),project)
+
+        if (newIntegrationStatus == "Disabled"):
+            newIntegration.enable()
+
+        #create a new integration objects
+        return HttpResponse("200")
+    
+    if (request.method == "PATCH"):
+        project = getProjectFromRequest(request)
+        updateStatus = getValueOfJSONRequest(request,"status")
+        updateIdentification = getValueOfJSONRequest(request,"identification")
+        updatePlatform = getValueOfJSONRequest(request,"platform")
+        previous_name = getValueOfJSONRequest(request,"id")
+        
+        #check pemmission
+        if (not isAdministrator(request,project)):
+            return HttpResponse("denied")
+        
+        #update
+        integration_to_update= Integration.objects.get(project=project,identifier=previous_name)
+        integration_to_update.identifier = updateIdentification
+        integration_to_update.platform = Platform.objects.get(name=updatePlatform)
+        
+        if (updateStatus == "Active"):
+            integration_to_update.enabled = True
+        else:
+            integration_to_update.enabled = False
+        
+        #save
+        integration_to_update.save()
+
+        return HttpResponse("200")
+
+    if (request.method == "DELETE"):
+        project = getProjectFromRequest(request)
+        identification = getValueOfJSONRequest(request,"identification")
+        if (not isAdministrator(request,project)):
+            return HttpResponse("denied")
+        
+        Integration.objects.get(project=project,identifier=identification).delete()
+
+        return HttpResponse("200")
+# Create Project API
+@require_http_methods(["POST","UPDATE"])
+@csrf_exempt
+@login_required
+def generateNewKey(request):
+    project = getProjectFromRequest(request)
+    integrationName = getValueOfJSONRequest(request,"identification")
+
+    #check pemmisions 
     if (not isAdministrator(request,project)):
         return HttpResponse("denied")
 
-    #get integrations
-    integrations = Integration.objects.filter(project=project)
+    integration = Integration.objects.get(project=project,identifier=integrationName)
+    integration. generateNewKey()
+    return HttpResponse("200")
 
-    #serialize
-    serializer = IntegrationSerializer(integrations,many=True)
-
-    return JsonResponse(serializer.data,safe=False)
+@csrf_exempt
+def platform(request):
+    if (request.method == "GET"):
+        try:
+            platforms = Platform.objects.all()
+            platformsSerialized = PlatformSerializer(platforms,many=True)
+            return JsonResponse(platformsSerialized.data,safe=False)
+        except:
+            return HttpResponse("500")
 
 @require_http_methods(["POST","PUT"])
 @csrf_exempt

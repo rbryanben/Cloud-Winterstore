@@ -720,7 +720,6 @@
     }
 
     //add client modal
-
     function getIntegrations(){
         //body to display 
         var bodyToDisplay = document.getElementById("addClientIntegrations")
@@ -769,4 +768,17 @@
         modal.classList.remove("show")
     }
 
+    //add integrations 
+    function showAddIntegrationModal(){
+        var modal = document.getElementById("addIntegrationModal")
+        if (!modal.classList.contains("show")){
+            modal.classList.add("show")
+        }
+    }
+
+
+    function hideAddIntegrationsModal(){
+        var modal = document.getElementById("addIntegrationModal")
+        modal.classList.remove("show")
+    }
 </script>

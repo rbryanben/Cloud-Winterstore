@@ -96,8 +96,18 @@ class Integration(models.Model):
         self.identifier = identifier
         self.platform = platform
         self.project = project
-        self.integrationKey = string_generator(size=64)
         self.save()
+        self.generateNewKey()
+        self.enable()
+
+    def generateNewKey(self):
+        newKey = string_generator(size=38)
+        try:
+            Integration.objects.get(integrationKey=newKey)
+            self.generateNewKey()
+        except:
+            self.integrationKey = newKey
+            self.save()
 
     def enable(self):
         self.enabled = True

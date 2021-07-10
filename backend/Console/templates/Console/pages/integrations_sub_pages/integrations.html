@@ -4,6 +4,15 @@
     }
 
 
+    .animate-clicked {
+        transition: all 0.2s ease-in;
+    }
+
+    .animate-clicked.animate {
+        transform: rotate(180deg);
+    }
+
+
     /* page toolbar */
     .integrations-integrations-page.top-toolbar {
         margin-top: 20px;
@@ -62,9 +71,9 @@
 <div id="integrations-subpage" class="integrations-integrationss-page">
     <div class="top-toolbar" >
         <form autocomplete="off" method="dialog">
-            <input  autocomplete="off" onkeyup="searchIntegration(this)" class="top-toolbar-search" placeholder="Search file by id">
+            <input id="integrationsSearchInput"  autocomplete="off" onkeyup="searchIntegration(this)" class="top-toolbar-search" placeholder="Search file by id">
         </form>
-        <span class="add-admin-account"><i class="fas fa-plus"></i></span>
+        <span class="add-admin-account"><i class="fas fa-plus" onclick=" showAddIntegrationModal()"></i></span>
     </div>
 
     <!-- categorizer -->
@@ -77,7 +86,7 @@
 
 
     <!-- loader -->
-    <div id="integrationsFilesLoader" class="pageLoader" style="transform: scale(0.2);">
+    <div id="integrationsLoadingModal" class="pageLoader" style="transform: scale(0.2);">
         <div class="loader-console"></div>
    </div>
 
@@ -87,15 +96,120 @@
     </div>
 </div>
 
+<!-- add integration modal -->
+<div id="addIntegrationModal" class="console-modal">
+    <form method="dialog" autocomplete="off">
+        <!-- cancel  modal-->
+        <div class="modal-cancel">
+            <i class="fas fa-times" onclick="hideAddIntegrationsModal()"></i>
+        </div>
+
+        <!-- integration identification-->
+        <div class="console-modal-subtext" style="font-size: small;">Identification</div>
+        <div  class="input-frame" style="position: relative;">
+            <input id="newIntegrationIdentification" placeholder="Integration Name" class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;font-size: small;">
+        </div>
+        
+        <!-- Integration plaforms -->
+        <div class="console-modal-subtext" style="font-size: small;">Platform</div>
+        <div  class="input-frame" style="position: relative;">
+            <select id="newIntegrationPlatform" class="projects-modal-body-item plain-input no-anime" style="width: 302px; padding-right: 5px; cursor: text; font-size: small;">
+                <!-- integrations come here -->
+                <option value="Windows">Windows</option>
+            </select>
+        </div>
+
+        
+        <!-- status platform -->
+        <div class="console-modal-subtext" style="font-size: small;">Startup status</div>
+        <div  class="input-frame" style="position: relative;">
+            <select id="newIntegrationStatus" class="projects-modal-body-item plain-input no-anime" style="width: 302px; padding-right: 5px; cursor: text; font-size: small;">
+                <!-- integrations come here -->
+                <option value="Active">Active</option>
+                <option value="Disabled">Disabled</option>
+            </select>
+        </div>
+  
+        <div class="folder-namer-buttons" style="margin-top: 5px;">
+            <div onclick="addAddIntegrationHttpRequest()" class="create-folder-button" style="font-size: small;"> 
+                Add
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- update integration modal -->
+<div id="updateIntegrationModal" class="console-modal">
+    <form method="dialog" autocomplete="off">
+        <!-- cancel  modal-->
+        <div class="modal-cancel">
+            <i class="fas fa-times" onclick="hideUpdateIntegrationsModal()"></i>
+        </div>
+
+        <!-- integration identification-->
+        <div class="console-modal-subtext" style="font-size: small;">Identification</div>
+        <div  class="input-frame" style="position: relative;">
+            <input id="updateIntegrationIdentification" placeholder="Integration Name" class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;font-size: small;">
+        </div>
+        
+        <!-- Integration plaforms -->
+        <div class="console-modal-subtext" style="font-size: small;">Platform</div>
+        <div  class="input-frame" style="position: relative;">
+            <select id="updateIntegrationPlatform" class="projects-modal-body-item plain-input no-anime" style="width: 302px; padding-right: 5px; cursor: text; font-size: small;">
+                <!-- integrations come here -->
+                <option value="Windows">Windows</option>
+            </select>
+        </div>
+
+        
+        <!-- status platform -->
+        <div class="console-modal-subtext" style="font-size: small;">Status</div>
+        <div  class="input-frame" style="position: relative;">
+            <select id="updateIntegrationStatus" class="projects-modal-body-item plain-input no-anime" style="width: 302px; padding-right: 5px; cursor: text; font-size: small;">
+                <!-- integrations come here -->
+                <option value="Active">Active</option>
+                <option value="Disabled">Disabled</option>
+            </select>
+        </div>
+  
+        <div class="folder-namer-buttons" style="margin-top: 5px;">
+            <div onclick="updateIntegrationHttpRequest()" class="create-folder-button" style="font-size: small;"> 
+                Add
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- delete integration modal-->
+<div id="deleteIntegrationModal" class="console-modal">
+    <form method="dialog" autocomplete="off">
+        <!-- cancel  modal-->
+        <div class="modal-cancel">
+            <i class="fas fa-times" onclick="hideDeleteIntegrationModal()"></i>
+        </div>
+        <div class="console-modal-subtext" style="font-size: small;">Delete Integration</div>
+        <div  class="input-frame" style="position: relative;">
+            <input id="deleteIntegrationIdentification" readonly class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;font-size: small;">
+        </div>
+        <div class="folder-namer-buttons" style="margin-top: 5px;">
+            <div onclick="deleteIntegrationHttpRequest()"  class="create-folder-button" style="font-size: small; background-color: rgba(228, 82, 82, 0.685);"> 
+                Delete
+            </div>
+        </div>
+    </form>
+</div>
+
+
 <script>
     let integrationsSubPageInitialized = false
-
+    let activeIntegrationSearch = false
     
     //initialize
     function initializeIntegrationsSubPage(){
         integrationsSubPageInitialized = true
         //get integrations
         getIntegrationsList()
+        getPlatformsForIntegrationsHttpRequest()
     }
 
     //entry
@@ -110,8 +224,84 @@
         }
     }
 
+
+    //add integrations 
+    function showAddIntegrationModal(){
+        var modal = document.getElementById("addIntegrationModal")
+        if (!modal.classList.contains("show")){
+            modal.classList.add("show")
+        }
+
+        //clear the identification
+        document.getElementById("newIntegrationIdentification").value = ""
+    }
+
+    function hideAddIntegrationsModal(){
+        var modal = document.getElementById("addIntegrationModal")
+        modal.classList.remove("show")
+    }
+
+    function getPlatformsForIntegrationsHttpRequest(){
+        //body to put set and clear
+        var bodyToput = document.getElementById("newIntegrationPlatform")
+        var bodyToputUpdateModal = document.getElementById("updateIntegrationPlatform")
+        bodyToput.innerHTML = ""
+        bodyToputUpdateModal.innerHTML = ""
+
+        getToServer("/console/platforms", null, function(responce) {
+            var platformsJSONArray = JSON.parse(responce)
+
+            platformsJSONArray.forEach(platform => {
+                frame = `
+                    <option value="${platform["name"]}">${platform["name"]}</option>
+                `
+                bodyToput.innerHTML += frame
+                bodyToputUpdateModal.innerHTML += frame
+            });
+        })
+    }
+
+    function addAddIntegrationHttpRequest(){
+        var newIntegrationIdentification = document.getElementById("newIntegrationIdentification").value
+        var newIntegrationPlatform = document.getElementById("newIntegrationPlatform").value
+        var newIntegrationStatus = document.getElementById("newIntegrationStatus").value
+        
+        //data to update
+        data = {
+            "identification" : newIntegrationIdentification,
+            "platform" : newIntegrationPlatform,
+            "status" : newIntegrationStatus,
+            "project" : localStorage.getItem("working-project")
+        }
+
+        //check if the identification is not empty
+        if (newIntegrationIdentification.length < 6){
+            ShowWarning("Check Identification")
+            return
+        }    
+
+        //request 
+        updateToServer("/console/integrations",data, function(responce) {
+            if (responce == "200") {
+                ShowSuccess("Integration Created")
+                hideAddIntegrationsModal()
+                if (!activeIntegrationSearch){
+                    getIntegrationsList()
+                }
+            } 
+            else if(responce == "1705"){
+                ShowWarning("Integration Exists")
+            }
+            else {
+                ShowWarning("Something's Wrong")
+            }
+        })   
+    }
+
+
     //get integrations
     function getIntegrationsList(){
+        setIntegrationsLoading(true)
         //body to display 
         var bodyToDisplay = document.getElementById("bodyIntegrationsList")
         bodyToDisplay.innerHTML = ""
@@ -123,6 +313,7 @@
 
         //request
         postToServer("/console/integrations", data, function(responce) {
+            setIntegrationsLoading(false)
             if (responce == "not found" || responce == "Does'nt seem like the JSON we need"){
                 ShowWarning("Error Fetching Objects")
             }
@@ -136,19 +327,19 @@
                     frame = `
                     <!-- categorizer -->
                         <div class="integrations-file-item">
-                            <div class="categorizer-text hide-mobile">${intergrationNew.identifier}</div>
+                            <div class="categorizer-text ">${intergrationNew.identifier}</div>
                             <div class="categorizer-text hide-mobile ">${jsonObject["platform"]["name"]}</div>
                             <div class="categorizer-text hide-mobile ">${convertDate(jsonObject["created"])}</div>
                             <div class="categorizer-text hide-mobile allow-select ">${jsonObject["integrationKey"]}</div>
                             <div class="categorizer-text controls-client-accounts hide-mobile">
                                 <div class="barn-client hide-mobile">
-                                    <i class="fas fa-sync-alt"></i>
+                                    <i class="fas fa-sync-alt animate-clicked" onclick="generateNewKeyHttpRequest('${intergrationNew.identifier}',this)"></i>
                                 </div>
                                 <div class="delete-client hide-mobile">
-                                    <i class="fas fa-edit" ></i>          
+                                    <i class="fas fa-edit" onclick="showUpdateIntegrationsModal('${jsonObject["identifier"]}','${jsonObject["platform"]["name"]}',${jsonObject["enabled"]})"></i>      
                                 </div>
                                 <div class="edit-client hide-mobile">
-                                    <i class="fas fa-trash"></i>
+                                    <i class="fas fa-trash" onclick="showDeleteConfirmationModal('${intergrationNew.identifier}')"></i>
                                 </div>
                             </div>  
                         </div>
@@ -164,6 +355,19 @@
 
     function searchIntegration(object){
         document.getElementById("bodyIntegrationsList").innerHTML = ""
+        //if search is empty
+        if (object.value.length == 0){
+            getIntegrationsList()
+            return
+        }
+
+        //if search length is 6 or more then search 
+        if (object.value.length < 6){
+            return
+        }
+
+        //start loading
+        setIntegrationsLoading(true)
 
         data = {
             "project" : localStorage.getItem("working-project"),
@@ -171,25 +375,26 @@
         }
 
         postToServer("/console/search-update-integrations",data, function(responce) {
+            setIntegrationsLoading(false)
             receivedObjects = JSON.parse(responce)
             receivedObjects.forEach(jsonObject => {
                 frame = `
                     <!-- categorizer -->
                     <div class="integrations-file-item">
-                        <div class="categorizer-text hide-mobile">${jsonObject["identifier"]}</div>
+                        <div class="categorizer-text">${jsonObject["identifier"]}</div>
                         <div class="categorizer-text hide-mobile ">${jsonObject["platform"]["name"]}</div>
                         <div class="categorizer-text hide-mobile ">${convertDate(jsonObject["created"])}</div>
                         <div class="categorizer-text hide-mobile allow-select ">${jsonObject["integrationKey"]}</div>
                     
                         <div class="categorizer-text controls-client-accounts hide-mobile">
                             <div class="barn-client hide-mobile">
-                                <i class="fas fa-sync-alt"></i>
+                                <i class="fas fa-sync-alt animate-clicked" onclick="generateNewKeyHttpRequest('${jsonObject["identifier"]}',this)"></i>
                             </div>
                             <div class="delete-client hide-mobile">
-                                <i class="fas fa-edit" ></i>          
+                                <i class="fas fa-edit" onclick="showUpdateIntegrationsModal('${jsonObject["identifier"]}','${jsonObject["platform"]["name"]}',${jsonObject["enabled"]})"></i>          
                             </div>
                             <div class="edit-client hide-mobile">
-                                <i class="fas fa-trash"></i>
+                                <i class="fas fa-trash" onclick="showDeleteConfirmationModal('${jsonObject["identifier"]}')"></i>
                             </div>
                         </div>  
                     </div> 
@@ -199,5 +404,144 @@
             });
         })
     }
+
+    //loading
+    function setIntegrationsLoading(stateLoading){
+        var loadingModal = document.getElementById("integrationsLoadingModal")
+        if (stateLoading == false){
+            loadingModal.classList.remove("show")
+        }
+        else if (stateLoading == true){
+            if (!loadingModal.classList.contains("show")){
+                loadingModal.classList.add("show")
+            }
+        }
+    }
+
+    //generate new key
+    function generateNewKeyHttpRequest(integration,object){
+        //animate
+        if (!object.classList.contains("animate")){
+            object.classList.add("animate")
+        }
+        
+        data = {
+            "identification" : integration,
+            "project" : localStorage.getItem("working-project")
+        }
+
+        postToServer("/console/generate-new-key", data, function(responce) {
+            if (responce == "200") {
+                ShowSuccess("Key Generated")
+                if (!activeIntegrationSearch){
+                    getIntegrationsList()
+                }
+            } else {
+                ShowWarning("Server Error")
+            }
+        })
+    }
+
+    //update integration
+    let integrationToUpdate = "None"
+
+    function showUpdateIntegrationsModal(identification,platform,status){
+        var modal = document.getElementById("updateIntegrationModal")
+        if (!modal.classList.contains("show")){
+            modal.classList.add("show")
+        }
+
+        //elements
+        var updateIntegrationsInput= document.getElementById("updateIntegrationIdentification")
+        var updateIntegrationsStatus = document.getElementById("updateIntegrationStatus")
+        var updateIntegrationPlatform = document.getElementById("updateIntegrationPlatform")
+
+        updateIntegrationsInput.value = identification
+        integrationToUpdate = identification
+        //set status
+        if (status){
+            updateIntegrationsStatus.value = "Active"
+        }
+        else {
+            updateIntegrationsStatus.value = "Disabled"
+        }
+
+        //set platform
+        updateIntegrationPlatform.value = platform
+    }
+
+    //update integration httprequest
+    function updateIntegrationHttpRequest(){
+        //elements
+        var updateIntegrationsInput= document.getElementById("updateIntegrationIdentification")
+        var updateIntegrationsStatus = document.getElementById("updateIntegrationStatus")
+        var updateIntegrationPlatform = document.getElementById("updateIntegrationPlatform")
+
+        //check the length of the identification 
+        if (updateIntegrationsInput.value.length < 6){
+            ShowWarning("Check Identification")
+            return
+        }
+
+        data = {
+            "project" : localStorage.getItem("working-project"),
+            "platform" : updateIntegrationPlatform.value,
+            "identification" : updateIntegrationsInput.value,
+            "status" : updateIntegrationsStatus.value,
+            "id" : integrationToUpdate
+        }
+
+        //request
+        patchToServer("/console/integrations", data, function(responce) {
+            if (responce == "200"){
+                if (!activeIntegrationSearch){
+                    hideUpdateIntegrationsModal()
+                    getIntegrationsList()
+                }
+                ShowSuccess("Integration Updated")
+            }
+        })
+    }
+    
+    function hideUpdateIntegrationsModal(){
+        var modal = document.getElementById("updateIntegrationModal")
+        modal.classList.remove("show")
+    }
+
+    //delete integration
+    let integrationToDelete = "None"
+    function showDeleteConfirmationModal(identification){
+        var modal = document.getElementById("deleteIntegrationModal")
+        if (!modal.classList.contains("show")){
+            modal.classList.add("show")
+        }
+        //set the integration
+        integrationToDelete = identification
+        document.getElementById("deleteIntegrationIdentification").value = identification
+    }
+
+    function hideDeleteIntegrationModal(){
+        var modal = document.getElementById("deleteIntegrationModal")
+        modal.classList.remove("show")
+    }
+
+    function deleteIntegrationHttpRequest(){
+        data = {
+            "identification" : integrationToDelete,
+            "project" : localStorage.getItem("working-project")
+        }
+
+        deleteToServer("/console/integrations", data, function(responce) {
+            if (responce == "200") {
+                ShowSuccess("Integration Deleted")
+                document.getElementById("integrationsSearchInput").value = ""
+                getIntegrationsList()
+                hideDeleteIntegrationModal()
+            } else {
+                ShowWarning("Deletion Error")
+            }
+        })
+    }
+
 
 </script>

@@ -1,7 +1,7 @@
 from os import stat
 from rest_framework import fields, serializers
 from SharedApp import models
-from SharedApp.models import IndexObject , Integration , Platform , DeveloperClient
+from SharedApp.models import IndexObject , Integration , Platform , DeveloperClient 
 from django.contrib.auth.models import User
 from .models import FileDownloadInstance , FileDownloadObjectStat
 
@@ -50,3 +50,7 @@ class DeveloperClientSerializer(serializers.ModelSerializer):
         fields = ["integration","identification","user","project","token","last_login","isBarned"]
 
 
+class PlatformSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Platform
+        fields = ['name']
