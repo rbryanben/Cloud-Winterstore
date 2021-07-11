@@ -578,6 +578,10 @@ def developerClient(request):
             return HttpResponse("not found")
         except:
             return HttpResponse("Does'nt seem like the JSON we need")
+
+        #check pemmision
+        if (not isAdministrator(request,project)):
+            return HttpResponse("denied")
         
         #get developer clients
         developerClients = DeveloperClient.objects.filter(project=project)

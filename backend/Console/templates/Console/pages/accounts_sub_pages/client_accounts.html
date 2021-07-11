@@ -179,7 +179,7 @@
         </div>
         <div class="folder-namer-buttons" style="margin-top: 5px;">
             <div onclick="barnClientAccountHttpRequest()"  class="create-folder-button" style="font-size: small; background-color: rgba(53, 53, 53, 0.685);"> 
-                Barn
+                Ban
             </div>
         </div>
     </form>
@@ -206,8 +206,7 @@
     </form>
 </div>
 
-
-
+<!-- remove ban-->
 <div id="removeBarnClientAccountModal" class="console-modal">
     <form method="dialog" autocomplete="off">
         <!-- cancel  modal-->
@@ -220,7 +219,7 @@
         </div>
         <div class="folder-namer-buttons" style="margin-top: 5px;">
             <div onclick="removeBarnClientAccountHttpRequest()"  class="create-folder-button" style="font-size: small; background-color: rgba(53, 53, 53, 0.685);"> 
-                Remove Barn
+                Remove Ban
             </div>
         </div>
     </form>
@@ -573,7 +572,7 @@
             if (responce == "500" || responce == "not found") {
                 ShowWarning("Client Not Found")
             } else {
-                ShowSuccess("Barn Successful")
+                ShowSuccess("Ban Successful")
                 hideBarnAccountModal()
                 if (activeClientSearch){
                     searchClientAccounts(document.getElementById("searchClientInput"))
@@ -609,8 +608,8 @@
             if (responce == "500" || responce == "not found") {
                 ShowWarning("Client Not Found")
             } else {
-                ShowSuccess("Barn Remmoved")
-                hideBarnAccountModal()
+                ShowSuccess("Ban Removed")
+                hideRemoveBarnAccountModal()
                 if (activeClientSearch){
                     searchClientAccounts(document.getElementById("searchClientInput"))
                     return
