@@ -71,7 +71,7 @@
 <div id="integrations-subpage" class="integrations-integrationss-page">
     <div class="top-toolbar" >
         <form autocomplete="off" method="dialog">
-            <input id="integrationsSearchInput"  autocomplete="off" onkeyup="searchIntegration(this)" class="top-toolbar-search" placeholder="Search file by id">
+            <input id="integrationsSearchInput"  autocomplete="off" onkeyup="searchIntegration(this)" class="top-toolbar-search" placeholder="Search by identification">
         </form>
         <span class="add-admin-account"><i class="fas fa-plus" onclick=" showAddIntegrationModal()"></i></span>
     </div>
@@ -203,6 +203,7 @@
 <script>
     let integrationsSubPageInitialized = false
     let activeIntegrationSearch = false
+    let integrationToDelete = "None"
     
     //initialize
     function initializeIntegrationsSubPage(){
@@ -224,6 +225,13 @@
         }
     }
 
+
+    //hide page
+     function hideIntegrationsSubPage(){
+        //set page visible
+        var page = document.getElementById("integrations-subpage")
+        page.style.display = "none"
+    }
 
     //add integrations 
     function showAddIntegrationModal(){
@@ -508,8 +516,6 @@
         modal.classList.remove("show")
     }
 
-    //delete integration
-    let integrationToDelete = "None"
     function showDeleteConfirmationModal(identification){
         var modal = document.getElementById("deleteIntegrationModal")
         if (!modal.classList.contains("show")){

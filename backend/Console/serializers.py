@@ -34,7 +34,7 @@ class IntegrationSerializer(serializers.ModelSerializer):
     platform = PlatformSerializer()
     class Meta:
         model = Integration
-        fields = ["identifier","enabled","created","integrationKey","platform"]
+        fields = ["identifier","enabled","created","integrationKey","platform","push","pull","daily_average","files_stored","devices"]
 
 
 class UserSerializer(serializers.ModelSerializer):

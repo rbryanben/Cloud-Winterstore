@@ -68,19 +68,20 @@
 </style>
 
 <div id="integrations-page" class="integrations-page show">
-    <div  class="integrations-page-left">
-        <div  class="integrations-page-left-item selected">
+    <div class="integrations-page-left">
+        <div id="integrations-button"  class="integrations-page-left-item selected">
             <div class="div-flex center" > <i class="fas fa-project-diagram"></i></div>
             <div class="page-item-text div-flex start">All Integrations</div>
         </div>
-        <div  class="integrations-page-left-item">
-            <div class="div-flex center" > <i class="fas fa-trash-alt"></i></div>
-            <div class="page-item-text div-flex start">Deleted Integrations</div>
+        <div id="deleted-integrations-button"  class="integrations-page-left-item">
+            <div class="div-flex center" > <i class="fas fa-server"></i></div>
+            <div class="page-item-text div-flex start">Integrations Stats</div>
         </div>
     </div>
     <div class="integrations-page-right" onclick="hideOptionsModals()" >
         <!-- sub-pages -->
         {% include 'Console/pages/integrations_sub_pages/integrations.html' %}
+        {% include 'Console/pages/integrations_sub_pages/stats_integrations.html' %}
     </div>
 </div>
 
@@ -109,12 +110,36 @@
         showIntegrationsSubPage()
     }
 
-
     function hideIntegrationsPage(){
         var page = document.getElementById("integrations-page")
         if (page.classList.contains("show")){
             page.classList.remove("show")
         }
     }
+
+    //listeners
+
+    //(integrations)
+    document.getElementById("integrations-button").addEventListener("click",()=>{
+        //remove integrations as selected
+        document.getElementById("deleted-integrations-button").classList.remove("selected")
+        document.getElementById("integrations-button").classList.add("selected")
+        
+        //show page
+        hideStatsIntegrationsPage()
+        showIntegrationsSubPage()
+    }) 
+
+    
+    //(deleted-integrations)
+    document.getElementById("deleted-integrations-button").addEventListener("click",()=>{
+        //remove integrations as selected
+        document.getElementById("integrations-button").classList.remove("selected")
+        document.getElementById("deleted-integrations-button").classList.add("selected")
+
+        //show page
+        hideIntegrationsSubPage()
+        showStatsIntegrationsPage()
+    })
 
 </script>

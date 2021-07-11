@@ -17,6 +17,7 @@ from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
+from hurry.filesize import size
 
 from datetime import datetime
 
@@ -90,7 +91,30 @@ class Integration(models.Model):
     created = models.DateTimeField(null=False,auto_now=True)
     project = models.ForeignKey(Project,null=False,on_delete=models.CASCADE)
     integrationKey = models.CharField(max_length=64,null=False)
+    push = models.IntegerField(default=0)
+    pull = models.IntegerField(default=0)
+    stored = models.IntegerField(default=0)
+    devices = models.IntegerField(default=0)
 
+    def registerDevice(self):
+        self.devices += 1 
+        self.save()
+
+    def makePush(self):
+        self.push += 1
+        self.save()
+
+    def makePull(self):
+        self.pull += 1
+        self.save()
+
+    @property
+    def files_stored(self):
+        return size(self.stored)
+
+    @property
+    def daily_average(self):
+        return str(self.push)+"/"+str(self.pull)+" (push/pull)"
 
     def create(self,identifier,platform,project):
         self.identifier = identifier
