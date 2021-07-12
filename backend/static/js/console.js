@@ -20,6 +20,21 @@ window.document.addEventListener("readystatechange",()=>{
         }
 })
 
+//disable a button 
+//this dibles a modal button
+function disableModalButton(button){
+    button.style.pointerEvents = 'none';
+    if (!button.classList.contains("clicked")){
+        button.classList.add("clicked")
+    }
+
+}
+
+function enableModalButton(button){
+    button.style.pointerEvents = 'auto';
+    button.classList.remove("clicked")
+}
+
 //
 //document
 function disableScrolling() {

@@ -1,0 +1,71 @@
+/* */
+/* */
+/* */
+/* */
+/*  BODY LOADING - Used in body where we are loading components */
+.pageLoader{
+    transition: all ease-in 0.1s ;
+    opacity: 0;
+    transform: scale(0.2);
+    position: absolute;
+    top: 35%;
+    left: 52%;
+}
+
+.pageLoader.show{
+    opacity: 1;
+    transform: scale(1);
+}
+
+.loader-console {
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid #539CA1;
+    width: 120px;
+    height: 120px;
+    -webkit-animation: spin 0.8s linear infinite; /* Safari */
+    animation: spin 0.8s linear infinite;
+  }
+  
+  /* Safari */
+  @-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+
+
+
+/* */
+/* */
+/* */
+/* */
+/*  BODY LOADING - Used in body where we are loading components */
+.modalLoader{
+    transition: all ease-in 0.1s ;
+    opacity: 0;
+    transform: scale(0.1);
+    position: absolute;
+    top: 35%;
+    left: 69%;
+}
+
+.modalLoader.show{
+    opacity: 1;
+}
+
+ .modal-loader {
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid #5a5a5a;
+    width: 120px;
+    height: 120px;
+    -webkit-animation: spin 0.8s linear infinite; /* Safari */
+    animation: spin 0.8s linear infinite;
+  }
+  
