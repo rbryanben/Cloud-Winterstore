@@ -1,6 +1,6 @@
 {% load static %}
 <style>
-    /* file browser page */
+    /* body */
     .folder-browser-page {
         display: none;
         height: 100%;
@@ -134,7 +134,13 @@
         font-size: x-small;
     }
 
-    /* name folder modal  */
+    /*  */
+    /*  */
+    /*  */
+    /*  */
+    /* Modal CSS */
+
+    /* Body */
     .console-modal {
         position: fixed;
         z-index: 102;
@@ -147,21 +153,33 @@
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
         visibility: hidden;
         opacity: 0;
-        font-size: small;
         transition: all 0.1s ease-in;
     }
 
+    /* Show modal body transition*/
     .console-modal.show{
         visibility: visible;
         opacity: 1;
         transform: translate(-50%,-50%);
     }
 
-    .console-modal div {
+    /* Hide modal */
+    .modal-cancel {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        color: gray;
+    }
+
+
+    /* Console Modal Subtext */
+    .console-modal-subtext {
+        margin-top: 20px;
         font-size: small;
     }
 
-    .create-folder-button {
+    /* Modal Button */
+    .modal-button {
         padding: 15px 20px;
         background-color: #8594E3;
         color: white;
@@ -170,24 +188,8 @@
         margin-top: 10px;
         border-radius: 6px;
         width: 80px;
-        margin-left: -10px;
         transition: all 0.2s ease-in;
-    }
-
-    .create-folder-button:hover {
-        transform: scale(1.02);
-    }
-
-    .modal-cancel {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        color: gray;
-    }
-
-    .folder-namer-buttons {
-        margin-left: 10px;
-    }
+    } 
 
     @media only screen and (max-width: 750px) {
         .folder-categorizer.item {
@@ -296,52 +298,49 @@
 
 </style>
 
-<div class="folder-browser-page">  
+
+<div class="folder-browser-page">
+
+    <!-- loading modal -->
     <div id="browserLoader" class="pageLoader" style="transform: scale(0.2);">
          <div class="loader-console"></div>
     </div>
+    
+    <!-- tool bar-->
     <div class="folder-toolbar" >
+        <!-- home icon // onclick load the home folder-->
         <div  class="folder-toolbar-navigator">
              <i class="fas fa-home" onclick="goHome()"></i><span id="dirMapper"><!-- mapping elements here --> </span>
         </div>
-        <!-- upload and delete-->
+
+        <!-- upload and delete // on delete clicked delete the set of selected files-->
+        <!-- // on upload click call the upload file function to upload a file -->
         <div class="upload-file">
              <i class="delete-button-files"><i class="fas fa-trash" onclick="deleteSelectedFiles()"></i></i> <!-- upload--> <i class="fas fa-upload" onclick="uploadFile()"></i>
         </div>
-        <!-- folders-->
+
+        <!--Categories // the category bar is meant to provide the meaning of each column-->
         <div class="folder-categorizer">
-            <div class=""><input id="selectUnselectAllFiles" type="checkbox" onclick="selectUnselectAllFiles(this)"></div>
+            <!-- Select all checkbox // when this checkbox is clicked it should select all files in the index -->
+            <div>
+                <input id="selectUnselectAllFiles" type="checkbox" onclick="selectUnselectAllFiles(this)">
+            </div>
+            <!-- categories -->
             <div class="categorizer-text">Name</div>
             <div class="categorizer-text hide-mobile ">Size</div>
             <div class="categorizer-text hide-mobile ">Modified</div>
         </div>
-        <!-- separator -->
+
+        <!-- Separator // adding a gray line to separate the tool bar and the index objects  -->
         <div class="separator"></div>
-        <!-- files come in here-->
+
+        <!-- Index Objects Holder // this is where the files and folders are displayed -->
+        <!-- //on click we are supposed to remove any active modal because the client may want to abandon a modal -->
+        <!-- // on context menu captures right click - on right click show the plain options modal which include reloading an index or new folder -->
         <div id="browserFilesContent" class="browserFilesContent" onclick="removeAnyModal()" oncontextmenu="showOptionsModal(event)" >
     
         </div>
 
-        <!-- rename folder modal  -->
-        <div id="renameFolderModal" class="console-modal">
-            <form method="dialog" autocomplete="off">
-                <!-- cancel  modal-->
-                <div class="modal-cancel">
-                    <i class="fas fa-times" onclick="hideRenameModal()"></i>
-                </div>
-                <div class="console-modal-subtext" style="margin-top: 20px;" >Enter new name</div>
-                <div id="projectNameNew" class="input-frame" style="position: relative;">
-                    <input id="renameText" class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;">
-                </div>
-                <div class="folder-namer-buttons">
-                    <div id="createFolderButton" class="create-folder-button" onclick="sendRenameRequest()"> 
-                        Rename
-                    </div>
-                </div>
-            </form>
-        </div>
-
-        
        
         <!-- access control add account modal -->
 
@@ -422,7 +421,7 @@
                 <div id="projectNameNew" class="input-frame" style="position: relative;">
                     <input id="newFolderName" class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;">
                 </div>
-                <div class="folder-namer-buttons">
+                <div class="modal-button">
                     <div id="createFolderButton" onclick="createNewFolder()" class="create-folder-button">
                         Create Folder
                     </div>
@@ -460,6 +459,32 @@
             </div>
         </div>
      </div>
+</div>
+
+<!--  -->
+<!--  -->
+<!--  -->
+<!--  -->
+<!-- Modals Follow -->
+
+<!-- Rename Folder Modal  -->
+<div id="renameFolderModal" class="console-modal">
+    <!-- Form // to prevent auto completion -->
+    <form method="dialog" autocomplete="off">
+        <!-- Cancel Modal // on click hides this modal -->
+        <div class="modal-cancel">
+            <i class="fas fa-times" onclick="hideRenameModal()"></i>
+        </div>
+        <!-- Modal Input Item(New Folder Name) -->
+        <div class="console-modal-subtext">Enter new name</div>
+        <div id="projectNameNew" class="input-frame" style="position: relative;">
+            <input id="renameText" class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;">
+        </div>
+        <!-- Modal Button (Rename) // on click renames folder-->
+        <div id="createFolderButton" class="modal-button" onclick="sendRenameRequest()"> 
+            Rename
+        </div>
+    </form>
 </div>
 
 <script>

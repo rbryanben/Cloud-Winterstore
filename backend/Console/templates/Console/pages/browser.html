@@ -47,12 +47,11 @@
 
     
 /* adaptivenes */
-
 @media only screen and (max-width: 600px) {
+
     .page-browser {
       grid-template-columns: 40% 60%;
     }
-
 
     .page-browser-right  {
         padding-right: 0px;
@@ -89,64 +88,61 @@
 
 
 <script>
-
-    var allFilesButton ;
-    var downloadStatsButton;
-    var deletedHistoryButton;
+    //varibles
     let browserPageInitialized = false
+    let allFilesButton = document.getElementById("allFilesButton ")
+    let downloadStatsButton = document.getElementById("downloadStatsButton")
+    let deletedHistoryButton = document.getElementById("deletedHistoryButton")
 
 
-    //entry
-    function showBrowser(){
-        //make visible
-        document.getElementById("page-browser").style.display = "grid"
-        
-        //initialize 
-        if (browserPageInitialized == false){
-            browserPageInitialized = true
-            initialize()
-        }
-    }
-
-    //initialization
-    //browserPageLoading()
-    allFilesButton = document.getElementById("allFilesButton ")
-    downloadStatsButton = document.getElementById("downloadStatsButton")
-    deletedHistoryButton = document.getElementById("deletedHistoryButton")
-
-    //listeners
+    //Navigation listener(Files)
     allFilesButton.addEventListener("click",()=>{
             hideOtherSubPages()
             showBrowserFilePage()
             loadBrowserSubPage(allFilesButton)
         })
-
+    
+    //Navigation listener(Download Stats)
     downloadStatsButton.addEventListener("click",()=>{
             hideOtherSubPages()
             showBrowserDownloadPage()
             loadBrowserSubPage(downloadStatsButton)
         })
-        
+    
+    //Navigation listener(Deleted Files)
     deletedHistoryButton.addEventListener("click",()=>{
             hideOtherSubPages()
             showBrowserDeletedPage()
             loadBrowserSubPage(deletedHistoryButton)
         })
 
+    //show page(Entry)
+    function showBrowser(){
+        //make visible
+        document.getElementById("page-browser").style.display = "grid"
+        
+        //initialize of not initialized
+        if (browserPageInitialized == false){
+            browserPageInitialized = true
+            initialize()
+        }
+    }
+
+    //initilize page
     function initialize(){
         //show files page first
         loadBrowserSubPage(allFilesButton)
         showBrowserFilePage()  
     }
 
-
-    
+    //hide page
     function hideBrowser(){
         //make visible
         document.getElementById("page-browser").style.display = "none"
     }
     
-
+    //hide sub pages
+    //this function hide all subpages as to transition to a subpage
     function hideOtherSubPages(){
         hideBrowserDownloadPage()
         hideBrowserFilePage()
@@ -154,13 +150,14 @@
     }
 
 
-    //hide all options modal
+    //hide all modals
+    //this function hides option modals as to show a certain modal
     function hideOptionsModals(){
         hideOptionsModal()
         hideBrowserOptionsPage()
     }
 
-    //functions
+    //Set select sub page icon dark
     function loadBrowserSubPage(button){
         //remove selected and assign new selected 
         document.querySelector(".page-browser-left-item.selected").classList.remove("selected")

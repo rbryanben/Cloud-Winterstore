@@ -81,10 +81,6 @@ class RangeFileWrapper(object):
             self.remaining -= len(data)
             return data
 
-
-#
-# Gateway to chech if the server is online 
-#
 @csrf_exempt
 def gateway(request):
     #for system information
@@ -341,7 +337,6 @@ def renameIndexObject(request):
 @login_required(login_url='/console/login-required')
 def newFolder(request):
     #check if owner of project
-
     folderName = None
     projectName = None
     parentID = None
@@ -358,6 +353,11 @@ def newFolder(request):
 
     #parent object container
     parentObject = None
+
+
+    #check if folder name is not less that
+    if (len(folderName) < 3):
+        return HttpResponse("500")
     
     #if parent object is not root
     if (parentID != "root"):
@@ -438,7 +438,8 @@ def deleteIndexObject(request):
 
 
 ####################################################################################
-##### Used by 3rd party software 
+##### Used by client libraries
+
 @api_view(['POST'])
 @csrf_exempt
 def getToken(request):
@@ -662,7 +663,9 @@ def getFileWithName(request):
     except:
         return HttpResponse("500")
 
-#helpers
+
+
+#methods to help with some functins
 def deleteFolder(folder,request):
     childObject = IndexObject.objects.filter(parent=folder)
     for object in childObject:
@@ -712,7 +715,6 @@ def destroyIndexObject(object,request, developerClient=None):
     #delete object
     object.delete()
 
-
 def isAdministrator(request,project):
     #check if owner
     if (project.owner == request.user):
@@ -726,7 +728,6 @@ def isAdministrator(request,project):
         pass
     
     return False
-
 
 def checkPemmission(request,IndexFile,method):
     #check barn
