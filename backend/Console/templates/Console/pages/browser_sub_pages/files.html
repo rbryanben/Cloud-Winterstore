@@ -1,40 +1,50 @@
 {% load static %}
 <style>
-    /* body */
+    /*  */
+    /*  */
+    /*  */
+    /*  */
+    /* BODY */
     .folder-browser-page {
         display: none;
         height: 100%;
+        margin-right: 1.5%;
     }
 
-    .browserFilesContent {
-        overflow-y: scroll;
-        overflow-x: hidden;
-        height: 100vh;
-    }
 
-    .folder-toolbar-navigator {
+    /*  */
+    /*  */
+    /*  */
+    /*  */
+    /* TOOL BAR */
+    .list-body-navigator {
         padding-left: 20px;
     }
 
-    .folder-toolbar-navigator>i {
+    /* Home Icon */
+    .list-body-navigator>i {
         color: gray;
     }
-    .folder-toolbar-navigator>span{
+
+    /* Index Path // shows the path to the current loaded index */
+    .list-body-navigator>span{
         color: gray;
     }
+
+    /* Slash // separates directories */
     .slash{
         margin-left: 5px;
         margin-right: 5px;
+        text-decoration: none;
         color: gray;
     }
+
+    /* Underline a directory on hover (Transition) */
     .directory-name:hover{
         text-decoration: underline;
     }
 
-    .slash{
-        text-decoration: none;
-    }
-
+    /*  */
     .upload-file{
         position: absolute;
         top: 15px;
@@ -43,32 +53,33 @@
         transition: all 0.2s ease-in;
     }
 
-
-    .folder-categorizer {
+    /* Categorizer for files */
+    .list-element {
         margin-top: 30px;
         display: grid;
         padding-left: 20px;
         grid-template-columns: 10% 29.3% 20% 30% 10%;
     }
 
-
+    /*  */
     .categorizer-text {
         margin-top: 2px;
         font-size: small;
         color: gray;
     }
 
-    .separator {
-        border-bottom: solid 1px rgba(235, 235, 235, 0.685);
-        margin-left: -20px;
-        margin-top: 20px;
-    }
 
-    .folder-browser-page {
-        margin-right: 1.5%;
-    }
 
-    .folder-categorizer.item{
+    /* FILES AND FOLDERS BODY */
+    .browserFilesContent {
+        overflow-y: scroll;
+        overflow-x: hidden;
+        height: 100vh;
+    }
+    
+    /* LISTS IN BODY */
+
+    .list-element.item{
         margin-top: 0;
         padding-left: 20px;
         padding-top: 10px;
@@ -79,7 +90,7 @@
     }
 
 
-    .folder-categorizer.selected {
+    .list-element.selected {
         opacity: 0.8;
         background-color: rgba(128, 128, 128, 0.089);
     }
@@ -89,7 +100,7 @@
         color: rgb(108, 219, 177);
     }
 
-    .folder-categorizer.item:hover{
+    .list-element.item:hover{
         background-color: rgba(142, 178, 226, 0.137);
     }
 
@@ -126,7 +137,7 @@
     .separator {
         margin:0;
     }
-    .folder-toolbar {
+    .list-body {
         height: 100%;
     }
     .console-modal-subtext {
@@ -134,69 +145,14 @@
         font-size: x-small;
     }
 
-    /*  */
-    /*  */
-    /*  */
-    /*  */
-    /* Modal CSS */
-
-    /* Body */
-    .console-modal {
-        position: fixed;
-        z-index: 102;
-        top: 50%;
-        left: 50%;
-        border-radius: 6px;
-        transform: translate(-50%,-50%);
-        padding: 20px;
-        background-color: white;
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-        visibility: hidden;
-        opacity: 0;
-        transition: all 0.1s ease-in;
-    }
-
-    /* Show modal body transition*/
-    .console-modal.show{
-        visibility: visible;
-        opacity: 1;
-        transform: translate(-50%,-50%);
-    }
-
-    /* Hide modal */
-    .modal-cancel {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        color: gray;
-    }
-
-
-    /* Console Modal Subtext */
-    .console-modal-subtext {
-        margin-top: 20px;
-        font-size: small;
-    }
-
-    /* Modal Button */
-    .modal-button {
-        padding: 15px 20px;
-        background-color: #8594E3;
-        color: white;
-        text-align: center;
-        font-size: small;
-        margin-top: 10px;
-        border-radius: 6px;
-        width: 80px;
-        transition: all 0.2s ease-in;
-    } 
+ 
 
     @media only screen and (max-width: 750px) {
-        .folder-categorizer.item {
+        .list-element.item {
             grid-template-columns: 20% 90% ;
         }
 
-        .folder-categorizer {
+        .list-element {
             grid-template-columns: 20% 90% ;
         }
 
@@ -205,100 +161,10 @@
         }
     }
 
-    /* file access control modal */
-    .file-access-control-modal{
-        position: fixed;
-        bottom: 0;
-        right: 0;
-        margin-left: 1%;
-        margin-right: 1%;
-        height: 0%;
-        border-radius: 6px 6px 0px 0px;
-        background-color: white;
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-        width: 95%;
-        padding: 20px;
-        visibility: hidden;
-        transition:  all 0.1s ease-in;
-        cursor: pointer;
-    }
-
-    .file-access-control-modal.show {
-        height: 50%;
-        visibility: visible;
-    }
-
-    .file-access-control-modal>.close {
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        color: gray;
-    }
-
-    .file-access-control-modal>.header{
-        font-size: small;
-    }
-    .file-access-control-modal>.subtext{
-        font-size: 9pt;
-        margin-top: 4px;
-        opacity: 0.9;
-    }
-    .file-access-control-modal>.body{
-        display: grid;
-        grid-template-columns: 20% 80%;
-        opacity: 0.9;
-    }
-
-    .file-access-control-modal>.body>.left{
-        height: 100vh;
-        border-right: solid 1px rgba(235, 235, 235, 0.753);
-    }
-
-    .file-access-control-modal>.body>.right{
-        padding: none;
-    }
-
-    .sm {
-        font-size: 9pt;
-    }
-
-    /* account keys */
-    .delete-account-key {
-        margin-left: 20px;
-        visibility: hidden;
-        opacity: 0;
-        transition: all 0.2s ease-in;
-    }
-
-    .add-account-key {
-        opacity: 0.8;
-        margin-left: 20px;
-    }
-
-    .delete-account-key.show{
-        opacity: 0.8;
-        visibility: visible;
-    }
-
-    /*  delete button multiple files */
-
-    .delete-button-files {
-        margin-right: 20px;
-        color: gray;
-        opacity: 0;
-        visibility: hidden;
-        transition: all 0.2s ease-in;
-    }
-
-    .delete-button-files.show {
-        opacity: 1;
-        visibility: visible;
-    }
-
 
 </style>
 
-
+<!-- BODY -->
 <div class="folder-browser-page">
 
     <!-- loading modal -->
@@ -306,10 +172,10 @@
          <div class="loader-console"></div>
     </div>
     
-    <!-- tool bar-->
-    <div class="folder-toolbar" >
+    <!-- body -->
+    <div class="list-body" >
         <!-- home icon // onclick load the home folder-->
-        <div  class="folder-toolbar-navigator">
+        <div  class="list-body-navigator">
              <i class="fas fa-home" onclick="goHome()"></i><span id="dirMapper"><!-- mapping elements here --> </span>
         </div>
 
@@ -320,7 +186,7 @@
         </div>
 
         <!--Categories // the category bar is meant to provide the meaning of each column-->
-        <div class="folder-categorizer">
+        <div class="list-element">
             <!-- Select all checkbox // when this checkbox is clicked it should select all files in the index -->
             <div>
                 <input id="selectUnselectAllFiles" type="checkbox" onclick="selectUnselectAllFiles(this)">
@@ -341,133 +207,56 @@
     
         </div>
 
-       
-        <!-- access control add account modal -->
-
-        <!-- give key modal-->
-        <div id="accountKeyAddModal" class="console-modal">
-            <form method="dialog" autocomplete="off">
-                <!-- cancel  modal-->
-                <div class="modal-cancel">
-                    <i class="fas fa-times" onclick="hideAddAccountKey()"></i>
-                </div>
-                <div class="console-modal-subtext" style="margin-top: 20px;">Enter account id</div>
-                <div id="projectNameNew" class="input-frame" style="position: relative;">
-                    <input id="accountKeyIDText" class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;">
-                </div>
-                <div class="folder-namer-buttons">
-                    <div id="createFolderButton" class="create-folder-button" onclick=" giveKeyToAccountHTTP()"> 
-                        Give Key
-                    </div>
-                </div>
-            </form>
-        </div>
-
-        <!-- access control modal -->
-        <div id="accessControlModal" class="file-access-control-modal">
-            <!-- cancel -->
-            <div class="close"><i class="fas fa-times" onclick="hideAccessControlModal()"></i></div>
-            <!-- access control about section-->
-            <div class="header">Access Control Panel</div>
-            <div id="access-control-object-ownwer" class="subtext" style="margin-top: 20px;">Owner : rbryanben</div>
-            <div id="access-control-object-ownwer" class="subtext">Owner Account Type : developer</div>
-            <div class="separator" style="margin-top: 20px;"></div>
-            <!-- body-->
-            <div class="body">
-                <div class="left">
-                    <div class="access-control-detail div-flex start" style="margin-top: 20px;">
-                        <input id="allowAllUsersWriteAccessControl" type="checkbox" onclick="updateObjectAccessControl()"><span class="sm">allowAllUsersWrite</span>
-                    </div>
-                    <div class="access-control-detail div-flex start">
-                        <input id="allowAllUsersReadAccessControl" type="checkbox" onclick="updateObjectAccessControl()"><span class="sm">allowAllUsersRead</span>
-                    </div>
-                    <div class="access-control-detail div-flex start">
-                        <input id="allowKeyUsersWriteAccessControl" type="checkbox" onclick="updateObjectAccessControl()"><span class="sm">allowKeyUsersWrite</span>
-                    </div>
-                    <div class="access-control-detail div-flex start">
-                        <input id="allowKeyUsersReadAccessControl" type="checkbox" onclick="updateObjectAccessControl()"><span class="sm">allowKeyUsersRead</span>
-                    </div>
-                </div>
-                <div class="right">
-                    <!-- top bar -->
-                    <div class="sm" style="margin-top: 20px;padding-left: 20px;">Accounts with key <!-- add acccount --><span class="add-account-key"><i class="fas fa-plus" onclick="showAddAccountKey()"></i></span><!-- delete account--><span class="delete-account-key" id="deleteAccountKeyButton"><i class="fas fa-trash" onclick="deleteSelectedKeyAccounts()"></i></span></div> 
-                    <!-- categorizer-->
-                    <div class="folder-categorizer item" style="margin-top: 15px;">
-                        <div class=""><input type="checkbox" id="allKeysSelector" onclick="selectAllAccountsWithKeys(this)"></div>
-                        <div class="categorizer-text">
-                            <!-- object type-->                 
-                            Identifier</div>
-                        <div class="categorizer-text hide-mobile ">Providers</div>
-                        <div class="categorizer-text hide-mobile ">Obtained</div>
-                    </div>
-                    <div id="accessControlLoader" class="pageLoader"  style="transform: scale(0.2);top: 60%;">
-                        <div class="loader-console"></div>
-                   </div>
-                    <!--items panel-->
-                    <div id="accounts-with-key" class="accounts-with-key" style="overflow-y: scroll; overflow-x: hidden; min-height: 100px;">
-
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- name folder modal  -->
-        <div id="nameFolderModal" class="console-modal">
-            <form method="dialog" autocomplete="off">
-                <!-- cancel  modal-->
-                <div class="modal-cancel">
-                    <i class="fas fa-times" onclick="hideNameFolderModal()"></i>
-                </div>
-                <div class="console-modal-subtext" style="margin-top: 20px;">Enter new folder name</div>
-                <div id="projectNameNew" class="input-frame" style="position: relative;">
-                    <input id="newFolderName" class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;">
-                </div>
-                <div class="modal-button">
-                    <div id="createFolderButton" onclick="createNewFolder()" class="create-folder-button">
-                        Create Folder
-                    </div>
-                </div>
-            </form>
-        </div>
-
-        <!-- file menu modal-->
-        <div class="file-menu-modal" id="fileOptionsModal">
-            <div class="file-menu-modal-item" onclick="menuModalOpenClick()">
-                Open
-            </div>
-            <div class="file-menu-modal-item" onclick="showRenameModal()">
-                Rename
-            </div>
-            <div class="file-menu-modal-item" onclick="menuModalDeleteClick()">
-                Delete
-            </div>
-            <div class="separator"></div>
-            <div class="file-menu-modal-item hide-mobile" onclick="showAccessControlModal()">
-                Access Control
-            </div>
-        </div>
-
-        <!-- plain options -->
-        <div class="file-menu-modal" id="browserOptionsModal">
-            <div class="file-menu-modal-item" onclick="uploadFile()">
-                Upload File
-            </div>
-            <div class="file-menu-modal-item" onclick="plainMenuNewFolderClick()">
-                New Folder
-            </div>
-            <div class="file-menu-modal-item" onclick="reloadFiles()">
-                Reload Index
-            </div>
-        </div>
      </div>
+</div>
+
+<!-- -->
+<!-- -->
+<!-- Page Modals -->
+
+<!-- FILE MENU MODAL // appears when file or folder is right clicked-->
+<div class="file-menu-modal" id="fileOptionsModal">
+    <!-- Open File // onclick opens a file on folder -->
+    <div class="file-menu-modal-item" onclick="menuModalOpenClick()">
+        Open
+    </div>
+    <!-- Rename Folder or File // onclick calls the rename folder or file modal -->
+    <div class="file-menu-modal-item" onclick="showRenameModal()">
+        Rename
+    </div>
+    <!-- Delete Folder or Index Object // onclick deletes the selected file or folder -->
+    <div class="file-menu-modal-item" onclick="menuModalDeleteClick()">
+        Delete
+    </div>
+    <!-- Separator // separates the to options from the bottom -->
+    <div class="separator"></div>
+
+    <!-- Access Contol // onclick opens the access control modal -->
+    <div class="file-menu-modal-item hide-mobile" onclick="showAccessControlModal()">
+        Access Control
+    </div>
+</div>
+
+<!-- BASIC MENU MODAL // appers when user right clicks but no file selected -->
+<div class="file-menu-modal" id="browserOptionsModal">
+    <div class="file-menu-modal-item" onclick="uploadFile()">
+        Upload File
+    </div>
+    <div class="file-menu-modal-item" onclick="plainMenuNewFolderClick()">
+        New Folder
+    </div>
+    <div class="file-menu-modal-item" onclick="reloadFiles()">
+        Reload Index
+    </div>
 </div>
 
 <!--  -->
 <!--  -->
 <!--  -->
 <!--  -->
-<!-- Modals Follow -->
+<!-- MODALS FOLLOW  -->
 
-<!-- Rename Folder Modal  -->
+<!-- RENAME FOLDER MODAL  -->
 <div id="renameFolderModal" class="console-modal">
     <!-- Form // to prevent auto completion -->
     <form method="dialog" autocomplete="off">
@@ -484,6 +273,116 @@
         <div id="createFolderButton" class="modal-button" onclick="sendRenameRequest()"> 
             Rename
         </div>
+    </form>
+</div>
+
+<!-- ACCESS CONTROL MODAL -->
+<div id="accessControlModal" class="file-access-control-modal">
+    
+    <!-- Cancel Modal // onclick hide modal -->
+    <i class="fas fa-times file-access-control-modal-close-button" onclick="hideAccessControlModal()"></i>
+
+
+    <!-- ACCESS CONTROL FILE INFORMATION -->
+    <div class="file-access-control-modal-header">Access Control Panel</div>
+    <div id="access-control-object-ownwer" class="file-access-control-modal-subtext" style="margin-top: 20px;">Owner : rbryanben</div>
+    <div id="access-control-object-ownwer" class="file-access-control-modal-subtext">Owner Account Type : developer</div>
+
+    <!-- SEPARATOR // to separate information from the sub sections -->
+    <div class="separator" style="margin-top: 20px;"></div>
+
+    <!-- SUBBODY -->
+    <div class="file-access-control-modal-body">
+
+        <!-- SUB BODY LEFT // to show access contol options-->
+        <div class="file-access-control-modal-body-left">
+            <!-- ACCESS CONTROL OPTION // allow all user to write -->
+            <div class="access-control-detail div-flex start" style="margin-top: 20px;">
+                <input id="allowAllUsersWriteAccessControl" type="checkbox" onclick="updateObjectAccessControl()">
+                <span class="sm">allowAllUsersWrite</span>
+            </div>
+            <!-- ACCESS CONTROL OPTION // allow all user to read -->
+            <div class="access-control-detail div-flex start">
+                <input id="allowAllUsersReadAccessControl" type="checkbox" onclick="updateObjectAccessControl()">
+                <span class="sm">allowAllUsersRead</span>
+            </div>
+            <!-- ACCESS CONTROL OPTION // allow users with key to write -->
+            <div class="access-control-detail div-flex start">
+                <input id="allowKeyUsersWriteAccessControl" type="checkbox" onclick="updateObjectAccessControl()">
+                <span class="sm">allowKeyUsersWrite</span>
+            </div>
+            <!-- ACCESS CONTROL OPTION // allow users with key to read -->
+            <div class="access-control-detail div-flex start">
+                <input id="allowKeyUsersReadAccessControl" type="checkbox" onclick="updateObjectAccessControl()">
+                <span class="sm">allowKeyUsersRead</span>
+            </div>
+        </div>
+
+        <!-- SUB BODY RIGHT // to show accounts with keys to the file -->
+        <div class="right">
+            <!-- top bar -->
+            <div class="sm" style="margin-top: 20px;padding-left: 20px;">Accounts with key <!-- add acccount --><span class="add-account-key"><i class="fas fa-plus" onclick="showAddAccountKey()"></i></span><!-- delete account--><span class="delete-account-key" id="deleteAccountKeyButton"><i class="fas fa-trash" onclick="deleteSelectedKeyAccounts()"></i></span></div> 
+            <!-- categorizer-->
+            <div class="list-element item" style="margin-top: 15px;">
+                <div class=""><input type="checkbox" id="allKeysSelector" onclick="selectAllAccountsWithKeys(this)"></div>
+                <div class="categorizer-text">
+                    <!-- object type-->                 
+                    Identifier</div>
+                <div class="categorizer-text hide-mobile ">Providers</div>
+                <div class="categorizer-text hide-mobile ">Obtained</div>
+            </div>
+            <div id="accessControlLoader" class="pageLoader"  style="transform: scale(0.2);top: 60%;">
+                <div class="loader-console"></div>
+            </div>
+            <!--items panel-->
+            <div id="accounts-with-key" class="accounts-with-key" style="overflow-y: scroll; overflow-x: hidden; min-height: 100px;">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ACCESS CONTROL MODAL (GIVE KEY SUB MODAL)-->
+<div id="accountKeyAddModal" class="console-modal">
+    <form method="dialog" autocomplete="off">
+        <!-- Cancel  modal-->
+        <div class="modal-cancel">
+            <i class="fas fa-times" onclick="hideAddAccountKey()"></i>
+        </div>
+        <!-- Account ID Input-->
+        <div class="console-modal-subtext" style="margin-top: 20px;">Enter account id</div>
+        <div id="projectNameNew" class="input-frame" style="position: relative;">
+            <input id="accountKeyIDText" class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;">
+        </div>
+
+        <!-- GIVE KEY BUTTON -->
+        <div id="createFolderButton" class="modal-button" onclick=" giveKeyToAccountHTTP()"> 
+            Give Key
+        </div>
+
+    </form>
+</div>
+
+<!-- NAME FOLDER MODAL -->
+<div id="nameFolderModal" class="console-modal">
+    <form method="dialog" autocomplete="off">
+
+        <!-- Cancel  modal-->
+        <div class="modal-cancel">
+            <i class="fas fa-times" onclick="hideNameFolderModal()"></i>
+        </div>
+
+        <!-- Folder Name -->
+        <div class="console-modal-subtext" style="margin-top: 20px;">Folder Name</div>
+        <div id="projectNameNew" class="input-frame" style="position: relative;">
+            <input id="newFolderName" class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;">
+        </div>
+
+        <!-- Name Folder Button // onclick will create a new Folder  -->
+        <div id="createFolderButton" onclick="createNewFolder()" class="modal-button">
+            Create Folder
+        </div>
+
     </form>
 </div>
 
@@ -618,7 +517,7 @@
             bodyToPlace.innerHTML = ""
             JSON.parse(responce).forEach(element => {
                 element = `<!-- item frame -->
-                        <div class="folder-categorizer item">
+                        <div class="list-element item">
                             <div class=""><input type="checkbox" class="accountKeyCheckBox" onclick="addSelectedAccountToCheckedList('${element['developerIdentification']}',this)"></div>
                             <div class="categorizer-text">${element['developerIdentification']}</div>
                             <div class="categorizer-text hide-mobile " style="padding-left:8px;"><i class="fas fa-envelope" style="color: gray;"></i></div>
@@ -1235,7 +1134,7 @@
 
 
     function removeAllSelected(){
-        var AllObjects = document.querySelectorAll(".folder-categorizer")
+        var AllObjects = document.querySelectorAll(".list-element")
         AllObjects.forEach(element => {
             element.classList.remove("selected")
         });

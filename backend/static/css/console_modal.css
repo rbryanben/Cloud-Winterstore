@@ -1,0 +1,56 @@
+/*  */
+/*  */
+/*  */
+/*  */
+/* Console Modal CSS */
+
+/* Body */
+.console-modal {
+    position: fixed;
+    z-index: 102;
+    top: 50%;
+    left: 50%;
+    border-radius: 6px;
+    transform: translate(-50%,-50%);
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    visibility: hidden;
+    opacity: 0;
+    transition: all 0.1s ease-in;
+}
+
+/* Show modal body (Transition) */
+.console-modal.show{
+    visibility: visible;
+    opacity: 1;
+    transform: translate(-50%,-50%);
+}
+
+/* Hide modal (Button) */
+.modal-cancel {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: gray;
+}
+
+
+/* Console Modal Subtext (Text) */
+.console-modal-subtext {
+    margin-top: 20px;
+    font-size: small !important;
+}
+
+/* Modal Button (Button) */
+.modal-button {
+    padding: 15px 20px;
+    background-color: #8594E3;
+    color: white;
+    text-align: center;
+    font-size: small;
+    margin-top: 10px;
+    border-radius: 6px;
+    width: 80px;
+    transition: all 0.2s ease-in;
+}
