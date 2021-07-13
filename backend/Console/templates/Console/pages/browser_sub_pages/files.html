@@ -196,10 +196,13 @@
         </div>
 
         <!-- GIVE KEY BUTTON -->
-        <div id="createFolderButton" class="modal-button" onclick=" giveKeyToAccountHTTP()"> 
+        <div id="access-control-give-key-button" class="modal-button" onclick=" giveKeyToAccountHTTP()"> 
             Give Key
         </div>
-
+        <!-- Modal Loader-->
+        <div id="give-key-modal-loader" class="modalLoader" style="transform: scale(0.1); margin-top: 3px;">
+            <div class="modal-loader"></div>
+        </div>
     </form>
 </div>
 
@@ -219,9 +222,12 @@
         </div>
 
         <!-- Name Folder Button // onclick will create a new Folder  -->
-        <div id="createFolderButton" onclick="createNewFolder()" class="modal-button">
+        <div id="name-folder-button" onclick="createNewFolder()" class="modal-button">
             Create Folder
         </div>
-
+        <!-- Modal Loader-->
+        <div id="name-folder-modal-loader" class="modalLoader" style="transform: scale(0.1); margin-top: 3px;">
+            <div class="modal-loader"></div>
+        </div>
     </form>
 </div>

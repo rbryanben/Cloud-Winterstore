@@ -238,12 +238,28 @@ function addSelectedAccountToCheckedList(email,object){
 }
 
 function giveKeyToAccountHTTP(){
+    //disable button on click to prevent double clicked 
+    var give_key_button = document.getElementById("access-control-give-key-button")
+    var loading_modal = document.getElementById("give-key-modal-loader")
+
+
     data = {
         "account" : document.getElementById("accountKeyIDText").value,
         "file" : (fileThatHasAccessControlOpen.objectID)
     }
 
+
+    //disable button and show loading
+    disableModalButton(give_key_button)
+    if (!loading_modal.classList.contains("show")){
+        loading_modal.classList.add("show")
+    }
+
     postToServer("/api/give-key/", data, function(responce) {
+    //enable button and hide loading 
+    enableModalButton(give_key_button)
+    loading_modal.classList.remove("show")
+
     if (responce == "200") {
         hideAddAccountKey()
         showAccessControlModal()
@@ -265,6 +281,12 @@ function showAddAccountKey(){
         modal.classList.add("show")
         lockUploadAndDownloadModal = true
     }
+
+    //enable button and hide loading 
+    var give_key_button = document.getElementById("access-control-give-key-button")
+    var loading_modal = document.getElementById("give-key-modal-loader")
+    enableModalButton(give_key_button)
+    loading_modal.classList.remove("show")
 }
 
 function hideAddAccountKey(){
@@ -347,34 +369,62 @@ function hideNameFolderModal(){
         modal.classList.remove("show")
         lockUploadAndDownloadModal = false
     }
+    //hide loading 
+    var loading_modal = document.getElementById("name-folder-modal-loader")
+    var name_folder_button = document.getElementById("name-folder-button")
+    enableModalButton(name_folder_button)
+    loading_modal.classList.remove("show")
     
+    //clear text in name folder 
+    document.getElementById("newFolderName").value = ""
 }
 
 //once user has name modal, send the request to the Server 
 function createNewFolder(){
-name = document.getElementById("newFolderName").value
-var parentID = "root"
-if (browserNavigationMap.length > 0){
-    parentID = browserNavigationMap[browserNavigationMap.length - 1].folderID
-}
-data = {
-    "folderName" : name,
-    "projectName" : localStorage.getItem("working-project"),
-    "parentID" : parentID,
-} 
+    var name = document.getElementById("newFolderName").value
+    var parentID = "root"
 
-postToServer("/api/new-folder/",data, function(responce) {
-    if (responce == "200") {
-        hideNameFolderModal()
-        reloadFiles()
+    if (browserNavigationMap.length > 0){
+        parentID = browserNavigationMap[browserNavigationMap.length - 1].folderID
     }
-    else if (responce == "1701"){
-        ShowWarning("Repeated Folder Name")
-    } 
-    else {
-        ShowWarning("Folder Creation Failed")
+    
+    //if folder name is less than 3 alert user
+    if (name.length < 3){
+        ShowWarning("Check Folder Name")
+        return
     }
-})
+
+    data = {
+        "folderName" : name,
+        "projectName" : localStorage.getItem("working-project"),
+        "parentID" : parentID,
+    }
+    
+    //disable button and show request is loading 
+    var name_folder_button = document.getElementById("name-folder-button")
+    var loading_modal = document.getElementById("name-folder-modal-loader")
+
+    disableModalButton(name_folder_button)
+    if (!loading_modal.classList.contains("show")){
+        loading_modal.classList.add("show")
+    }
+
+    postToServer("/api/new-folder/",data, function(responce) {
+        //enable button and show loading
+        enableModalButton(name_folder_button)
+        loading_modal.classList.remove("show")
+
+        if (responce == "200") {
+            hideNameFolderModal()
+            reloadFiles()
+        }
+        else if (responce == "1701"){
+            ShowWarning("Repeated Folder Name")
+        } 
+        else {
+            ShowWarning("Folder Creation Failed")
+        }
+    })
 
 }
 
