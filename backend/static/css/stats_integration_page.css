@@ -44,6 +44,10 @@
         transition: all 0.1s ease;
     }
 
+    .stats-integrations-item:hover{
+        background-color: rgba(142, 178, 226, 0.137);
+    }
+
     /* ADAPTIVENESS */
     @media only screen and (max-width: 600px) {
         .integrations-file-item {

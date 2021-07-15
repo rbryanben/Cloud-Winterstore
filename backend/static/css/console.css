@@ -61,6 +61,17 @@ transition: all 0.2s ease-in;
     transform: rotate(180deg);
 }
 
+/* SCROLLABLE */
+.scrollable {
+    height: 100vh;
+    padding-bottom: 100px;
+    overflow-y: scroll;
+}
+
+.toolbar-shift {
+    margin-right: 18px;
+}
+
 /* font of small */
 .sm {
     font-size: 9pt;
