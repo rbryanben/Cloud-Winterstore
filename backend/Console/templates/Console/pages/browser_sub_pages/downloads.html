@@ -1,225 +1,34 @@
-<style>
-    .browser-downloads-page {
-        display: none;
-    }
-
-
-    /* page toolbar */
-    .browser-download-page.top-toolbar {
-        margin-top: 20px;
-        margin-left: 0px;
-    }
-
-    .top-toolbar-search {
-        background-color: rgba(223, 223, 223, 0.555);
-        width: 600px;
-        padding: 13px;
-        font-size: small;
-        border: none;
-        outline: none;
-        color: gray;
-        border-radius: 4px;
-    }
-
-    /* categorizer */
-    .download-categorizer {
-        margin-top: 20px;
-        padding-left: 20px;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        display: grid;
-        grid-template-columns: 40% 20% 12% 12% 12%;
-        border-bottom: solid 1px rgba(235, 235, 235, 0.685);
-    }
-
-    /* download file item */
-    .download-file-item {
-        padding-left: 20px;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        display: grid;
-        grid-template-columns: 40% 20% 12% 12% 12%;
-        border-bottom: solid 1px rgba(235, 235, 235, 0.685);
-        transition: all 0.1s ease;
-    }
-
-
-    @media only screen and (max-width: 600px) {
-        .download-file-item {
-            grid-template-columns: 100%
-        }
-    }
-
-</style>
-
+<!-- BODY DOWNLOADS PAGE -->
 <div class="browser-downloads-page">
+
+    <!-- TOOL BAR // Will allow the client to search to search a files download stats-->
     <div class="top-toolbar" >
+        <!-- // form to prevent auto fill-->
         <form autocomplete="off" method="dialog">
-            <input id="downloadFileSearchInput"  autocomplete="off" onkeyup="searchDownloadStats(event)"  class="top-toolbar-search" placeholder="Search file by id" type="search">
+            <!-- SEARCH INPUT // onkeyup will start a search query -->
+            <input id="downloadFileSearchInput" onkeyup="searchDownloadStats()"  class="top-toolbar-search" placeholder="Search for file">
         </form>
+        <!-- refresh button -->
+        <i class="fas fa-sync-alt refresh-button animate-clicked" onclick="download_stats_page_refresh(this)"></i>
     </div>
 
-    <!-- categorizer -->
+    <!-- TOOL BAR CATEGORIZER -->
     <div class="download-categorizer">
         <div class="categorizer-text hide-mobile">Identification</div>
         <div class="categorizer-text">Name</div>
-        <div class="categorizer-text hide-mobile ">Download-by</div>
+        <div class="categorizer-text hide-mobile ">Downloaded-by</div>
         <div class="categorizer-text hide-mobile ">Downloaded</div>
         <div class="categorizer-text hide-mobile ">Overall-Downloads</div>
     </div>
 
 
-    <!-- loader -->
+    <!-- SUB PAGE LOADER -->
     <div id="downloadFilesLoader" class="pageLoader" style="transform: scale(0.2);">
         <div class="loader-console"></div>
    </div>
 
-    <!-- download items -->
+    <!-- DOWNLOAD LIST -->
     <div id="bodydownloadFiles" class="download-files-list" >
         
     </div>
 </div>
-<script>
-    var downloadsPageBrowser 
-
-    window.addEventListener("DOMContentLoaded",()=>{
-        downloadsPageBrowser = document.querySelector(".browser-downloads-page")
-    })
-
-    function showBrowserDownloadPage(){
-        downloadsPageBrowser.style.display = "block"
-        getDownloadStats()
-    }
-
-    function hideBrowserDownloadPage(){
-        downloadsPageBrowser.style.display = "none"
-    }
-
-    let downloadStat = class {
-        constructor(object){
-            /// id name username data and downloads
-            this.username = (object['user']['username']);
-            this.id = (object['file']['id']);
-            this.name = (object['file']['name']);
-            this.date = (object['downloaded']);
-            this.total = (object['totalDownloads']);
-
-            //check if the file was downloaded 
-            //rather by a client
-            if (object["developerClient"] != null){
-                this.username = object["developerClient"];
-                this.username = this.username.substring(0,this.username.indexOf("@") - 1);
-            }
-            
-
-            //trimmers 
-            this.trimName()
-            this.trimID()
-            this.convertDate()
-        }
-
-        trimName(){
-            if (this.name.length > 25){
-                this.name =  this.name.substring(0, 25) + "..."
-            }
-        }
-
-        trimID(){
-           this.id = this.id.substring(0, 25) + "..." + this.id.substring(46, 64)
-        }
-
-        convertDate(){
-            this.date = new Date(this.date);
-            this.date = (this.date.getDate() + "-" + this.date.getMonth() + "-" + this.date.getFullYear() + " " + 
-                this.date.getHours()+":"+this.date.getMinutes()); 
-        }
-
-    }
-
-
-
-    //objects 
-    function getDownloadStats(){
-
-        //body to add 
-        var bodyToAdd = document.getElementById("bodydownloadFiles")
-        bodyToAdd.innerHTML = ""
-        //data to post
-        data = {
-            "project" : localStorage.getItem("working-project")
-        }
-        postToServer("/console/get-download-stats", data, function(responce) {
-            if (responce == "500" || responce == "not found" || responce == "denied") {
-                ShowWarning("Fetch Objects Failed")
-            } else {
-                //make json objects
-                downloadedFilesArray = JSON.parse(responce)
-
-                //for objects
-                downloadedFilesArray.forEach(object => {
-                    //frame
-                    var downloadItem = new downloadStat(object)
-                    //frame
-                    var frame = 
-                    `
-                    <!-- download file-->
-                    <div class="download-file-item">
-                        <div class="categorizer-text hide-mobile">${downloadItem.id}</div>
-                        <div class="categorizer-text">${downloadItem.name}</div>
-                        <div class="categorizer-text hide-mobile ">${downloadItem.username}</div>
-                        <div class="categorizer-text hide-mobile ">${downloadItem.date}</div>
-                        <div class="categorizer-text hide-mobile ">${downloadItem.total}</div>
-                    </div>
-                    `
-                    bodyToAdd.innerHTML += frame
-                });
-            }
-        })
-
-    }
-
-    function searchDownloadStats(event){
-        if (document.getElementById("downloadFileSearchInput").value == ""){
-            getDownloadStats()
-        }
-        if (event.keyCode != 13){
-            return
-        }
-        //body to add 
-        var bodyToAdd = document.getElementById("bodydownloadFiles")
-        bodyToAdd.innerHTML = ""
-        //data to post
-        data = {
-            "project" : localStorage.getItem("working-project"),
-            "criteria" : document.getElementById("downloadFileSearchInput").value
-        }
-        postToServer("/console/search-download-stats", data, function(responce) {
-            if (responce == "500" || responce == "not found" || responce == "denied") {
-                //Do nothing
-            } else {
-                //make json objects
-                downloadedFilesArray = JSON.parse(responce)
-
-                //for objects
-                downloadedFilesArray.forEach(object => {
-                    //frame
-                    var downloadItem = new downloadStat(object)
-                    //frame
-                    var frame = 
-                    `
-                    <!-- download file-->
-                    <div class="download-file-item">
-                        <div class="categorizer-text">${downloadItem.id}</div>
-                        <div class="categorizer-text">${downloadItem.name}</div>
-                        <div class="categorizer-text hide-mobile ">${downloadItem.username}</div>
-                        <div class="categorizer-text hide-mobile ">${downloadItem.date}</div>
-                        <div class="categorizer-text hide-mobile ">${downloadItem.total}</div>
-                    </div>
-                    `
-                    bodyToAdd.innerHTML += frame
-                });
-            }
-        })
-    }
-
-</script>

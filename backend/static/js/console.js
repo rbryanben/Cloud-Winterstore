@@ -1,21 +1,12 @@
 //entry
+// after the page has loaded hide the loading modal
+// this will show the projects modal
 window.document.addEventListener("readystatechange",()=>{
-    var progress = document.querySelector(".loading-modal-body-bar-inner")
     switch (document.readyState) {
-        case "interactive":
-            // The document has finished loading. We can now access the DOM elements.
-            // But sub-resources such as scripts, images, stylesheets and frames are still loading.
-            if (!progress.classList.contains("second")){
-                progress.classList.add("second")
-            }
-            break;
         case "complete":
-            // The page is fully loaded.
-            if (!progress.classList.contains("third")){
-                progress.style.transition = "all 0.2s ease-in"
-                progress.classList.add("third")
-                setTimeout(hideConsoleLoading(),200)
-            }
+            setTimeout(function(){
+                hideConsoleLoading()
+            },1000)
             break;
         }
 })
@@ -100,8 +91,7 @@ document.addEventListener('keyup',(event)=>{
     }
 })
 
-
-//for document 
+//copy element 
 function fallbackCopyTextToClipboard(text) {
     var textArea = document.createElement("textarea");
     textArea.value = text;
@@ -124,4 +114,4 @@ function fallbackCopyTextToClipboard(text) {
     }
   
     document.body.removeChild(textArea);
-  }
+}

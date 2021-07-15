@@ -66,6 +66,21 @@ transition: all 0.2s ease-in;
     font-size: 9pt;
 }
 
+/* ALLOW SELECT FOR CERTAIN PARTS */
+.allow-select {
+    -webkit-user-select: all;  /* Chrome 49+ */
+    -moz-user-select: all;     /* Firefox 43+ */
+    -ms-user-select: all;      /* No support yet */
+    user-select: all; 
+}
+
+
+/* refresh button */
+.refresh-button {
+    margin-left: auto;
+    margin-right: 40px;
+}
+
 /* body separator */
 .separator {
     border-bottom: solid 1px rgba(235, 235, 235, 0.685);
