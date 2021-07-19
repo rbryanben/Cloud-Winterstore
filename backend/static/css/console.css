@@ -107,6 +107,19 @@ transition: all 0.2s ease-in;
     margin-top: 20px;
 }
 
+/* remove dropdown select */
+select {
+    /* for Firefox */
+    -moz-appearance: none;
+    /* for Chrome */
+    -webkit-appearance: none;
+  }
+  
+  /* For IE10 */
+  select::-ms-expand {
+    display: none;
+  }
+  
 /* adaptive global css */
 @media only screen and (max-width: 750px) {
     

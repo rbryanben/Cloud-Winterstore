@@ -95,12 +95,22 @@
             </select>
         </div>
 
+        <!-- STREAMING TYPE -->
+        <div class="console-modal-subtext" style="font-size: small; margin-top: 20px;">Storage Type</div>
+        <div  class="input-frame" style="position: relative;">
+            <select  class="projects-modal-body-item plain-input no-anime" style="width: 302px; padding-right: 5px; cursor: text; font-size: small;">
+                <!-- integrations come here -->
+                <option value="closed">Closed Streaming</option>
+                <option value="open">Open Streaming</option>
+            </select>
+        </div>
+
         <!-- ADD BUTTON // onclick sends and http request to add an account-->
         <div id="admin-add-project-button" onclick="addClientAccount()" class="modal-button" style="font-size: small;"> 
             Add
         </div>
         <!-- Modal Loader-->
-        <div id="add-client-account-modal-loader" class="modalLoader show" style="transform: scale(0.1);margin-top: 60px;">
+        <div id="add-client-account-modal-loader" class="modalLoader" style="transform: scale(0.1);margin-top: 60px;">
             <div class="modal-loader"></div>
         </div>
     </form>
