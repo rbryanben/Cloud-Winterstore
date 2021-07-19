@@ -1,0 +1,27 @@
+<div id="admin_profile_page" class="admin-panel-page">
+    Profile
+ </div>
+ 
+ <script>
+     //function to initialize page
+     function init_admin_profile_page(){
+
+     }
+
+
+     //function to show and hide page
+     function admin_panel_profile_page_showing(visibility){
+        //page 
+        var page = document.getElementById("admin_profile_page")
+        
+        if (visibility){
+            //initialize page
+            init_admin_profile_page()
+            page.style.display = "block"
+        }
+        else{
+            //hide page
+            page.style.display = "none"
+        }
+     }
+ </script>

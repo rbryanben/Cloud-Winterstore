@@ -56,13 +56,13 @@
         cursor: pointer;
     }
 
-    /* GROUP NAVIGATION */
-    .navigation-group {
-        border-top: solid 0.5px rgb(236, 236, 236);
+    .navigation-button.selected {
+        background-color: rgba(213, 241, 227, 0.719);
     }
 
-    .navigation-button:hover{
-        background-color: rgba(213, 241, 227, 0.459);
+    /* GROUP NAVIGATION */
+    .navigation-group {
+        border-top: solid 0.5px rgba(236, 236, 236, 0.493);
     }
 
     /* create projects */
@@ -90,8 +90,10 @@
         transform: translate(-50%,-50%);
     }
 
- 
-
+    /* global css */
+    .admin-panel-page {
+        display: none;
+    }
     
     /* animations */
     .admin-panel-body-item:hover{
@@ -127,30 +129,35 @@
      <!-- navigation -->
      <div class="navigation">
         <!-- Projects Button -->
-        <div class="navigation-button">
+        <div id="admin_panel_projects" class="navigation-button selected">
             <div class="navigation-button-icon"><i class="fas fa-layer-group"></i></div>
             <div class="navigation-button-text">Projects</div>
         </div>
-        <!-- Profile -->
-        <div class="navigation-button">
+        <!-- Subscription -->
+        <div id="admin_panel_subscriptions" class="navigation-button">
             <div class="navigation-button-icon"><i class="fas fa-credit-card"></i></div>
             <div class="navigation-button-text">Subscription</div>
         </div>
-        <!-- Profile -->
-        <div class="navigation-button">
+        <!-- Account -->
+        <div id="admin_panel_profile" class="navigation-button">
             <div class="navigation-button-icon"><i class="fas fa-user"></i></div>
-            <div class="navigation-button-text">Profile</div>
-        </div>
-    
+            <div class="navigation-button-text">Account</div>
+        </div>    
     </div>
 
      <!-- view -->
      <div class="view">
          <!-- view top -->
          <div class="top">
-            <div class="navigation-page-name">Secure Storage</div>
-            <div class="navigation-page-info">View and edit storage projects from team collaborations or owned.</div>
+            <div id="admin_panel_view_top_header" class="navigation-page-name">Secure Storage</div>
+            <div id="admin_panel_view_top_subtext" class="navigation-page-info">View and edit storage projects from team collaborations or owned.</div>
          </div>
+         <!-- subpages -->
+         <div class="admin-sub-pages">
+            {% include 'Console/modals/admin_panel_sub_pages/projects.html' %}
+            {% include 'Console/modals/admin_panel_sub_pages/subscriptions.html' %}
+            {% include 'Console/modals/admin_panel_sub_pages/profile.html' %}
+        </div>
 
      </div>
 </div>
@@ -181,6 +188,37 @@
     let createProjectModalProjectName;
     let inputPasses = false
 
+    //button click listeners
+    
+    //(Project)
+    document.getElementById("admin_panel_projects").addEventListener("click",()=>{
+        hide_all_admin_subpages()
+        admin_panel_projects_page_showing(true)
+        set_admin_marker_on(document.getElementById("admin_panel_projects"))
+        set_top_text("Secure Storage","View and edit storage projects from team collaborations or owned.")
+    })
+
+    //(Subscriptions)
+    document.getElementById("admin_panel_subscriptions").addEventListener("click",()=>{
+        hide_all_admin_subpages()
+        admin_panel_subscriptions_page_showing(true)
+        set_admin_marker_on(document.getElementById("admin_panel_subscriptions"))
+        set_top_text("Activations","By packages and view subscription expiry dates from this page.")
+    })
+
+    //(Profile)
+    document.getElementById("admin_panel_profile").addEventListener("click",()=>{
+        hide_all_admin_subpages()
+        admin_panel_profile_page_showing(true)
+        set_admin_marker_on(document.getElementById("admin_panel_profile"))
+        set_top_text("Your Account","Preview and update your profile from here.")
+    })
+
+    //intialize 
+    function intialize_admin_panel() {
+        //show projects
+        admin_panel_projects_page_showing(true)
+    }
 
     //Entry Point
     window.addEventListener("DOMContentLoaded",()=>{
@@ -189,6 +227,8 @@
         createProjectModal = document.getElementById("createProjectModal")
         createProjectModalProjectName = document.getElementById("createProjectModalProjectName")
 
+        //intialize
+        intialize_admin_panel()
 
         //listener for create project click
         //may not be necessary
@@ -219,6 +259,32 @@
 
     })
 
+    //function to hide all admin subpages
+    function hide_all_admin_subpages(){
+        admin_panel_projects_page_showing(false)
+        admin_panel_profile_page_showing(false)
+        admin_panel_subscriptions_page_showing(false)
+    }
+
+    //function set marker on
+    function set_admin_marker_on(object){
+        //remove markers from other objects 
+        var buttons = document.querySelectorAll(".navigation-button , .selected")
+        buttons.forEach(element => {
+            element.classList.remove("selected")
+        });
+
+        //add selected class 
+        if (!object.classList.contains("selected")){
+            object.classList.add("selected")
+        }
+    }
+
+    //function to text view to text 
+    function set_top_text(heading,subtext){
+        document.getElementById("admin_panel_view_top_header").innerHTML = heading
+        document.getElementById("admin_panel_view_top_subtext").innerHTML = subtext
+    }
 
     //LOAD PROJECT
     // To load a project you need to parse a name of format <username>.<project_name>

@@ -1,0 +1,27 @@
+<div id="admin_projects_page" class="admin-panel-page">
+    Projects
+ </div>
+ 
+ <script>
+     //function to initialize page
+     function init_admin_projects_page(){
+
+     }
+
+
+     //function to show and hide page
+     function admin_panel_projects_page_showing(visibility){
+        //page 
+        var page = document.getElementById("admin_projects_page")
+        
+        if (visibility){
+            //initialize page
+            init_admin_projects_page()
+            page.style.display = "block"
+        }
+        else{
+            //hide page
+            page.style.display = "none"
+        }
+     }
+ </script>
