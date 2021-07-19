@@ -1,6 +1,112 @@
+<style>
+    /* */
+    /* */
+    /* CATEGORIZER */
+    .admin-projects-categorizer {
+        margin-top: 20px;
+        padding-left: 20px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        display: grid;
+        grid-template-columns: 25%  15% 15% 15% 15% 4% 4%;
+        border-bottom: solid 1px rgba(235, 235, 235, 0.685);
+    }
+
+
+    /* */
+    /* */
+    /* Item */
+    .admin-projects-item {
+        padding-left: 20px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        display: grid;
+        grid-template-columns: 25%  15% 15% 15% 15%;
+        border-bottom: solid 1px rgba(235, 235, 235, 0.685);
+        cursor: pointer;
+    }
+
+    .admin-projects-item:hover {
+        background-color: rgba(142, 178, 226, 0.137);
+    }
+
+    /* CONTROLS FOR ADMIN PROJECT OBJECT */
+    .controls-admin-projects {
+        display: grid;
+        padding-right: 10px;
+        grid-template-columns: 30px 30px;
+    } 
+</style>
+
 <div id="admin_projects_page" class="admin-panel-page">
-    Projects
+    <!-- CATEGORIZER -->
+    <div class="admin-projects-categorizer">
+        <div class="categorizer-text ">Identification</div>
+        <div class="categorizer-text hide-mobile ">Created</div>
+        <div class="categorizer-text hide-mobile ">Owner</div>
+        <div class="categorizer-text hide-mobile ">Admins</div>
+        <div class="categorizer-text hide-mobile">Controls</div>
+        <div class="categorizer-text hide-mobile"><i onclick="show_admin_add_project_modal(true)" style="color: gray; cursor: pointer;" class="fas fa-plus"></i></div>
+        <div class="categorizer-text hide-mobile"><i  style="color: gray; cursor: pointer;" class="fas fa-sync"></i></div>
+    </div>
+    <!-- projects-list -->
+    <div class="admin-projects-list">
+        <!-- item -->
+        <div class="admin-projects-item">
+            <div class="categorizer-text ">Cloud-Winterstore</div>
+            <div class="categorizer-text hide-mobile ">23/03/21 13:43</div>
+            <div class="categorizer-text hide-mobile ">rbryanben</div>
+            <div class="categorizer-text hide-mobile ">14</div>
+            <div class="categorizer-text controls-admin-projects hide-mobile">
+                <div class="delete-client hide-mobile">
+                    <i class="fas fa-edit" onclick="showEditClientModal('${developerClientNew.identification}','${developerClientNew.integration}')"></i>          
+                </div>
+                <div class="edit-client hide-mobile">
+                    <i class="fas fa-trash" onclick="showDeleteAccountModal('${developerClientNew.identification}','${developerClientNew.integration}')"></i>
+                </div>
+            </div>
+        </div>
+    </div>
  </div>
+
+<!-- -->
+<!-- -->
+<!-- ADD PROJECT MODAL -->
+<div id="admin_add_project_modal" class="console-modal">
+    <!-- Form to prevent auto fill -->
+    <form method="dialog" autocomplete="off">
+        <!-- Cancel Modal-->
+        <div class="modal-cancel">
+            <i class="fas fa-times" onclick="show_admin_add_project_modal(false)"></i>
+        </div>
+
+        <!-- CLIENT IDENTIFICATION (INPUT)-->
+        <div class="console-modal-subtext" style="font-size: small;">Client Provider</div>
+        <div  class="input-frame" style="position: relative;">
+            <input id="newClientAccountIdentification" placeholder="Identifier" class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;font-size: small;">
+        </div>
+
+        <!-- STORAGE SELECT -->
+        <div class="console-modal-subtext" style="font-size: small; margin-top: 20px;">Storage Type</div>
+        <div  class="input-frame" style="position: relative;">
+            <select  class="projects-modal-body-item plain-input no-anime" style="width: 302px; padding-right: 5px; cursor: text; font-size: small;">
+                <!-- integrations come here -->
+                <option value="Secure Storage">Secure Storage</option>
+            </select>
+        </div>
+
+        <!-- ADD BUTTON // onclick sends and http request to add an account-->
+        <div id="admin-add-project-button" onclick="addClientAccount()" class="modal-button" style="font-size: small;"> 
+            Add
+        </div>
+        <!-- Modal Loader-->
+        <div id="add-client-account-modal-loader" class="modalLoader show" style="transform: scale(0.1);margin-top: 60px;">
+            <div class="modal-loader"></div>
+        </div>
+    </form>
+</div>
+
+
  
  <script>
      //function to initialize page
@@ -23,5 +129,17 @@
             //hide page
             page.style.display = "none"
         }
+     }
+
+     //function show add project modal 
+     function show_admin_add_project_modal(visibility){
+        var modal = document.getElementById("admin_add_project_modal")
+        if (visibility){
+            if (!modal.classList.contains("show")){
+                modal.classList.add("show")
+            }
+            return
+        }
+        modal.classList.remove("show")
      }
  </script>
