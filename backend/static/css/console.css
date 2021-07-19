@@ -72,6 +72,14 @@ transition: all 0.2s ease-in;
     margin-right: 18px;
 }
 
+/* COPYRIGHT TEXT */
+.copyright-text {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: xx-small;
+}
+
 /* font of small */
 .sm {
     font-size: 9pt;

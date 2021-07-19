@@ -1,5 +1,6 @@
 {% load static %}
 <style>
+    /* NAVBAR BODY */
     .console-navbar {
         cursor: pointer;
         position: fixed;
@@ -10,18 +11,21 @@
         width: 100%;
         padding: 10px;
         display: grid;
-        grid-template-columns: 10fr repeat(3,6fr) 56fr repeat(3,5fr);
+        grid-template-columns: 10fr repeat(3,6fr) 56fr 5fr 1fr;
     }
 
+    /* MOBILE MENU */
     .mobile-menu {
         display: none;
     }
 
+    /* NAVBAR LOGOS */
     .console-navbar-logo >img{
         height: 40px;
         opacity: 0.7;
     }
 
+    /* NAVBAR ICON */
     .navbar-icon {
         display: flex;
         justify-content: center;
@@ -29,19 +33,14 @@
         font-size: 16pt;
         margin-top: 8px;
         color: rgb(211, 211, 211);
-        transition: all 0.1s ease-in;
     }
 
-    .navbar-icon:hover{
-        color: rgb(233, 233, 233);
-    }
-
-
-
+    /* SELECTED NAVBAR */
     .navbar-icon.selected {
         color: white;
     }
 
+    /* MOBILE MENU CONTENT */
     .mobile-menu-content {
         display: none;
     }
@@ -49,53 +48,44 @@
 
     /* adaptivenes */
 
-@media only screen and (max-width: 1055px) {
-    .console-navbar {
-        grid-template-columns: 10fr repeat(3,6fr) 56fr repeat(3,5fr);
+    @media only screen and (max-width: 1055px) {
+        .console-navbar {
+            grid-template-columns: 10fr repeat(3,6fr) 56fr repeat(3,5fr);
+        }
     }
 
-}
-
-@media only screen and (max-width: 800px) {
-    .console-navbar {
-        grid-template-columns: 10fr repeat(3,6fr) 20fr repeat(3,5fr);
-    }
-}
-
-@media only screen and (max-width: 700px) {}
-
-@media only screen and (max-width: 600px) {
-    .navbar-icon {
-        display: none;
+    @media only screen and (max-width: 800px) {
+        .console-navbar {
+            grid-template-columns: 10fr repeat(3,6fr) 20fr repeat(3,5fr);
+        }
     }
 
-    .console-navbar {
-        grid-template-columns: 10% 0% 80% 10%;
+
+    @media only screen and (max-width: 600px) {
+        .navbar-icon {
+            display: none;
+        }
+
+        .console-navbar {
+            grid-template-columns: 10% 0% 80% 10%;
+        }
+
+        .mobile-menu {
+            display: block;
+            margin-top: 8px;
+            color: rgb(233, 233, 233);
+        }
+
+        .mobile-menu.logo {
+            font-size: small;
+            display: flex;
+            margin-top: 12px;
+            color: rgb(216, 216, 216);
+            justify-content: center;
+        }
+
+        
     }
-
-    .mobile-menu {
-        display: block;
-        margin-top: 8px;
-        color: rgb(233, 233, 233);
-    }
-
-    .mobile-menu.logo {
-        font-size: small;
-        display: flex;
-        margin-top: 12px;
-        color: rgb(216, 216, 216);
-        justify-content: center;
-    }
-
-    
-}
-
-@media only screen and (max-width: 500px) {}
-
-@media only screen and (max-width: 400px) {}
-
-@media only screen and (max-width: 340px) {}
-
 </style>
 
 <!-- Navbar -->
@@ -115,14 +105,8 @@
         <i class="fas fa-cloud-upload-alt"></i>
     </div>
     <div class=""></div>
-    <div class="console-browser navbar-icon">
-        <i class="fas fa-bell"></i>
-    </div>
     <div id="navSettings" class="console-browser navbar-icon">
         <i class="fas fa-cog"></i>
-    </div>
-    <div class="console-browser navbar-icon">
-        R
     </div>
     <div class="mobile-menu logo">
         Cloud Winterstore
@@ -184,7 +168,8 @@
         })
 
         settings.addEventListener('click',()=>{
-            setMarkerOn(settings)
+           //open settings modal oin click
+           
         })
     })
 

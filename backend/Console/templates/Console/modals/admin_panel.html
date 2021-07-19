@@ -1,0 +1,313 @@
+{% load static %}
+<style>
+    /* ADMIN PANEL BODY */
+    .admin-panel {
+        display:grid;
+        z-index: 100;
+        height: 100%;
+        width: 100%;
+        background-color: white;
+        position: fixed;
+        transform: scale(1);
+        opacity: 1;
+        visibility: visible;
+        transition: all 0.2s ease-in;
+        grid-template-columns: 20% 80%;
+        color: rgb(75, 75, 75);
+    }
+
+    /* ADMIN PANEL HIDE (TRANSITION) */
+    .admin-panel.hide{
+        opacity: 0;
+        visibility: hidden;
+        transform: scale(1.1);
+    }
+
+    /* NAVIGATION */
+    .admin-panel > .view {
+        background-color: rgba(226, 226, 226, 0.822);
+        border-left: solid 0.5px rgba(218, 218, 218, 0.507);
+    }
+
+    .admin-panel > .view > .top {
+        background-color: rgba(255, 255, 255, 0.685);
+        height: 100px;
+        padding: 20px;
+    }
+
+    .navigation-page-name {
+        font-size: xx-large;
+    }
+
+    .navigation-page-info {
+        margin-top: 10px;
+        font-size: medium;
+        color: gray;
+        padding-left: 3px;
+    }
+
+
+    /* NAVIGATION BUTTON */
+    .navigation-button {
+        display: grid;
+        grid-template-columns: 15% 75%;
+        border-bottom: solid 0.5px rgba(218, 218, 218, 0.507);
+        padding: 20px;
+        cursor: pointer;
+    }
+
+    /* GROUP NAVIGATION */
+    .navigation-group {
+        border-top: solid 0.5px rgb(236, 236, 236);
+    }
+
+    .navigation-button:hover{
+        background-color: rgba(213, 241, 227, 0.459);
+    }
+
+    /* create projects */
+    .projects-create {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        border-radius: 6px;
+        padding: 20px;
+        width: 300px;
+        font-size: small;
+        transform: translate(-50%,-50%);
+        background-color: white;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        visibility: hidden;
+        opacity: 0;
+        transform: scale(0.1);
+        transition: all 0.2s ease-in;
+    }
+
+    .projects-create.show {
+        visibility: visible;
+        opacity: 1;
+        transform: scale(1);
+        transform: translate(-50%,-50%);
+    }
+
+ 
+
+    
+    /* animations */
+    .admin-panel-body-item:hover{
+        transform: scale(1.015);
+    }
+
+    .add-project-button:hover{
+        transform: scale(1.1);
+    }
+
+    .no-anime:hover {
+        transform: none;
+    }
+
+    /* input frame */
+    .input-frame{
+        display: flex;
+        position: relative;
+    }
+
+    .input-frame> i {
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-25%);
+    }
+
+
+</style>
+
+<!-- ADMIN PANEL BODY -->
+<div class="admin-panel">
+     <!-- navigation -->
+     <div class="navigation">
+        <!-- Projects Button -->
+        <div class="navigation-button">
+            <div class="navigation-button-icon"><i class="fas fa-layer-group"></i></div>
+            <div class="navigation-button-text">Projects</div>
+        </div>
+        <!-- Profile -->
+        <div class="navigation-button">
+            <div class="navigation-button-icon"><i class="fas fa-credit-card"></i></div>
+            <div class="navigation-button-text">Subscription</div>
+        </div>
+        <!-- Profile -->
+        <div class="navigation-button">
+            <div class="navigation-button-icon"><i class="fas fa-user"></i></div>
+            <div class="navigation-button-text">Profile</div>
+        </div>
+    
+    </div>
+
+     <!-- view -->
+     <div class="view">
+         <!-- view top -->
+         <div class="top">
+            <div class="navigation-page-name">Secure Storage</div>
+            <div class="navigation-page-info">View and edit storage projects from team collaborations or owned.</div>
+         </div>
+
+     </div>
+</div>
+
+<!-- create project -->
+<div id="createProjectModal" class="projects-create">
+    <i class="fas fa-times" style="position: absolute; right: 15px; top: 15px; color: gray; cursor: pointer;" onclick="hideCreateProjectModal()"></i>
+    <div class="">Enter New Project Name</div>
+    <div class="" style="margin-bottom: 20px; margin-top: 10px; font-size: xx-small; padding-right: 40px;">Your project name should be unique, 6 charectors long, and not contain any spaces.</div>
+    <div id="projectNameNew" class="input-frame" style="position: relative;">
+        <input id="createProjectModalProjectName" class="admin-panel-body-item plain-input no-anime" style="width: 280px;cursor: text;">
+        <i id="error" class="fas fa-exclamation-triangle error" style="color: rgb(235, 192, 112);visibility: hidden;"></i>
+        <i id="pass" class="fas fa-check pass" style="color: rgb(97, 179, 97);visibility: hidden;"></i>
+    </div>
+    <!-- add button -->
+    <div class="add-project-button div-flex center">
+        <i class="fas fa-plus-circle fa-2x" onclick="createProject()"></i>
+    </div>
+</div>
+
+
+<script>
+    //local vars projects
+    let projectsModal;
+
+    //local vars create
+    let createProjectModal;
+    let createProjectModalProjectName;
+    let inputPasses = false
+
+
+    //Entry Point
+    window.addEventListener("DOMContentLoaded",()=>{
+        //local variables
+        projectsModal = document.getElementById("projectsModal")
+        createProjectModal = document.getElementById("createProjectModal")
+        createProjectModalProjectName = document.getElementById("createProjectModalProjectName")
+
+
+        //listener for create project click
+        //may not be necessary
+        createProjectModalProjectName.addEventListener("keyup",(event)=>{
+            var textInput = createProjectModalProjectName.value
+            var inputDiv = document.getElementById("projectNameNew")
+
+            //enter pressed, create project 
+            if (event.keyCode === 13){
+                createProject()
+            }
+            
+            //check standard
+            if(textInput.indexOf(" ") > -1 || textInput.length < 6 ){
+                MarkError(inputDiv)
+                inputPasses = false
+            }
+            else{
+                MarkPass(inputDiv)
+                inputPasses = true
+         
+            }
+        })
+
+
+        ///load test project
+        //loadProject("rbryanben.Cloud-Winterstore")
+
+    })
+
+
+    //LOAD PROJECT
+    // To load a project you need to parse a name of format <username>.<project_name>
+    function loadProject(name){
+        var thisModal = document.querySelector(".admin-panel")
+
+        //set the selected porject
+        localStorage.setItem("working-project",name)
+
+        //show browser
+        showBrowser()
+
+        //hide self
+        thisModal.classList.add("hide")
+
+        //release lock on upload and download modal
+        lockUploadAndDownloadModal = false
+
+        //show recommendation modal if this is a mobile device
+        if (window.innerWidth <= 600){
+            showDesktopRecommemdation();
+        }
+        
+    }
+
+
+    
+    //create modal
+    function showCreateProjectModal(){
+        if (!projectsModal.classList.contains("hide")){
+            projectsModal.classList.add("hide")
+        }
+        if (!createProjectModal.classList.contains("show")){
+            createProjectModal.classList.add("show")
+        } 
+    }
+
+    function hideCreateProjectModal(){
+        createProjectModal.classList.remove("show")
+        projectsModal.classList.remove("hide")
+    }
+
+    //method create a project
+    function createProject(){
+        if (inputPasses){
+            text = document.getElementById("createProjectModalProjectName").value
+            data = {
+                "name" : text
+            }
+
+            //send request
+            showLoading()
+            postToServer("/console/create-project",data, function(responce) {
+                if (responce != "500") {
+                    hideLoading()
+                    ShowSuccess("Project Created")
+                    setTimeout(()=>{
+                        window.location.reload()
+                    },2000)
+                } else {
+                    hideLoading()
+                    ShowWarning("Failed to create project")
+                }
+            })
+        }
+    }
+
+    //input helper 
+    function MarkError(element){
+        element.getElementsByClassName("pass")[0].style.visibility = "hidden"
+        element.getElementsByClassName("error")[0].style.visibility = "visible"
+    }
+
+     //input helper 
+     function MarkPass(element){
+        element.getElementsByClassName("pass")[0].style.visibility = "visible"
+        element.getElementsByClassName("error")[0].style.visibility = "hidden"
+    }
+
+    //document 
+
+    function hideElement(elememt){
+        elememt.style.visibility = "hidden"
+    }
+
+    function showElement(elememt){
+        elememt.style.visibility = "hidden"
+    }
+
+
+
+</script>

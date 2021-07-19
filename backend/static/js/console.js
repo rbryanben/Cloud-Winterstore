@@ -6,7 +6,7 @@ window.document.addEventListener("readystatechange",()=>{
         case "complete":
             setTimeout(function(){
                 hideConsoleLoading()
-            },1000)
+            },10)
             break;
         }
 })

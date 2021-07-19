@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'Console', #console package
     'SharedApp', #Shared
     'rest_framework',#Rest Framework
-    'rest_framework.authtoken',
+    'rest_framework.authtoken', #Token 
+    'django_extensions', #Extensions
 ]
 
 REST_FRAMEWORK = {
