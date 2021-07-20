@@ -152,7 +152,7 @@
      //Implementing an MVVM Architecture
      let Project = class {
          constructor(jsonObject){
-            this.identification = jsonObject["identification"]
+            this.identification = jsonObject["name"]
             this.dateCreated = convertDate(jsonObject["dateCreated"])
             this.username = jsonObject["owner"]["username"]
             this.admin_count = jsonObject["admin_count"]

@@ -59,4 +59,4 @@ class ProjectSerializer(serializers.ModelSerializer):
     owner = UserSerializer()
     class Meta:
         model = Project
-        fields = ['owner','dateCreated','identification','admin_count']
+        fields = ['owner','dateCreated','name','admin_count']

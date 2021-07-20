@@ -23,6 +23,17 @@ from SharedApp.models import Developer, DeveloperClient, Platform, Project , Tea
 from .serializers import FileDownloadInstanceSerializer, IntegrationSerializer , DeveloperClientSerializer , PlatformSerializer , ProjectSerializer
 from SharedApp.serializers import TeamCollaboratorSerializer
 
+def getProjectFromRequest(request):   
+    try:
+        receivedData = json.loads(request.body)
+        project_owner_data = receivedData["project"].split(".")
+        project = Project.objects.get(owner=User.objects.get(username=project_owner_data[0]),name=project_owner_data[1])
+        return project
+    except exceptions.ObjectDoesNotExist:
+        return False
+    except:
+        return False
+
 
 @login_required(login_url='/')
 def console(request):
@@ -147,12 +158,26 @@ def getDownloadStats(request):
     return JsonResponse(serializer.data,safe=False)
 
 @login_required(login_url='/console/login-required')
-@require_http_methods(["POST","GET"])
+@require_http_methods(["GET","DELETE"])
 def developer_projects(request):
     if (request.method == "GET"):
         currentDeveloper = Developer.objects.get(user=request.user)
         serialized_projects = ProjectSerializer(currentDeveloper.get_projects(),many=True)
         return JsonResponse(serialized_projects.data,safe=False)
+
+    if (request.method == "DELETE"):
+        #project 
+        project = getProjectFromRequest(request)
+
+        #check pemmision 
+        if (project.owner != request.user):
+            return HttpResponse("denied")
+
+        
+        #delete project
+        project.delete()
+        return HttpResponse("200")
+
 
 
 @login_required(login_url='/console/login-required')
@@ -807,16 +832,7 @@ def isAdministrator(request,project):
 def meetsHTMLCompatability(string):
     return True
 
-def getProjectFromRequest(request):   
-    try:
-        receivedData = json.loads(request.body)
-        project_owner_data = receivedData["project"].split(".")
-        project = Project.objects.get(owner=User.objects.get(username=project_owner_data[0]),name=project_owner_data[1])
-        return project
-    except exceptions.ObjectDoesNotExist:
-        return HttpResponse("not found")
-    except:
-        return HttpResponse("500")
+
 
 def getProjectOwnerFromRequest(request):
     try:

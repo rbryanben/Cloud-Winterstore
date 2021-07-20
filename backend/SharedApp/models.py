@@ -29,7 +29,7 @@ def string_generator(size=6, chars=string.ascii_uppercase + string.digits):
 class Project(models.Model):
     owner = models.ForeignKey(User,null=False,on_delete=models.CASCADE)
     dateCreated = models.DateTimeField(auto_now=True,null=False)
-    identification = models.CharField(max_length=20,null=False)
+    name = models.CharField(max_length=20,null=False)
 
     def create(self,name,owner):
         self.name = name
