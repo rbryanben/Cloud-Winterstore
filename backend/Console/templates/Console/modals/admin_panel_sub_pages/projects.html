@@ -117,6 +117,35 @@
     </form>
 </div>
 
+<!-- -->
+<!-- -->
+<!-- -->
+<!-- -->
+<!-- DELETE PROJECT -->
+<div id="admin_panel_delete_project_modal"  class="console-modal">
+    <!-- Form to prevent auto fill-->
+    <form method="dialog" autocomplete="off">
+        <!-- CANCEL MODAL -->
+        <div class="modal-cancel">
+            <i onclick="admin_panel_hide_delete_project_modal()" class="fas fa-times"></i>
+        </div>
+        <!-- PROJECT NAME -->
+        <div class="console-modal-subtext" style="font-size: small;">Delete Project</div>
+        <div  class="input-frame" style="position: relative;">
+            <input id="project_to_delete_name"  readonly class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;font-size: small;">
+        </div>
+        <!-- DELETE BUTTON -->
+        <div id="admin_panel_delete_project_button" onclick="delete_project_http_request()" class="modal-button" style="font-size: small; background-color: rgba(228, 82, 82, 0.685);"> 
+            Delete
+        </div>
+        <!-- Modal Loader-->
+        <div id="admin_panel_delete_project_loader" class="modalLoader" style="transform: scale(0.1);">
+            <div class="modal-loader"></div>
+        </div>
+    </form>
+</div>
+
+
 
  
  <script>
@@ -201,7 +230,7 @@
                                     <i class="fas fa-edit" ></i>          
                                 </div>
                                 <div class="edit-client hide-mobile">
-                                    <i class="fas fa-trash"></i>
+                                    <i class="fas fa-trash" onclick="admin_panel_delete_project('${project_instance.identification}','${project_instance.username}')"></i>
                                 </div>
                             </div>
                         </div>
@@ -223,6 +252,36 @@
         }
         get_develoeper_projects();
     }
+    
+    //funtion to delete project
+    function admin_panel_delete_project(identification,username){
+        //show modal
+        var delete_modal = document.getElementById("admin_panel_delete_project_modal")
+        if (!delete_modal.classList.contains("show")){
+            delete_modal.classList.add("show")
+        }
+        //set the project name
+        var project_name  = document.getElementById("project_to_delete_name")
+        project_name.value = identification
+    }
+
+    function admin_panel_hide_delete_project_modal(){
+        var delete_modal = document.getElementById("admin_panel_delete_project_modal")
+        delete_modal.classList.remove("show")
+    }
+
+    function delete_project_http_request(){
+        var delete_button = document.getElementById("admin_panel_delete_project_button")
+        var modal_loader = document.getElementById("admin_panel_delete_project_loader")
+
+        //disable button and show loading
+        disableModalButton(delete_button)
+        if (!modal_loader.classList.contains("show")){
+            modal_loader.classList.add("show")
+        }
+
+    }
+
     //function to create a project 
     function create_project_http_request(){
         var new_project_name = document.getElementById("admin_panel_new_project_name").value
