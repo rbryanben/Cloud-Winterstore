@@ -20,37 +20,14 @@ from django.views.decorators.http import require_http_methods
 from pymongo.mongo_client import MongoClient
 from distutils.util import strtobool
 from SharedApp.models import Developer, DeveloperClient, Platform, Project , TeamCollaboration, IndexObject , Integration , BarnedDeveloperClient
-from .serializers import FileDownloadInstanceSerializer, IntegrationSerializer , DeveloperClientSerializer , PlatformSerializer
+from .serializers import FileDownloadInstanceSerializer, IntegrationSerializer , DeveloperClientSerializer , PlatformSerializer , ProjectSerializer
 from SharedApp.serializers import TeamCollaboratorSerializer
 
 
 @login_required(login_url='/')
 def console(request):
-    #local useful vars
-    currentDeveloper = Developer.objects.get(user=request.user)
-    currentUser = request.user
-
-    #max projects 
-    maxProjectsReached = False
-    if (len(Project.objects.filter(owner=request.user)) >= 5):
-        maxProjectsReached = True
-
-    #get all collaborating object 
-    teamCollaborations = TeamCollaboration.objects.filter(developer=currentDeveloper)
-    collaboratingProjects = []
-    
-    #assign collaborations - extract from teamCollaborations 
-    for object in teamCollaborations:
-        collaboratingProjects.append(object.project)
-
-
-    #final context 
-    context = {
-        "projects" : Project.objects.filter(owner=request.user),
-        "collaboratingProjects" :  collaboratingProjects,
-        "maxProjectsReached" : maxProjectsReached
-    }
-    return render(request,"Console/console.html",context)
+    #return frontend application
+    return render(request,"Console/console.html")
 
 @login_required(login_url='/console/login-required')
 @require_http_methods(["POST",])
@@ -168,6 +145,14 @@ def getDownloadStats(request):
     #serialize the data
     serializer = FileDownloadInstanceSerializer(downloadObjects,many=True)
     return JsonResponse(serializer.data,safe=False)
+
+@login_required(login_url='/console/login-required')
+@require_http_methods(["POST","GET"])
+def developer_projects(request):
+    if (request.method == "GET"):
+        currentDeveloper = Developer.objects.get(user=request.user)
+        serialized_projects = ProjectSerializer(currentDeveloper.get_projects(),many=True)
+        return JsonResponse(serialized_projects.data,safe=False)
 
 
 @login_required(login_url='/console/login-required')

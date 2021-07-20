@@ -1,9 +1,9 @@
-from os import stat
-from rest_framework import fields, serializers
-from SharedApp import models
-from SharedApp.models import IndexObject , Integration , Platform , DeveloperClient 
+from django.db.models import fields
+from rest_framework import serializers
+from SharedApp.models import IndexObject , Integration , Platform , DeveloperClient , Project
 from django.contrib.auth.models import User
-from .models import FileDownloadInstance , FileDownloadObjectStat
+from .models import FileDownloadInstance
+from Console import models 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -54,3 +54,9 @@ class PlatformSerializer(serializers.ModelSerializer):
     class Meta:
         model = Platform
         fields = ['name']
+
+class ProjectSerializer(serializers.ModelSerializer):
+    owner = UserSerializer()
+    class Meta:
+        model = Project
+        fields = ['owner','dateCreated','identification','admin_count']

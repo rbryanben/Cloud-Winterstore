@@ -29,23 +29,20 @@ def string_generator(size=6, chars=string.ascii_uppercase + string.digits):
 class Project(models.Model):
     owner = models.ForeignKey(User,null=False,on_delete=models.CASCADE)
     dateCreated = models.DateTimeField(auto_now=True,null=False)
-    name = models.CharField(max_length=20,null=False)
+    identification = models.CharField(max_length=20,null=False)
 
     def create(self,name,owner):
         self.name = name
         self.owner = owner
         self.save()
 
-class Developer(models.Model):
-    user = models.OneToOneField(User,null=False,on_delete=models.CASCADE,primary_key=True)
-
-    def create(self,user):
-        self.user = user
-        self.save()
+    @property
+    def admin_count(self):
+        return len(TeamCollaboration.objects.filter(project=self))
 
 class TeamCollaboration(models.Model):
     project = models.ForeignKey(Project,null=False,on_delete=models.CASCADE)
-    developer = models.ForeignKey(Developer,null=False,on_delete=models.CASCADE)
+    developer = models.ForeignKey("Developer",null=False,on_delete=models.CASCADE)
     added = models.DateTimeField(auto_now=True)
 
     def create(self,project,developer):
@@ -337,6 +334,28 @@ class FileKey(models.Model):
         except:
             return None
 
+class Developer(models.Model):
+    user = models.OneToOneField(User,null=False,on_delete=models.CASCADE,primary_key=True)
+
+    def create(self,user):
+        self.user = user
+        self.save()
+
+    def get_projects(self):
+        projects_to_return = []
+
+        owned_projects = Project.objects.filter(owner=self.user)
+        #add owned projects to list 
+        for project in owned_projects:
+            projects_to_return.append(project)
+
+        #get projects from team collaborations 
+        currentDeveloper = Developer.objects.get(user=self.user)
+        teamCollaborations = TeamCollaboration.objects.filter(developer=currentDeveloper)
+        for collaboration in teamCollaborations:
+            projects_to_return.append(collaboration.project)
+        
+        return projects_to_return
 #Tokens 
 @receiver(post_save, sender=User, dispatch_uid="create_user_token")
 def update_stock(sender, instance, **kwargs):

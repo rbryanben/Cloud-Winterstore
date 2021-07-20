@@ -26,6 +26,7 @@ urlpatterns = [
     path("search-update-integrations",views.search_update_integration), #search and update integrations
     path("platforms",views.platform), #to get plaforms
     path("generate-new-key",views.generateNewKey), #generate new key for interations
+    path("developer-projects",views.developer_projects), #developer projects
 
     ###############
     ############### Fallback 
