@@ -36,6 +36,7 @@
         padding-right: 10px;
         grid-template-columns: 30px 30px;
     } 
+
 </style>
 
 <div id="admin_projects_page" class="admin-panel-page">
@@ -80,10 +81,10 @@
             <i class="fas fa-times" onclick="show_admin_add_project_modal(false)"></i>
         </div>
 
-        <!-- CLIENT IDENTIFICATION (INPUT)-->
-        <div class="console-modal-subtext" style="font-size: small;">Client Provider</div>
+        <!-- PROJECT NAME (INPUT)-->
+        <div class="console-modal-subtext" style="font-size: small;">Project Name</div>
         <div  class="input-frame" style="position: relative;">
-            <input id="newClientAccountIdentification" placeholder="Identifier" class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;font-size: small;">
+            <input id="admin_panel_new_project_name" placeholder="Identifier" class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;font-size: small;">
         </div>
 
         <!-- STORAGE SELECT -->
@@ -96,21 +97,21 @@
         </div>
 
         <!-- STREAMING TYPE -->
-        <div class="console-modal-subtext" style="font-size: small; margin-top: 20px;">Storage Type</div>
+        <div class="console-modal-subtext" style="font-size: small; margin-top: 20px;">Stream Type</div>
         <div  class="input-frame" style="position: relative;">
             <select  class="projects-modal-body-item plain-input no-anime" style="width: 302px; padding-right: 5px; cursor: text; font-size: small;">
-                <!-- integrations come here -->
                 <option value="closed">Closed Streaming</option>
                 <option value="open">Open Streaming</option>
             </select>
         </div>
 
-        <!-- ADD BUTTON // onclick sends and http request to add an account-->
-        <div id="admin-add-project-button" onclick="addClientAccount()" class="modal-button" style="font-size: small;"> 
+        <!-- CREATE BUTTON // onclick sends and http request to create a new project-->
+        <div id="admin_panel_create_project" onclick="create_project_http_request()" class="modal-button" style="font-size: small;"> 
             Add
         </div>
+
         <!-- Modal Loader-->
-        <div id="add-client-account-modal-loader" class="modalLoader" style="transform: scale(0.1);margin-top: 60px;">
+        <div id="admin_modal_new_project_modal_loader" class="modalLoader" style="transform: scale(0.1);margin-top: 110px;">
             <div class="modal-loader"></div>
         </div>
     </form>
@@ -145,6 +146,12 @@
      function show_admin_add_project_modal(visibility){
         var modal = document.getElementById("admin_add_project_modal")
         if (visibility){
+            //clear text in modal 
+            document.getElementById("admin_panel_new_project_name").value = ""
+            //hide loading and enable button
+            var new_project_button = document.getElementById("admin_panel_create_project")
+            var modal_loader = document.getElementById("admin_modal_new_project_modal_loader")
+            //show modal
             if (!modal.classList.contains("show")){
                 modal.classList.add("show")
             }
@@ -152,4 +159,42 @@
         }
         modal.classList.remove("show")
      }
+
+    //function to add project 
+    function create_project_http_request(){
+        var new_project_name = document.getElementById("admin_panel_new_project_name").value
+
+        data = {
+            "name" : new_project_name
+        }
+        //disable button and show loading
+        var new_project_button = document.getElementById("admin_panel_create_project")
+        var modal_loader = document.getElementById("admin_modal_new_project_modal_loader")
+        enableModalButton(new_project_button)
+        modal_loader.classList.remove("show")
+        
+        disableModalButton(new_project_button)
+        if (!modal_loader.classList.contains("show")){
+            modal_loader.classList.add("show")
+        }
+
+        //send request
+        postToServer("/console/create-project",data, function(responce) {
+            //enable button on response 
+            enableModalButton(new_project_button)
+            modal_loader.classList.remove("show")
+
+            //if response is 500 , there was a problem
+            if (responce == "200") {
+                ShowSuccess("Created New Project")
+                //hide modal
+                show_admin_add_project_modal(false)
+                //fetch new projects
+            } else {
+                hideLoading()
+                ShowWarning("Failed to create project")
+            }
+        })
+        
+    }
  </script>
