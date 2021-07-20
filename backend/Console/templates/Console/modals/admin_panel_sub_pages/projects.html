@@ -48,10 +48,10 @@
         <div class="categorizer-text hide-mobile ">Admins</div>
         <div class="categorizer-text hide-mobile">Controls</div>
         <div class="categorizer-text hide-mobile"><i onclick="show_admin_add_project_modal(true)" style="color: gray; cursor: pointer;" class="fas fa-plus"></i></div>
-        <div class="categorizer-text hide-mobile"><i  style="color: gray; cursor: pointer;" class="fas fa-sync"></i></div>
+        <div class="categorizer-text hide-mobile"><i onclick="admin_panel_projects_refresh_page(this)" style="color: gray; cursor: pointer;" class="fas fa-sync animate-clicked"></i></div>
     </div>
     <!-- projects-list -->
-    <div class="admin-projects-list">
+    <div id="admin_panel_list" class="admin-projects-list">
         <!-- item -->
         <div class="admin-projects-item">
             <div class="categorizer-text ">Cloud-Winterstore</div>
@@ -120,9 +120,22 @@
 
  
  <script>
+     //Implementing an MVVM Architecture
+     let Project = class {
+         constructor(jsonObject){
+            this.identification = jsonObject["identification"]
+            this.dateCreated = convertDate(jsonObject["dateCreated"])
+            this.username = jsonObject["owner"]["username"]
+            this.admin_count = jsonObject["admin_count"]
+         }
+     }
+
+     //array to store projects
+     let projects_list = []
+
      //function to initialize page
      function init_admin_projects_page(){
-
+        get_develoeper_projects();
      }
 
 
@@ -160,7 +173,57 @@
         modal.classList.remove("show")
      }
 
-    //function to add project 
+     //function to get developer projects 
+     function get_develoeper_projects(){
+        //send http request
+        getToServer("/console/developer-projects",null, function(response) {
+            //if response is 500 , there was a problem
+            if (response == "500") {
+                ShowWarning("Fetch Objects Failed")
+            } else {
+                var projectsJSONArray = JSON.parse(response)
+                //list to add objects
+                var list_to_insert_elements = document.getElementById("admin_panel_list")
+                list_to_insert_elements.innerHTML = "" //clear list
+                //extract and insert objects into presentation list
+                projectsJSONArray.forEach(jsonObject => {
+                    var project_instance = new Project(jsonObject)
+                    //element to insert into list 
+                    var element_to_insert_into_list = `
+                        <!-- item -->
+                        <div class="admin-projects-item">
+                            <div class="categorizer-text ">${project_instance.identification}</div>
+                            <div class="categorizer-text hide-mobile ">${project_instance.dateCreated}</div>
+                            <div class="categorizer-text hide-mobile ">${project_instance.username}</div>
+                            <div class="categorizer-text hide-mobile ">${project_instance.admin_count}</div>
+                            <div class="categorizer-text controls-admin-projects hide-mobile">
+                                <div class="delete-client hide-mobile">
+                                    <i class="fas fa-edit" ></i>          
+                                </div>
+                                <div class="edit-client hide-mobile">
+                                    <i class="fas fa-trash"></i>
+                                </div>
+                            </div>
+                        </div>
+                    `
+                    //insert element
+                    list_to_insert_elements.innerHTML += element_to_insert_into_list;
+                });
+            }
+        })
+     }
+
+    //function to refresh page 
+    function admin_panel_projects_refresh_page(object){
+        if (!object.classList.contains("animate")){
+            object.classList.add("animate")
+        }
+        else {
+            object.classList.remove("animate")
+        }
+        get_develoeper_projects();
+    }
+    //function to create a project 
     function create_project_http_request(){
         var new_project_name = document.getElementById("admin_panel_new_project_name").value
 

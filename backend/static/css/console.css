@@ -106,6 +106,22 @@ transition: all 0.2s ease-in;
     margin-left: -20px;
     margin-top: 20px;
 }
+/* change color for bin */
+.fa-trash {
+    transition: all 0.2s ease-in;
+}
+
+.fa-trash:hover{
+    color: rgb(177, 77, 77);
+}
+
+.fa-edit {
+    transition: all 0.2s ease-in;
+}
+
+.fa-edit:hover{
+    color: rgb(77, 177, 85);
+}
 
 /* remove dropdown select */
 select {

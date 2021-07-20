@@ -38,7 +38,7 @@ class Project(models.Model):
 
     @property
     def admin_count(self):
-        return len(TeamCollaboration.objects.filter(project=self))
+        return len(TeamCollaboration.objects.filter(project=self)) + 1
 
 class TeamCollaboration(models.Model):
     project = models.ForeignKey(Project,null=False,on_delete=models.CASCADE)
