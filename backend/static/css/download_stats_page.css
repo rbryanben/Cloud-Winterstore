@@ -52,7 +52,7 @@
     }
 
     /* on devices of small screen make categorizer field visible */
-    @media only screen and (max-width: 600px) {
+    @media only screen and (max-width: 1000px) {
         .download-file-item {
             grid-template-columns: 100%
         }
