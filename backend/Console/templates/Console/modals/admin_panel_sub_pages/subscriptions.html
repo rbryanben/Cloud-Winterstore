@@ -1,5 +1,29 @@
+{% load static %}
+<style>
+    .admin-panel-msg {
+        margin: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .admin-panel-msg>img{
+        height: 300px;
+        width: 300px;
+    }
+
+    .unavailble-text {
+        margin-bottom: 20px;
+        color: rgb(71, 71, 71);
+        font-size: small;
+        padding: 20px;
+    }
+</style>
 <div id="admin_subscriptions_page" class="admin-panel-page">
-    subscriptions
+    <div class="admin-panel-msg">
+        <img src="{% static 'svg/undraw_heavy_box_agqi.svg' %}">
+    </div>
+    <div class="div-flex-center unavailble-text">Page Unavailble At This Moment</div>
  </div>
  
  <script>
