@@ -108,6 +108,54 @@
     </form>
 </div>
 
+
+<!-- -->
+<!-- -->
+<!-- UPDATE PROJECT MODAL -->
+<div id="admin_update_project_modal" class="console-modal">
+    <!-- Form to prevent auto fill -->
+    <form method="dialog" autocomplete="off">
+        <!-- Cancel Modal-->
+        <div class="modal-cancel">
+            <i class="fas fa-times" onclick="admin_panel_show_update_modal(false)" ></i>
+        </div>
+
+        <!-- NEW NAME (INPUT)-->
+        <div class="console-modal-subtext" style="font-size: small;">Project Name</div>
+        <div  class="input-frame" style="position: relative;">
+            <input id="admin_panel_update_project_name" placeholder="Identifier" class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;font-size: small;">
+        </div>
+
+        <!-- STORAGE SELECT -->
+        <div class="console-modal-subtext" style="font-size: small; margin-top: 20px;">Storage Type</div>
+        <div  class="input-frame" style="position: relative;">
+            <select  class="projects-modal-body-item plain-input no-anime" style="width: 302px; padding-right: 5px; cursor: text; font-size: small;">
+                <!-- integrations come here -->
+                <option value="Secure Storage">Secure Storage</option>
+            </select>
+        </div>
+
+        <!-- STREAMING TYPE -->
+        <div class="console-modal-subtext" style="font-size: small; margin-top: 20px;">Stream Type</div>
+        <div  class="input-frame" style="position: relative;">
+            <select  class="projects-modal-body-item plain-input no-anime" style="width: 302px; padding-right: 5px; cursor: text; font-size: small;">
+                <option value="closed">Closed Streaming</option>
+            </select>
+        </div>
+
+        <!-- UPDATE BUTTON // onclick sends and http request to create a new project-->
+        <div id="admin_panel_create_project" onclick="admin_panel_update_project_http_request()" class="modal-button" style="font-size: small;"> 
+            Update
+        </div>
+
+        <!-- Modal Loader-->
+        <div class="modalLoader" style="transform: scale(0.1);margin-top: 110px;">
+            <div class="modal-loader"></div>
+        </div>
+    </form>
+</div>
+
+
 <!-- -->
 <!-- -->
 <!-- -->
@@ -136,9 +184,6 @@
     </form>
 </div>
 
-
-
- 
  <script>
      //Implementing an MVVM Architecture
      let Project = class {
@@ -221,7 +266,7 @@
                             <div class="categorizer-text hide-mobile ">${project_instance.admin_count}</div>
                             <div class="categorizer-text controls-admin-projects hide-mobile">
                                 <div class="delete-client hide-mobile">
-                                    <i class="fas fa-edit" ></i>          
+                                    <i class="fas fa-edit" onclick="admin_panel_show_update_modal(true,'${project_instance.username}','${project_instance.identification}')"></i>          
                                 </div>
                                 <div class="edit-client hide-mobile">
                                     <i class="fas fa-trash" onclick="admin_panel_delete_project('${project_instance.identification}','${project_instance.username}')"></i>
@@ -372,6 +417,29 @@
         
     }
     
+    ///UPDATE FUNCTIONS 
+    let project_to_update = null
+    function  admin_panel_show_update_modal(visibility,project_owner,project_name){
+        var modal = document.getElementById("admin_update_project_modal")
+        document.getElementById("admin_panel_update_project_name").value = project_name
+        if (visibility){
+            if (!modal.classList.contains("show")){
+                modal.classList.add("show")
+            }
+        }
+        else {
+            modal.classList.remove("show")
+        }
+
+        //store project to update 
+        project_to_update = `${project_owner}.${project_name}`
+    }
+
+
+    function admin_panel_update_project_http_request(){
+        alert(project_to_update)
+    }
+
     //LOAD PROJECT
     // To load a project you need to parse a name of format <username>.<project_name>
     function loadProject(name){
