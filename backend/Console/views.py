@@ -26,6 +26,8 @@ from SharedApp.serializers import TeamCollaboratorSerializer
 def getProjectFromRequest(request):   
     try:
         receivedData = json.loads(request.body)
+        print("fionrinofr")
+        print(receivedData["project"])
         project_owner_data = receivedData["project"].split(".")
         project = Project.objects.get(owner=User.objects.get(username=project_owner_data[0]),name=project_owner_data[1])
         return project
@@ -38,7 +40,10 @@ def getProjectFromRequest(request):
 @login_required(login_url='/')
 def console(request):
     #return frontend application
-    return render(request,"Console/console.html")
+    context = {
+        "developer_username" : request.user.username
+    }
+    return render(request,"Console/console.html",context)
 
 @login_required(login_url='/console/login-required')
 @require_http_methods(["POST",])
@@ -169,6 +174,7 @@ def developer_projects(request):
         #project 
         project = getProjectFromRequest(request)
 
+        print(project)
         #check pemmision 
         if (project.owner != request.user):
             return HttpResponse("denied")
@@ -346,10 +352,11 @@ def createProject(request):
         if (not checkProjectName(request,newProjectName)):
             return HttpResponse("500")
         
-        #has 5 projects 
-        if (len(Project.objects.filter(owner=request.user)) >= 5):
-            return HttpResponse("500")
         
+        #check if it contains "."
+        if ( "." in newProjectName):
+            return HttpResponse("1707")
+
         #create project 
         newProject = Project()
         newProject.create(newProjectName,request.user)

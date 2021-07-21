@@ -86,6 +86,8 @@ function addAddIntegrationHttpRequest(){
     }
     //request 
     updateToServer("/console/integrations",data, function(responce) {
+        //update integrations in client page
+        getIntegrations()
         //enable button and hide loader 
         enableModalButton(add_integration_button)
         modal_loader.classList.remove("show")

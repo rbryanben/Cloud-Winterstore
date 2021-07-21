@@ -20,7 +20,6 @@
     .admin-panel.hide{
         opacity: 0;
         visibility: hidden;
-        transform: scale(1.1);
     }
 
     /* NAVIGATION */
@@ -288,32 +287,8 @@
         document.getElementById("admin_panel_view_top_subtext").innerHTML = subtext
     }
 
-    //LOAD PROJECT
-    // To load a project you need to parse a name of format <username>.<project_name>
-    function loadProject(name){
-        var thisModal = document.querySelector(".admin-panel")
-
-        //set the selected porject
-        localStorage.setItem("working-project",name)
-
-        //show browser
-        showBrowser()
-
-        //hide self
-        thisModal.classList.add("hide")
-
-        //release lock on upload and download modal
-        lockUploadAndDownloadModal = false
-
-        //show recommendation modal if this is a mobile device
-        if (window.innerWidth <= 600){
-            showDesktopRecommemdation();
-        }
-        
-    }
-
-
     
+
     //create modal
     function showCreateProjectModal(){
         if (!projectsModal.classList.contains("hide")){
