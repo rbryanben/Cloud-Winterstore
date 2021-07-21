@@ -311,7 +311,7 @@ function showUpdateIntegrationsModal(identification,platform,status){
     modal_loader.classList.remove("show")
 }
 
-//update integration httprequest
+
 function updateIntegrationHttpRequest(){
     //elements
     var updateIntegrationsInput= document.getElementById("updateIntegrationIdentification")
@@ -351,6 +351,8 @@ function updateIntegrationHttpRequest(){
                 hideUpdateIntegrationsModal()
                 getIntegrationsList()
             }
+            //update clients page
+            showClientAccounts()
             ShowSuccess("Integration Updated")
         }
     })
@@ -409,6 +411,8 @@ function deleteIntegrationHttpRequest(){
             document.getElementById("integrationsSearchInput").value = ""
             getIntegrationsList()
             hideDeleteIntegrationModal()
+            //update clients page
+            showClientAccounts()
         } else {
             ShowWarning("Deletion Error")
         }

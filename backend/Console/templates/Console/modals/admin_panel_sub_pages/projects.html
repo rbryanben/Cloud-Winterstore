@@ -144,12 +144,12 @@
         </div>
 
         <!-- UPDATE BUTTON // onclick sends and http request to create a new project-->
-        <div id="admin_panel_create_project" onclick="admin_panel_update_project_http_request()" class="modal-button" style="font-size: small;"> 
+        <div id="admin_panel_update_project" onclick="admin_panel_update_project_http_request()" class="modal-button" style="font-size: small;"> 
             Update
         </div>
 
         <!-- Modal Loader-->
-        <div class="modalLoader" style="transform: scale(0.1);margin-top: 110px;">
+        <div id="admin_panel_update_modal_loader" class="modalLoader" style="transform: scale(0.1);margin-top: 110px;">
             <div class="modal-loader"></div>
         </div>
     </form>
@@ -340,7 +340,7 @@
             modal_loader.classList.remove("show")
 
             //result anlysis
-            if (response == "500"){
+            if (response == "denied"){
                 ShowWarning("Disabled Priviledge")
             }
             else {
@@ -437,7 +437,37 @@
 
 
     function admin_panel_update_project_http_request(){
-        alert(project_to_update)
+        //new name
+        var new_name = document.getElementById("admin_panel_update_project_name").value
+        var update_button = document.getElementById("admin_panel_update_project")
+        var modal_loader = document.getElementById("admin_panel_update_modal_loader")
+
+        data = {
+            "project" : project_to_update,
+            "new_name" : new_name
+        }
+
+        //show loading 
+        disableModalButton(update_button)
+        if (!modal_loader.classList.contains("show")){
+            modal_loader.classList.add("show")
+        }
+
+        updateToServer("/console/developer-projects",data, function(response) {
+            //enable button on response 
+            enableModalButton(update_button)
+            modal_loader.classList.remove("show")
+
+            //result anlysis
+            if (response == "500"){
+                ShowWarning("Disabled Priviledge")
+            }
+            else {
+                ShowSuccess("Projected Updated");
+                admin_panel_show_update_modal(false)
+                get_developer_projects()
+            }
+        })
     }
 
     //LOAD PROJECT
@@ -468,4 +498,12 @@
         }
         
     }
+
+    //function to unload a project
+    function unload_project(){
+        var thisModal = document.querySelector(".admin-panel")
+        localStorage.removeItem("working-project")
+        thisModal.classList.remove("hide")
+    }
+
  </script>

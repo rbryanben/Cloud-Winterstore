@@ -26,8 +26,6 @@ from SharedApp.serializers import TeamCollaboratorSerializer
 def getProjectFromRequest(request):   
     try:
         receivedData = json.loads(request.body)
-        print("fionrinofr")
-        print(receivedData["project"])
         project_owner_data = receivedData["project"].split(".")
         project = Project.objects.get(owner=User.objects.get(username=project_owner_data[0]),name=project_owner_data[1])
         return project
@@ -163,7 +161,7 @@ def getDownloadStats(request):
     return JsonResponse(serializer.data,safe=False)
 
 @login_required(login_url='/console/login-required')
-@require_http_methods(["GET","DELETE"])
+@require_http_methods(["GET","DELETE","UPDATE"])
 def developer_projects(request):
     if (request.method == "GET"):
         currentDeveloper = Developer.objects.get(user=request.user)
@@ -174,14 +172,38 @@ def developer_projects(request):
         #project 
         project = getProjectFromRequest(request)
 
-        print(project)
-        #check pemmision 
+        #check pemmision, if not pemmited remove collaboration
         if (project.owner != request.user):
-            return HttpResponse("denied")
+            try:
+                developer_me = Developer.objects.get(user=request.user)
+                TeamCollaboration.objects.get(developer=developer_me,project=project).delete()
+            except:pass
+            return HttpResponse("1708")
 
         
         #delete project
         project.delete()
+        return HttpResponse("200")
+
+
+    if (request.method == "UPDATE"):
+        project_to_update = getProjectFromRequest(request)
+        new_name = getValueOfJSONRequest(request,"new_name")
+        
+        #check pemmissions
+        if (project_to_update.owner != request.user):
+            return HttpResponse("500")
+
+
+        #change root index object name 
+        root_index_object = IndexObject.objects.get(name=getValueOfJSONRequest(request,"project"))
+        root_index_object.name = f"{project_to_update.owner.username}.{new_name}"
+        root_index_object.save()
+
+        #rename project 
+        project_to_update.name = new_name
+        project_to_update.save()
+
         return HttpResponse("200")
 
 
