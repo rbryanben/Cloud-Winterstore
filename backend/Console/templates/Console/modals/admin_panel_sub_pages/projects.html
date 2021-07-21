@@ -42,6 +42,13 @@
         color: rgb(60, 63, 48);
     }
 
+    /* ADAPTIVENESS */
+    @media only screen and (max-width: 1000px) {
+        .admin-projects-item {
+            grid-template-columns: 100%;
+        }
+    }
+
 </style>
 
 <div id="admin_projects_page" class="admin-panel-page">
@@ -324,7 +331,7 @@
                     //element to insert into list 
                     var element_to_insert_into_list = `
                         <!-- item -->
-                        <div class="admin-projects-item">
+                        <div onclick="mobile_load_project('${project_instance.username}.${project_instance.identification}')" class="admin-projects-item">
                             <div class="categorizer-text ">${project_instance.identification}</div>
                             <div class="categorizer-text hide-mobile ">${project_instance.dateCreated}</div>
                             <div class="categorizer-text hide-mobile ">${project_instance.username}</div>
@@ -520,6 +527,11 @@
         
     }
 
+    function mobile_load_project(name){
+        if (window.innerWidth <= 1000){
+            loadProject(name)
+        }
+    }
     //function to unload a project
     function unload_project(){
         var thisModal = document.querySelector(".admin-panel")

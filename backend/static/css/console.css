@@ -137,7 +137,7 @@ select {
   }
   
 /* adaptive global css */
-@media only screen and (max-width: 750px) {
+@media only screen and (max-width: 1000px) {
     
     .frame-pager-marker {
         display: none;
