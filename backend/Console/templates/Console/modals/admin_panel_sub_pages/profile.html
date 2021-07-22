@@ -1,5 +1,116 @@
+<style>
+   /* PROFILE PAGE */
+   #admin_profile_page {
+       padding: 20px;
+       position: relative;
+   }
+
+   /* ADMIN PANEL HEADER */
+   .admin-panel-header {
+       font-size: x-large;
+       color: rgb(73, 73, 73);
+   }
+
+   /* DETAILS GRID */
+   .details-grid{
+       border-top: solid 0.5px rgba(209, 209, 209, 0.438);
+        padding-top: 10px;
+        margin-top: 20px;
+        gap: 10px;
+        display: grid;
+        grid-template-columns: repeat(2,340px);
+   }
+
+   /* DELETE ACCOUNT */
+   .delete-grid {
+        border-top: solid 0.5px rgba(209, 209, 209, 0.438);
+        margin-top: 20px;
+        padding-top: 20px;
+   }
+
+   .delete-account {
+       width: 100px;
+       background-color: rgb(236, 127, 127);
+   }
+
+   .delete-account-header {
+       color: rgb(44, 44, 44);
+       font-weight: 500;
+   }
+
+   .delete-account-caption {
+       margin-top: 5px;
+       font-size: small;
+   }
+
+   /* UPDATE BUTTON */
+   .update-button {
+      width: 100px;
+   }
+
+</style>
+
+<!-- PROFILE PAGE BODY -->
 <div id="admin_profile_page" class="admin-panel-page">
-    Profile
+    <!-- HEADER -->
+    <div class="admin-panel-header">Details</div>
+    
+    <!-- DETAILS GRID -->
+    <div class="details-grid">
+        <!-- USERNAME INPUT -->
+        <div class="username-div">
+            <div class="console-modal-subtext" style="font-size: small;">Username</div>
+            <div  class="input-frame" style="position: relative;">
+                <input id="admin_panel_details_username" class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;font-size: small;">
+            </div>
+        </div>
+
+        <!-- EMAIL INPUT -->
+        <div class="username-div">
+            <div class="console-modal-subtext" style="font-size: small;">Email</div>
+            <div  class="input-frame" style="position: relative;">
+                <input id="admin_panel_details_email" class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;font-size: small;">
+            </div>
+        </div>
+
+        
+        <!-- PASSWORD INPUT -->
+        <div class="username-div">
+            <div class="console-modal-subtext" style="font-size: small;">Password</div>
+            <div  class="input-frame" style="position: relative;">
+                <input id="admin_panel_details_password" class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;font-size: small;">
+            </div>
+        </div>
+
+        
+        <!-- MOBILE INPUT -->
+        <div class="username-div">
+            <div class="console-modal-subtext" style="font-size: small;">Payments(Mobile)</div>
+            <div  class="input-frame" style="position: relative;">
+                <input id="admin_panel_details_mobile" readonly class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;font-size: small;">
+            </div>
+        </div>
+
+    <!-- -->
+    </div>
+
+    <!-- SAVE CHANGES -->
+    <div class="delete-grid">
+        <!-- Update Account Caption -->
+        <div class="delete-account-header">Save Changes</div>
+        <div class="delete-account-caption">By saving changes we will immediately make the changes. </div>
+        <!-- UPDATE BUTTON  -->
+        <div class="modal-button update-button">Save Changes</div> 
+    </div>
+    
+    <!-- DELETE ACCOUNT -->
+    <div class="delete-grid">
+        <!-- Delete Account Caption -->
+        <div class="delete-account-header">Delete Account</div>
+        <div class="delete-account-caption">By deleting your account all your data will be lost.</div>
+        <!-- Delete Account -->
+        <div class="modal-button delete-account">Delete Account</div>
+    </div>
  </div>
  
  <script>
