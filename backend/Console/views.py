@@ -207,7 +207,7 @@ def developer_projects(request):
         return HttpResponse("200")
 
 @login_required(login_url='/console/login-required')
-@require_http_methods(["GET","DELETE","UPDATE"])
+@require_http_methods(["GET","UPDATE"])
 def auth_user(request):
     if (request.method == "GET"):
         try:
@@ -215,6 +215,9 @@ def auth_user(request):
             return JsonResponse(serialized_user.data)
         except:
             return HttpResponse("500")
+
+    if (request.method == "UPDATE"):
+        return HttpResponse("1709")
 
 
 @login_required(login_url='/console/login-required')

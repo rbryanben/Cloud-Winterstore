@@ -48,6 +48,11 @@
       width: 100px;
    }
 
+   .update-button.disable {
+       background-color: rgb(204, 204, 204);
+       opacity: 0.8 ;
+   }
+
    /* Error (Show error in input) */
    
    .border-input {
@@ -81,7 +86,7 @@
         <div class="username-div">
             <div class="console-modal-subtext" style="font-size: small;">Email</div>
             <div  class="input-frame" style="position: relative;">
-                <input id="admin_panel_details_email" onkeyup="validateEmail_Admin(this)" class="projects-modal-body-item border-input plain-input no-anime" style="width: 280px;cursor: text;font-size: small;">
+                <input id="admin_panel_details_email" readonly onkeyup="validateEmail_Admin(this)" class="projects-modal-body-item border-input plain-input no-anime" style="width: 280px;cursor: text;font-size: small;">
             </div>
         </div>
 
@@ -90,7 +95,7 @@
         <div class="username-div">
             <div class="console-modal-subtext" style="font-size: small;">Password</div>
             <div  class="input-frame" style="position: relative;">
-                <input id="admin_panel_details_password" type="password" class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;font-size: small;">
+                <input id="admin_panel_details_password" onkeyup="check_admin_panel_password(this)" type="password" class="projects-modal-body-item border-input plain-input no-anime" style="width: 280px;cursor: text;font-size: small;">
             </div>
         </div>
 
@@ -112,7 +117,7 @@
         <div class="delete-account-header">Save Changes</div>
         <div class="delete-account-caption">By saving changes we will immediately make the changes. </div>
         <!-- UPDATE BUTTON  -->
-        <div class="modal-button update-button">Save Changes</div> 
+        <div id="admin_panel_profile_update_button" onclick="save_changes(this)" class="modal-button update-button disable">Save Changes</div> 
     </div>
     
     <!-- DELETE ACCOUNT -->
@@ -121,11 +126,42 @@
         <div class="delete-account-header">Delete Account</div>
         <div class="delete-account-caption">By deleting your account all your data will be lost.</div>
         <!-- Delete Account -->
-        <div class="modal-button delete-account">Delete Account</div>
+        <div class="modal-button delete-account ">Delete Account</div>
     </div>
  </div>
  
+<!-- -->
+<!-- -->
+<!-- -->
+<!-- -->
+<!-- COONFIRM CHANGES MODAL  -->
+<div id="confirm_changes_modal" class="console-modal">
+    <!-- Form to prevent autofill -->
+    <form method="dialog" autocomplete="off">
+        <!-- CANCEL MODAL -->
+        <div class="modal-cancel">
+            <i class="fas fa-times" onclick="show_confirm_changes_modal(false)"></i>
+        </div>
+        <!-- CONFIRM CHANGES -->
+        <div class="console-modal-subtext" style="font-size: small;">Enter Password</div>
+        <div  class="input-frame" style="position: relative;">
+            <input id="save_changes_password_confirm_input" type="password" class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;font-size: small;">
+        </div>
+        <!-- MAKE CHANGES -->
+        <div id="confirm_changes_button" onclick="save_changes_http_request()"  class="modal-button" style="font-size: small; background-color: rgba(53, 53, 53, 0.685);"> 
+            Confirm
+        </div>
+        <!-- Modal Loader-->
+        <div id="confirm_changes_loader" class="modalLoader" style="transform: scale(0.1);">
+            <div class="modal-loader"></div>
+        </div>
+    </form>
+</div>
+
  <script>
+    let user_data = null
+    let new_password = null
+    let new_username = null
 
     //Auth user class 
     let AuthUser = class {
@@ -147,6 +183,10 @@
     function get_developer_data_http_request(){
         getToServer("/console/auth-user",null,function(response){
             var myDetails = new AuthUser(JSON.parse(response))
+
+            //assign user data 
+            user_data = myDetails ;
+
             //set page data
             var username_input = document.getElementById("admin_panel_details_username")
             var password_input = document.getElementById("admin_panel_details_password")
@@ -167,9 +207,18 @@
         if (input_object.value.length < 6){
             if (!input_object.classList.contains("error")){
                 input_object.classList.add("error")
+                disable_save_button()
             }
             return
         } 
+
+        if (input_object.value == user_data.username){
+            disable_save_button()
+            input_object.classList.remove("error")
+            return
+        }
+
+        
 
 
         //check if unique
@@ -180,12 +229,15 @@
             //username exists
             if (response == 500){
                 if (!input_object.classList.contains("error")){
+                    disable_save_button()
                     input_object.classList.add("error")
                 }
                 return
             }
 
             //username unique
+            enable_save_button()
+            new_username = input_object.value
             input_object.classList.remove("error")
         })
      }
@@ -206,8 +258,38 @@
 
     //check password strength
     function check_admin_panel_password(object_password){
+        //validations 
+        var strongPassword = new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})')
+        var mediumPassword = new RegExp('((?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{6,}))|((?=.*[a-z])(?=.*[A-Z])(?=.*[^A-Za-z0-9])(?=.{8,}))')
+
+        if (strongPassword.test(object_password.value)) {
+            object_password.classList.remove("error")
+            //if password is not the same as the one in userdata then show save button 
+            if (user_data.password != object_password.value){
+                enable_save_button()
+                new_password = object_password.value
+            }
+            else {
+                disable_save_button()
+            }
+        } else if (mediumPassword.test(object_password.value)) {
+            object_password.classList.remove("error")
+            //if password is not the same as the one in userdata then show save button 
+            if (user_data.password != object_password.value){
+                enable_save_button()
+                new_password = object_password.value
+            }
+            else {
+                disable_save_button()
+            }
+        } else {
+            if (!object_password.classList.contains("error")){
+                object_password.classList.add("error")
+            }
+        }
 
     }
+
      //function to show and hide page
      function admin_panel_profile_page_showing(visibility){
         //page 
@@ -223,4 +305,88 @@
             page.style.display = "none"
         }
      }
+
+     //confirm change modal 
+     function show_confirm_changes_modal(visibility){
+        //disable button and show loading
+        var confirm_button = document.getElementById("confirm_changes_button")
+        var confirm_loader = document.getElementById("confirm_changes_loader")
+        //enable button and hide loading 
+        enableModalButton(confirm_button)
+        confirm_loader.classList.remove("show")
+
+        var password_input_confim = document.getElementById("save_changes_password_confirm_input")
+        password_input_confim.value = ""
+         var modal = document.getElementById("confirm_changes_modal")
+         if (visibility){
+            if (!modal.classList.contains("show")){
+                modal.classList.add("show")
+            }
+            return
+         }
+         else {
+             modal.classList.remove("show")
+         }
+
+     }
+     //function save 
+     function enable_save_button(){
+         var update_button = document.getElementById("admin_panel_profile_update_button")
+         update_button.classList.remove("disable")
+     }
+
+     function disable_save_button(){
+         var update_button = document.getElementById("admin_panel_profile_update_button")
+         if (!update_button.classList.contains("disable")){
+             update_button.classList.add("disable")
+         }
+     }
+
+     function save_changes(object){
+        //if disbaled dont do anything
+        if (object.classList.contains("disable")){
+            return
+        }
+
+        //show confirm modal
+        show_confirm_changes_modal(true)
+     }
+
+     function save_changes_http_request(){
+         var password_input_confim = document.getElementById("save_changes_password_confirm_input")
+         data = {
+             "password" : password_input_confim.value,
+             "new_password" : new_password,
+             "new_username" :   new_username
+         }
+
+         //disable button and show loading
+         var confirm_button = document.getElementById("confirm_changes_button")
+         var confirm_loader = document.getElementById("confirm_changes_loader")
+         
+         disableModalButton(confirm_button)
+         if (!confirm_loader.classList.contains("show")){
+             confirm_loader.classList.add("show")
+         }
+
+
+        updateToServer("/console/auth-user",data,function(response){
+
+            //enable button and hide loading on response 
+            enableModalButton(confirm_button)
+            confirm_loader.classList.remove("show")
+
+            if (response == "200"){
+                ShowSuccess("Changes Saved")
+                show_confirm_changes_modal(false)
+            }
+            else if (response == "1709") {
+                ShowWarning("Invalid Password")
+            }
+        })
+     }
+
+
+
+
  </script>
