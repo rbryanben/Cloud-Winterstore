@@ -27,7 +27,7 @@ urlpatterns = [
     path("platforms",views.platform), #to get plaforms
     path("generate-new-key",views.generateNewKey), #generate new key for interations
     path("developer-projects",views.developer_projects), #developer projects
-
+    path("auth-user",views.auth_user), #Auth User
     ###############
     ############### Fallback 
     path("login-required",views.loginRequired), #login required

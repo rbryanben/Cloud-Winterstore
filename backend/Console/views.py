@@ -20,7 +20,7 @@ from django.views.decorators.http import require_http_methods
 from pymongo.mongo_client import MongoClient
 from distutils.util import strtobool
 from SharedApp.models import Developer, DeveloperClient, Platform, Project , TeamCollaboration, IndexObject , Integration , BarnedDeveloperClient
-from .serializers import FileDownloadInstanceSerializer, IntegrationSerializer , DeveloperClientSerializer , PlatformSerializer , ProjectSerializer
+from .serializers import FileDownloadInstanceSerializer, IntegrationSerializer , DeveloperClientSerializer , PlatformSerializer , ProjectSerializer, UserSerializer
 from SharedApp.serializers import TeamCollaboratorSerializer
 
 def getProjectFromRequest(request):   
@@ -206,6 +206,14 @@ def developer_projects(request):
 
         return HttpResponse("200")
 
+@login_required(login_url='/console/login-required')
+@require_http_methods(["GET","DELETE","UPDATE"])
+def auth_user(request):
+    try:
+        serialized_user = UserSerializer(request.user,many=False)
+        return JsonResponse(serialized_user.data)
+    except:
+        return HttpResponse("500")
 
 
 @login_required(login_url='/console/login-required')

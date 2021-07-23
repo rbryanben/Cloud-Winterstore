@@ -3,13 +3,12 @@ from rest_framework import serializers
 from SharedApp.models import IndexObject , Integration , Platform , DeveloperClient , Project
 from django.contrib.auth.models import User
 from .models import FileDownloadInstance
-from Console import models 
+from SharedApp.models import string_generator
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['username']
-
+        fields = ["username","date_joined","email",]
 
 class IndexObjectSerializer(serializers.ModelSerializer):
     class Meta:
@@ -36,11 +35,6 @@ class IntegrationSerializer(serializers.ModelSerializer):
         model = Integration
         fields = ["identifier","enabled","created","integrationKey","platform","push","pull","daily_average","files_stored","devices"]
 
-
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ["username","date_joined"]
 
 class DeveloperClientSerializer(serializers.ModelSerializer):
     integration = IntegrationSerializer()
