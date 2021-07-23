@@ -64,11 +64,24 @@
        border: solid 0.5px rgba(206, 68, 68, 0.562);
    }
 
+   /* logout */
+   .logout-button {
+       position: absolute;
+       cursor: pointer;
+       right: 22px;
+       top: 25px;
+   }
+
+
 
 </style>
 
 <!-- PROFILE PAGE BODY -->
 <div id="admin_profile_page" class="admin-panel-page">
+    <!-- logout-->
+    <div class="logout-button" onclick="logout()">
+        Logout
+    </div>
     <!-- HEADER -->
     <div class="admin-panel-header">Details</div>
     
@@ -167,7 +180,6 @@
 <!-- CONFIRM ACOUNT DELETE  -->
 <div id="confirm_delete_account_modal" class="console-modal">
 
-    <!-- logout button -->
     <!-- Form to prevent autofill -->
     <form method="dialog" autocomplete="off">
         <!-- CANCEL MODAL -->
@@ -463,6 +475,19 @@
             else {
                 ShowWarning("Invalid Password")
             }
+        })
+    }
+ 
+    function logout(){
+        ShowWarning("Logging Out")
+        getToServer("/console/logout",null,function(response){
+            if (response == "200"){
+                window.location.reload()
+            }
+            else {
+                ShowWarning("Something Went Wrong")
+            } 
+            
         })
     }
  </script>

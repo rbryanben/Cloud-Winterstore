@@ -28,6 +28,7 @@ urlpatterns = [
     path("generate-new-key",views.generateNewKey), #generate new key for interations
     path("developer-projects",views.developer_projects), #developer projects
     path("auth-user",views.auth_user), #Auth User
+    path("logout",views.logout_developer), #Logout
     ###############
     ############### Fallback 
     path("login-required",views.loginRequired), #login required

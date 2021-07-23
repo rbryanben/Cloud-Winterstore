@@ -22,6 +22,7 @@ from distutils.util import strtobool
 from SharedApp.models import Developer, DeveloperClient, Platform, Project , TeamCollaboration, IndexObject , Integration , BarnedDeveloperClient
 from .serializers import FileDownloadInstanceSerializer, IntegrationSerializer , DeveloperClientSerializer , PlatformSerializer , ProjectSerializer, UserSerializer
 from SharedApp.serializers import TeamCollaboratorSerializer
+from django.contrib.auth import logout
 
 def getProjectFromRequest(request):   
     try:
@@ -521,11 +522,18 @@ def removeBarnForClient(request):
 
     return HttpResponse("200")
 
+@login_required(login_url='/console/login-required')
+def logout_developer(request):
+    #try:
+        logout(request)
+        return HttpResponse("200")
+    #except:
+        return HttpResponse("500") 
 
 # Create Project API
 @require_http_methods(["POST"])
 @csrf_exempt
-@login_required
+@login_required(login_url='/console/login-required')
 def search_update_integration(request):
     if (request.method == "POST"):
         project = getProjectFromRequest(request)
@@ -543,7 +551,7 @@ def search_update_integration(request):
 # Create Project API
 @require_http_methods(["POST","UPDATE","PATCH","DELETE"])
 @csrf_exempt
-@login_required
+@login_required(login_url='/console/login-required')
 def integrations(request):
     if (request.method == "POST"):
         project = None
@@ -636,7 +644,7 @@ def integrations(request):
 # Create Project API
 @require_http_methods(["POST","UPDATE"])
 @csrf_exempt
-@login_required
+@login_required(login_url='/console/login-required')
 def generateNewKey(request):
     project = getProjectFromRequest(request)
     integrationName = getValueOfJSONRequest(request,"identification")
@@ -661,7 +669,7 @@ def platform(request):
 
 @require_http_methods(["POST","PUT"])
 @csrf_exempt
-@login_required
+@login_required(login_url='/console/login-required')
 def developerClient(request):
     if (request.method == "POST"):
         #get project
@@ -721,7 +729,7 @@ def searchDeveloperClients(request):
 
 @require_http_methods(["POST","UPDATE","DELETE"])
 @csrf_exempt
-@login_required
+@login_required(login_url='/console/login-required')
 def addDeveloperClient(request):
     client_to_add_identification =None
     client_to_add_password = None
