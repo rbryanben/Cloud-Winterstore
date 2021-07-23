@@ -117,7 +117,7 @@
         <div class="delete-account-header">Save Changes</div>
         <div class="delete-account-caption">By saving changes we will immediately make the changes. </div>
         <!-- UPDATE BUTTON  -->
-        <div id="admin_panel_profile_update_button" onclick="save_changes(this)" class="modal-button update-button disable">Save Changes</div> 
+        <div id="admin_panel_profile_update_button"  class="modal-button update-button disable">Save Changes</div> 
     </div>
     
     <!-- DELETE ACCOUNT -->
@@ -126,7 +126,7 @@
         <div class="delete-account-header">Delete Account</div>
         <div class="delete-account-caption">By deleting your account all your data will be lost.</div>
         <!-- Delete Account -->
-        <div class="modal-button delete-account ">Delete Account</div>
+        <div class="modal-button delete-account" onclick="show_delete_account_modal(true)">Delete Account</div>
     </div>
  </div>
  
@@ -134,7 +134,7 @@
 <!-- -->
 <!-- -->
 <!-- -->
-<!-- COONFIRM CHANGES MODAL  -->
+<!-- CONFIRM CHANGES MODAL  -->
 <div id="confirm_changes_modal" class="console-modal">
     <!-- Form to prevent autofill -->
     <form method="dialog" autocomplete="off">
@@ -153,6 +153,38 @@
         </div>
         <!-- Modal Loader-->
         <div id="confirm_changes_loader" class="modalLoader" style="transform: scale(0.1);">
+            <div class="modal-loader"></div>
+        </div>
+    </form>
+</div>
+
+
+ 
+<!-- -->
+<!-- -->
+<!-- -->
+<!-- -->
+<!-- CONFIRM ACOUNT DELETE  -->
+<div id="confirm_delete_account_modal" class="console-modal">
+
+    <!-- logout button -->
+    <!-- Form to prevent autofill -->
+    <form method="dialog" autocomplete="off">
+        <!-- CANCEL MODAL -->
+        <div class="modal-cancel">
+            <i class="fas fa-times" onclick="show_delete_account_modal(false)"></i>
+        </div>
+        <!-- CONFIRM DELETION -->
+        <div class="console-modal-subtext" style="font-size: small;">Enter Password D</div>
+        <div  class="input-frame" style="position: relative;">
+            <input id="confirm_delete_password_input" type="password" class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;font-size: small;">
+        </div>
+        <!-- MAKE CHANGES -->
+        <div id="confirm_delete_account_button" onclick="delete_account_http_request()"  class="modal-button" style="font-size: small; background-color: rgba(53, 53, 53, 0.685);"> 
+            Confirm
+        </div>
+        <!-- Modal Loader-->
+        <div id="confirm_delete_account_loader" class="modalLoader" style="transform: scale(0.1);">
             <div class="modal-loader"></div>
         </div>
     </form>
@@ -329,6 +361,7 @@
          }
 
      }
+     
      //function save 
      function enable_save_button(){
          var update_button = document.getElementById("admin_panel_profile_update_button")
@@ -386,7 +419,50 @@
         })
      }
 
+    // Account Delete
+    function show_delete_account_modal(visibility){
+        var modal = document.getElementById("confirm_delete_account_modal")
+        //show 
+        if (visibility){
+            if (!modal.classList.contains("show")){
+                modal.classList.add("show")
+            }
+            //clear password input on show 
+            document.getElementById("confirm_delete_password_input").value = ""
+            return
+        }
+        else {
+            modal.classList.remove("show")
+        }
+    }
+ 
+    function delete_account_http_request(){
+        var password_confirm = document.getElementById("confirm_delete_password_input")
 
+        //check length 
+        if (password_confirm.value.length < 6){
+            ShowWarning("Check Password")
+            return
+        }
 
+        data = {
+            "password" : password_confirm.value 
+        }
 
+        //send request 
+        deleteToServer("/console/create-project",data,function(response){
+            if (response == "200"){
+               ShowWarning("Wiping Data")
+               setTimeout(function(){
+                   ShowSuccess("Wipe Complete")
+                   setTimeout(function(){
+                       window.location.reload()
+                   },2000)
+               },4000)
+            }
+            else {
+                ShowWarning("Invalid Password")
+            }
+        })
+    }
  </script>

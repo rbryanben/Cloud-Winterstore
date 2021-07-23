@@ -534,6 +534,7 @@
     }
     //function to unload a project
     function unload_project(){
+        lockUploadAndDownloadModal = true
         var thisModal = document.querySelector(".admin-panel")
         localStorage.removeItem("working-project")
         thisModal.classList.remove("hide")

@@ -160,7 +160,13 @@
     //Set select sub page icon dark
     function loadBrowserSubPage(button){
         //remove selected and assign new selected 
-        document.querySelector(".page-browser-left-item.selected").classList.remove("selected")
+        try{
+            document.querySelector(".page-browser-left-item.selected").classList.remove("selected")
+        }
+        catch(e){
+            null
+        }
+        
         if (!button.classList.contains("selected")){
             button.classList.add("selected")
         }

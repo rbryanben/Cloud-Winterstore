@@ -400,32 +400,55 @@ def projectAdminAccounts(request):
         return JsonResponse(serializer.data,safe=False)
 
 # Create Project API
-@require_http_methods(["POST",])
+@require_http_methods(["POST","DELETE"])
 @csrf_exempt
 @login_required
 def createProject(request):
-    try:
-        receivedJSON = json.loads(request.body)
-        newProjectName = receivedJSON["name"]
-        
-        #check standard
-        if (not checkProjectName(request,newProjectName)):
+    if (request.method == "POST"):
+        try:
+            receivedJSON = json.loads(request.body)
+            newProjectName = receivedJSON["name"]
+            
+            #check standard
+            if (not checkProjectName(request,newProjectName)):
+                return HttpResponse("500")
+            
+            
+            #check if it contains "."
+            if ( "." in newProjectName):
+                return HttpResponse("1707")
+
+            #create project 
+            newProject = Project()
+            newProject.create(newProjectName,request.user)
+
+            #run project creation routine
+            routineNewProject(request,newProject)
+
+            return HttpResponse("200")
+        except:
             return HttpResponse("500")
-        
-        
-        #check if it contains "."
-        if ( "." in newProjectName):
-            return HttpResponse("1707")
-
-        #create project 
-        newProject = Project()
-        newProject.create(newProjectName,request.user)
-
-        #run project creation routine
-        routineNewProject(request,newProject)
-
-        return HttpResponse("200")
-    except:
+    
+    if (request.method == "DELETE"):
+        if (request.user.check_password(getValueOfJSONRequest(request,"password"))):
+            # And this rounds of the Console
+            """ 
+            ⢀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⣠⣤⣶⣶
+            ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⢰⣿⣿⣿⣿
+            ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧⣀⣀⣾⣿⣿⣿⣿
+            ⣿⣿⣿⣿⣿⡏⠉⠛⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⣿
+            ⣿⣿⣿⣿⣿⣿⠀⠀⠀⠈⠛⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠛⠉⠁⠀⣿
+            ⣿⣿⣿⣿⣿⣿⣧⡀⠀⠀⠀⠀⠙⠿⠿⠿⠻⠿⠿⠟⠿⠛⠉⠀⠀⠀⠀⠀⣸⣿
+            ⣿⣿⣿⣿⣿⣿⣿⣷⣄⠀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⣿
+            ⣿⣿⣿⣿⣿⣿⣿⣿⣿⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⣴⣿⣿⣿⣿
+            ⣿⣿⣿⣿⣿⣿⣿⣿⡟⠀⠀⢰⣹⡆⠀⠀⠀⠀⠀⠀⣭⣷⠀⠀⠀⠸⣿⣿⣿⣿
+            ⣿⣿⣿⣿⣿⣿⣿⣿⠃⠀⠀⠈⠉⠀⠀⠤⠄⠀⠀⠀⠉⠁⠀⠀⠀⠀⢿⣿⣿⣿
+            ⣿⣿⣿⣿⣿⣿⣿⣿⢾⣿⣷⠀⠀⠀⠀⡠⠤⢄⠀⠀⠀⠠⣿⣿⣷⠀⢸⣿⣿⣿
+            ⣿⣿⣿⣿⣿⣿⣿⣿⡀⠉⠀⠀⠀⠀⠀⢄⠀⢀⠀⠀⠀⠀⠉⠉⠁⠀⠀⣿⣿⣿
+            ⣿⣿⣿⣿⣿⣿⣿⣿⣧⠀⠀⠀⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢹⣿⣿
+            ⣿⣿⣿⣿⣿⣿⣿⣿⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿ """
+            request.user.delete()
+            return HttpResponse("200")
         return HttpResponse("500")
 
 @require_http_methods(["POST",])
