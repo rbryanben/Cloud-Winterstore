@@ -52,6 +52,7 @@ let uploadIndex ; //holds the value of the directory to upload the file, because
 
 //Check if initialized
 let BrowserPageInitialized = false
+let file_browser_initialized_project = null
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -62,7 +63,9 @@ function showBrowserFilePage(){
     filesPageBrowser.style.display = "block"
     
     //check if the page was initialized
-    if (!BrowserPageInitialized){
+    if (!BrowserPageInitialized || file_browser_initialized_project != localStorage.getItem("working-project")){
+        file_browser_initialized_project = localStorage.getItem("working-project")
+        console.log("(File Subpage) initialized for " + file_browser_initialized_project)
         intialize()
     }
 }

@@ -130,7 +130,7 @@
         <div class="delete-account-header">Save Changes</div>
         <div class="delete-account-caption">By saving changes we will immediately make the changes. </div>
         <!-- UPDATE BUTTON  -->
-        <div id="admin_panel_profile_update_button"  class="modal-button update-button disable">Save Changes</div> 
+        <div id="admin_panel_profile_update_button" onclick="show_confirm_changes_modal(true)"  class="modal-button update-button disable">Save Changes</div> 
     </div>
     
     <!-- DELETE ACCOUNT -->
@@ -422,11 +422,15 @@
             confirm_loader.classList.remove("show")
 
             if (response == "200"){
+                init_admin_profile_page()
                 ShowSuccess("Changes Saved")
                 show_confirm_changes_modal(false)
             }
             else if (response == "1709") {
                 ShowWarning("Invalid Password")
+            }
+            else {
+                window.location.reload()
             }
         })
      }

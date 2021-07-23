@@ -35,7 +35,6 @@ def getProjectFromRequest(request):
     except:
         return False
 
-
 @login_required(login_url='/')
 def console(request):
     #return frontend application
@@ -231,15 +230,15 @@ def auth_user(request):
             for root_index in all_root_indexes:
                 name = root_index.name
                 name_split = name.split(".")
-                print(name_split)
                 new_name = getValueOfJSONRequest(request,"new_username") +"." + name_split[1]
                 root_index.name = new_name
                 root_index.save()
-                print(root_index.name)
 
         #check password
         if (getValueOfJSONRequest(request,"new_password") != None):
             user.set_password(getValueOfJSONRequest(request,"new_password"))
+            user.save()
+            return HttpResponse("redirect")
         
         user.save()
         
@@ -524,10 +523,10 @@ def removeBarnForClient(request):
 
 @login_required(login_url='/console/login-required')
 def logout_developer(request):
-    #try:
+    try:
         logout(request)
         return HttpResponse("200")
-    #except:
+    except:
         return HttpResponse("500") 
 
 # Create Project API

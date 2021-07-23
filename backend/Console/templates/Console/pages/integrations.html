@@ -89,6 +89,7 @@
 <script>
 
     let integrationsPageInitialized = false
+    let initialize_integrations_project = null
 
     //show and hide page
     function showIntegrationsPage(){
@@ -98,7 +99,11 @@
         }
 
         //initilize page 
-        if (integrationsPageInitialized == false){
+        if (integrationsPageInitialized == false || initialize_integrations_project != localStorage.getItem("working-project")){
+            initialize_integrations_project = localStorage.getItem("working-project")
+            //remove integrations as selected
+            document.getElementById("deleted-integrations-button").classList.remove("selected")
+            document.getElementById("integrations-button").classList.add("selected")
             initializeIntegrationsPage()
         }
     }

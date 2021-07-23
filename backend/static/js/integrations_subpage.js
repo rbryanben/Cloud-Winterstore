@@ -1,6 +1,7 @@
 let integrationsSubPageInitialized = false
 let activeIntegrationSearch = false
 let integrationToDelete = "None"
+let integration_intialized_project = null
 
 //initialize
 function initializeIntegrationsSubPage(){
@@ -17,8 +18,11 @@ function showIntegrationsSubPage(){
     page.style.display = "grid"
 
     //initialize page
-    if (integrationsSubPageInitialized == false){
+    if (integrationsSubPageInitialized == false || integration_intialized_project != localStorage.getItem("working-project")){
+        integration_intialized_project = localStorage.getItem("working-project")
+        console.log("(Integrations) initialized on " + integration_intialized_project)
         initializeIntegrationsSubPage()
+
     }
 }
 

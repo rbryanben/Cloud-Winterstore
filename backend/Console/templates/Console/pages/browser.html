@@ -90,6 +90,7 @@
 <script>
     //varibles
     let browserPageInitialized = false
+    let project_initialized = null
     let allFilesButton = document.getElementById("allFilesButton ")
     let downloadStatsButton = document.getElementById("downloadStatsButton")
     let deletedHistoryButton = document.getElementById("deletedHistoryButton")
@@ -121,9 +122,13 @@
         //make visible
         document.getElementById("page-browser").style.display = "grid"
         
+
         //initialize of not initialized
-        if (browserPageInitialized == false){
+        if (browserPageInitialized == false || project_initialized != localStorage.getItem("working-project")){
+            project_initialized = localStorage.getItem("working-project")
+            console.log("(browser) initialized project " + project_initialized)
             browserPageInitialized = true
+            setMarkerOn(document.getElementById("navFolders"))
             initialize()
         }
     }

@@ -85,13 +85,16 @@
 <!-- script -->
 <script>
     let pageInitialized = false
+    let accounts_intialized_project = null
 
     //function to show the page
     function showAccountsPage(){
         document.getElementById("accounts-page").style.display = "grid" ;        
         
-        if (pageInitialized == false){
+        if (pageInitialized == false || accounts_intialized_project != localStorage.getItem("working-project")){
             pageInitialized = true
+            accounts_intialized_project = localStorage.getItem("working-project")
+            setSelected(document.getElementById("AccountsClientButton"))
             intilize()
         }
     }
