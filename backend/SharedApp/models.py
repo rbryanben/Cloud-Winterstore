@@ -256,6 +256,7 @@ class IndexObject(models.Model):
     project = models.ForeignKey(Project,null=False,on_delete=models.CASCADE)
     parent = models.ForeignKey('IndexObject',null=True,on_delete=models.CASCADE)
     owner = models.ForeignKey(User,null=False,on_delete=models.CASCADE)
+    root = models.BooleanField(default=False)
     #object type options 
     OBJECT_TYPE_OPTIONS = [
         ("FD","folder"),

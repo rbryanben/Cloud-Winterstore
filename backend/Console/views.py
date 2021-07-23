@@ -225,6 +225,16 @@ def auth_user(request):
         #change username 
         if (getValueOfJSONRequest(request,"new_username") != None):
             user.username = getValueOfJSONRequest(request,"new_username")
+            #Adjust all root index objects
+            all_root_indexes = IndexObject.objects.filter(owner=user,root=True)
+            for root_index in all_root_indexes:
+                name = root_index.name
+                name_split = name.split(".")
+                print(name_split)
+                new_name = getValueOfJSONRequest(request,"new_username") +"." + name_split[1]
+                root_index.name = new_name
+                root_index.save()
+                print(root_index.name)
 
         #check password
         if (getValueOfJSONRequest(request,"new_password") != None):
@@ -859,6 +869,7 @@ def mongoUploadFile(file,key,filename,owner):
 def routineNewProject(request,newProject):
     #start a new root index object
     newRootIndexObject = IndexObject()
+    newRootIndexObject.root = True
     newRootIndexObject.create(request.user,"FD",f"{request.user.username}.{newProject.name}",newProject,None)
     #create a new demo file 
     newDemoFile = IndexObject()
