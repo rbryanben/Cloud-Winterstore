@@ -217,7 +217,23 @@ def auth_user(request):
             return HttpResponse("500")
 
     if (request.method == "UPDATE"):
-        return HttpResponse("1709")
+        user = request.user 
+        #check if password is correct
+        if (not user.check_password(getValueOfJSONRequest(request,"password"))):
+            return HttpResponse("1709")
+
+        #change username 
+        if (getValueOfJSONRequest(request,"new_username") != None):
+            user.username = getValueOfJSONRequest(request,"new_username")
+
+        #check password
+        if (getValueOfJSONRequest(request,"new_password") != None):
+            user.set_password(getValueOfJSONRequest(request,"new_password"))
+        
+        user.save()
+        
+
+        return HttpResponse("200")
 
 
 @login_required(login_url='/console/login-required')
