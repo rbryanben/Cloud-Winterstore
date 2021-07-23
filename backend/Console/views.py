@@ -209,11 +209,12 @@ def developer_projects(request):
 @login_required(login_url='/console/login-required')
 @require_http_methods(["GET","DELETE","UPDATE"])
 def auth_user(request):
-    try:
-        serialized_user = UserSerializer(request.user,many=False)
-        return JsonResponse(serialized_user.data)
-    except:
-        return HttpResponse("500")
+    if (request.method == "GET"):
+        try:
+            serialized_user = UserSerializer(request.user,many=False)
+            return JsonResponse(serialized_user.data)
+        except:
+            return HttpResponse("500")
 
 
 @login_required(login_url='/console/login-required')

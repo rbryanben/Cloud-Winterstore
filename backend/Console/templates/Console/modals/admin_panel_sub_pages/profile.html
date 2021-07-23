@@ -40,13 +40,25 @@
 
    .delete-account-caption {
        margin-top: 5px;
-       font-size: small;
+       font-size: small; 
    }
 
    /* UPDATE BUTTON */
    .update-button {
       width: 100px;
    }
+
+   /* Error (Show error in input) */
+   
+   .border-input {
+       transition: all 0.2s ease-in;
+       border: solid 0.5px transparent;
+   }
+
+   .error {
+       border: solid 0.5px rgba(206, 68, 68, 0.562);
+   }
+
 
 </style>
 
@@ -61,7 +73,7 @@
         <div class="username-div">
             <div class="console-modal-subtext" style="font-size: small;">Username</div>
             <div  class="input-frame" style="position: relative;">
-                <input id="admin_panel_details_username" class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;font-size: small;">
+                <input id="admin_panel_details_username" onkeyup="check_username_unique(this)" class="projects-modal-body-item border-input plain-input no-anime" style="width: 280px;cursor: text;font-size: small;">
             </div>
         </div>
 
@@ -69,7 +81,7 @@
         <div class="username-div">
             <div class="console-modal-subtext" style="font-size: small;">Email</div>
             <div  class="input-frame" style="position: relative;">
-                <input id="admin_panel_details_email" class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;font-size: small;">
+                <input id="admin_panel_details_email" onkeyup="validateEmail_Admin(this)" class="projects-modal-body-item border-input plain-input no-anime" style="width: 280px;cursor: text;font-size: small;">
             </div>
         </div>
 
@@ -78,7 +90,7 @@
         <div class="username-div">
             <div class="console-modal-subtext" style="font-size: small;">Password</div>
             <div  class="input-frame" style="position: relative;">
-                <input id="admin_panel_details_password" class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;font-size: small;">
+                <input id="admin_panel_details_password" type="password" class="projects-modal-body-item plain-input no-anime" style="width: 280px;cursor: text;font-size: small;">
             </div>
         </div>
 
@@ -114,12 +126,88 @@
  </div>
  
  <script>
-     //function to initialize page
-     function init_admin_profile_page(){
 
+    //Auth user class 
+    let AuthUser = class {
+         constructor(jsonObject){
+             this.username = jsonObject["username"]
+             this.email = jsonObject["email"]
+             this.password = "gTYhndjkHY"
+             this.mobile = "07xx xxx xxx"
+         }
      }
 
+     //function to initialize page
+     function init_admin_profile_page(){
+        //get user data 
+        get_developer_data_http_request()
+     }
 
+    //get data 
+    function get_developer_data_http_request(){
+        getToServer("/console/auth-user",null,function(response){
+            var myDetails = new AuthUser(JSON.parse(response))
+            //set page data
+            var username_input = document.getElementById("admin_panel_details_username")
+            var password_input = document.getElementById("admin_panel_details_password")
+            var mobile_input = document.getElementById("admin_panel_details_mobile")
+            var email_input = document.getElementById("admin_panel_details_email")
+
+            username_input.value = myDetails.username
+            password_input.value = myDetails.password
+            email_input.value = myDetails.email
+            mobile_input.value = myDetails.mobile
+        })
+     }
+
+    //check username uniquenes
+    function check_username_unique(input_object){
+        
+        //show error if too short
+        if (input_object.value.length < 6){
+            if (!input_object.classList.contains("error")){
+                input_object.classList.add("error")
+            }
+            return
+        } 
+
+
+        //check if unique
+        data = {
+            "username" : input_object.value
+        }
+        postToServer("/hjkdjNHjnudellphgy",data,function(response){
+            //username exists
+            if (response == 500){
+                if (!input_object.classList.contains("error")){
+                    input_object.classList.add("error")
+                }
+                return
+            }
+
+            //username unique
+            input_object.classList.remove("error")
+        })
+     }
+
+    //check email 
+    function validateEmail_Admin(object_email) {
+        const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        if (re.test(String(object_email.value).toLowerCase())){
+            object_email.classList.remove("error")
+        }
+        else {
+            //mark error
+            if (!object_email.classList.contains("error")){
+                object_email.classList.add("error")
+            }
+        }
+    }
+
+    //check password strength
+    function check_admin_panel_password(object_password){
+
+    }
      //function to show and hide page
      function admin_panel_profile_page_showing(visibility){
         //page 
