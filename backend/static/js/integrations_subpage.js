@@ -277,7 +277,7 @@ function generateNewKeyHttpRequest(integration,object){
     })
 }
 
-//update integration
+//update or edit  integration
 let integrationToUpdate = "None"
 
 function showUpdateIntegrationsModal(identification,platform,status){

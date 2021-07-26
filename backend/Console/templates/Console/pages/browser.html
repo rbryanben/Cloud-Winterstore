@@ -120,15 +120,12 @@
     //show page(Entry)
     function showBrowser(){
         //make visible
-        document.getElementById("page-browser").style.display = "grid"
+        document.getElementById("page-browser").style.display = "grid"  
+        setMarkerOn(document.getElementById("navFolders"))
         
-
-        //initialize of not initialized
         if (browserPageInitialized == false || project_initialized != localStorage.getItem("working-project")){
             project_initialized = localStorage.getItem("working-project")
-            console.log("(browser) initialized project " + project_initialized)
             browserPageInitialized = true
-            setMarkerOn(document.getElementById("navFolders"))
             initialize()
         }
     }

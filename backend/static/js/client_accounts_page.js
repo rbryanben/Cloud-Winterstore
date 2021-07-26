@@ -176,7 +176,7 @@ function deleteClientAccountHttpRequest(){
     })
 }
 
-//edit/update client modal
+// edit or update client modal
 function showEditClientModal(identification, integrationClient){
     //add upload and download lock  
     lockUploadAndDownloadModal = true
@@ -204,7 +204,7 @@ function showEditClientModal(identification, integrationClient){
 function hideEditClientModal(){
     //release upload and download lock  
     lockUploadAndDownloadModal = false
-    
+
     var modal = document.getElementById("editClientAccountModal")
     modal.classList.remove("show")
 }

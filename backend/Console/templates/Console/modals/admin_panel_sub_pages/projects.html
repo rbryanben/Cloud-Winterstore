@@ -537,7 +537,25 @@
     
     //function to unload a project
     function unload_project(){
+        //hide all modals if any open
+        hideAccessControlModal()
+        hideAddAccountKey()
+        hideRenameModal()
+        hideAddClientModal()
+        hideEditClientModal()
+        hideDeleteAccountModal()
+        hideBarnAccountModal()
+        hideRemoveBarnAccountModal()
+        hideAddAdminAccountModal()
+        hideDeleteAdminModal()
+        hideUpdateIntegrationsModal()
+        hideAddIntegrationsModal()
+        hideDeleteIntegrationModal()
+
+        //lock upload and download modal 
         lockUploadAndDownloadModal = true
+
+        
         var thisModal = document.querySelector(".admin-panel")
         localStorage.removeItem("working-project")
         thisModal.classList.remove("hide")
