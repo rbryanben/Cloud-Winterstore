@@ -10,17 +10,6 @@
         margin-left: 0px;
     }
 
-    /* TOOLBAR SEARCH (INPUT) */
-    .top-toolbar-search {
-        background-color: rgba(223, 223, 223, 0.555);
-        width: 600px;
-        padding: 13px;
-        font-size: small;
-        border: none;
-        outline: none;
-        color: gray;
-        border-radius: 4px;
-    }
 
     /* CATEGORIZER */
     .stats-integrations-categorizer {
