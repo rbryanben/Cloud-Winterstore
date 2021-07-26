@@ -425,6 +425,8 @@
                 init_admin_profile_page()
                 ShowSuccess("Changes Saved")
                 show_confirm_changes_modal(false)
+                //refresh projects page
+                admin_panel_projects_refresh_page(null)
             }
             else if (response == "1709") {
                 ShowWarning("Invalid Password")

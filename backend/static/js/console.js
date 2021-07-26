@@ -115,3 +115,8 @@ function fallbackCopyTextToClipboard(text) {
   
     document.body.removeChild(textArea);
 }
+
+//handle error
+function handleError(error,project){
+    console.log(error + " in project " + project)
+}

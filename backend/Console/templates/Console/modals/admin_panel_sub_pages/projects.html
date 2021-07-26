@@ -357,11 +357,13 @@
 
     //REFRESH
     function admin_panel_projects_refresh_page(object){
-        if (!object.classList.contains("animate")){
-            object.classList.add("animate")
-        }
-        else {
-            object.classList.remove("animate")
+        if (object != null){
+            if (!object.classList.contains("animate")){
+                object.classList.add("animate")
+            }
+            else {
+                object.classList.remove("animate")
+            }
         }
         get_developer_projects();
     }
@@ -532,6 +534,7 @@
             loadProject(name)
         }
     }
+    
     //function to unload a project
     function unload_project(){
         lockUploadAndDownloadModal = true
