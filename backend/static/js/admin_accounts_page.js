@@ -24,8 +24,11 @@ function adminAccountPageLoadingCancel(){
     }
 }
 
-//add admin account front 
+//add admin account 
 function showAddAdminAccountModal(){
+    //add upload and download lock  
+    lockUploadAndDownloadModal = true
+
     var modal = document.getElementById("addAdminAccountModal")
     document.getElementById('newAdminAccountIdentification').value = ""
     if (!modal.classList.contains("show")){
@@ -42,6 +45,9 @@ function showAddAdminAccountModal(){
 }
 
 function hideAddAdminAccountModal(){
+    //release upload and download lock  
+    lockUploadAndDownloadModal = false
+
     var modal = document.getElementById("addAdminAccountModal")
     if (modal.classList.contains("show")){
         modal.classList.remove("show")

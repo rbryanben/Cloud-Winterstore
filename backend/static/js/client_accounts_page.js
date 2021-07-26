@@ -178,10 +178,14 @@ function deleteClientAccountHttpRequest(){
 
 //edit/update client modal
 function showEditClientModal(identification, integrationClient){
+    //add upload and download lock  
+    lockUploadAndDownloadModal = true
+
     var modal = document.getElementById("editClientAccountModal")
     if (!modal.classList.contains("show")){
         modal.classList.add("show")
     }
+
     //set identification
     document.getElementById("updateClientAccountIdentifierInput").value = identification
     //set integration 
@@ -198,6 +202,9 @@ function showEditClientModal(identification, integrationClient){
 }
 
 function hideEditClientModal(){
+    //release upload and download lock  
+    lockUploadAndDownloadModal = false
+    
     var modal = document.getElementById("editClientAccountModal")
     modal.classList.remove("show")
 }
@@ -529,6 +536,9 @@ function getIntegrations(){
 }
 
 function showAddClientModal(){
+    //lock upload and download modal 
+    lockUploadAndDownloadModal = true
+
     var modal = document.getElementById("addClientAccount")
     if (!modal.classList.contains("show")){
         modal.classList.add("show")
@@ -547,6 +557,9 @@ function showAddClientModal(){
 }
 
 function hideAddClientModal(){
+    //release upload and download lock  
+    lockUploadAndDownloadModal = false
+
     var modal = document.getElementById("addClientAccount")
     modal.classList.remove("show")
 }
