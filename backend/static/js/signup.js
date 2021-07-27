@@ -1,3 +1,5 @@
+localStorage.clear()
+
 //first function to trigger
 window.addEventListener("DOMContentLoaded", function() {
     watchUsername();
