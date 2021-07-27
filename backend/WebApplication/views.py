@@ -296,6 +296,7 @@ def NewFreeUserAccount(request):
     if (not checkEmailValid(email)):
         return HttpResponse("500")
 
+
     #add to unverified users 
     try:
         newUnverifiedUser = UnverifiedUser()
@@ -310,16 +311,17 @@ def NewFreeUserAccount(request):
 
 
 def sendEmail(email,subject,msg):
-    #send email
-    email = EmailMessage(
-        subject,
-        msg,
-        'cloudwinterstore@gmail.com',
-        [email],    
-    )
-
-    email.fail_silently=False
-    email.send()
+    try:
+        #send email
+        email = EmailMessage(
+            subject,
+            msg,
+            'cloudwinterstore@gmail.com',
+            [email],    
+        )
+        email.send()
+    except Exception as e:
+        print(e)
 
 
 
@@ -382,7 +384,6 @@ def checkUsernameValidation(username):
     #return true if it passes
     return True
 
-
 def checkEmailValid(email):
 
     try:
@@ -390,8 +391,6 @@ def checkEmailValid(email):
         return False
     except:
         return True
-
-
 
 ####
 #### Procedures

@@ -83,31 +83,50 @@
 </div>
 <script>
     function verify() {
+        //show loading
         showLoading();
+
+        //verification data to send
         data = {
             "link": "{{data.verificationLink}}",
             "code": document.getElementById("code").value
         }
-        postToServer("/verify/{{data.verificationLink}}", data, function(responce) {
+
+        //send request
+        postToServer("/verify/{{data.verificationLink}}", data, function(response) {
+            //hide loading on response
             hideLoading()
-            setTimeout(function() {
-                if (responce == "200") {
-                    localStorage.setItem("new-account", true)
-                    if (localStorage.getItem("enhanced")) { //redirect to enhanced if 
-                        localStorage.setItem("enhanced-account", "{{data.email}}")
-                        localStorage.removeItem("enhanced")
-                        window.location.replace("/sign-up/enhanced")
-                        return
-                    }
-                    window.location.replace("/console/")
-                }
-            }, 2000)
-            if (responce == "200") {
+
+            //if 200 means success
+            if (response == "200"){
+                //show success message
                 ShowSuccess("Verification Successful")
-            } else {
+                //store cookie that this is a new account
+                localStorage.setItem("new-account", true)
+
+                //Enhanced Sign-Up
+                if (localStorage.getItem("enhanced")) {
+                    localStorage.setItem("enhanced-account", "{{data.email}}")
+                    localStorage.removeItem("enhanced")
+                    //redirect after 2 seconds
+                    setTimeout(()=>{
+                        window.location.replace("/sign-up/enhanced")
+                    },2000)
+                }
+                //normal account
+                else {
+                    //redirect after 2 seconds
+                    setTimeout(()=>{
+                        window.location.replace("/console/")
+                    },2000)
+                }
+
+            }
+            //anything else means failed
+            else {
                 ShowWarning("Verification Failed")
             }
-        })
+        });
     }
 </script>
 
