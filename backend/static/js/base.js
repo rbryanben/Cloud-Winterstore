@@ -1,7 +1,7 @@
 //start
 '{% load static %}'
 window.addEventListener('DOMContentLoaded', () => {
-    preloadImages([serverURL + "/static/png/logo.png"]); //preload loading image and background
+    preloadObjects([serverURL + "/static/png/logo.png"]); //preload loading image and background
 })
 
 
@@ -173,7 +173,7 @@ function postToServer(url, data, callback) {
 
 //
 //cache
-function preloadImages(array) {
+function preloadObjects(array) {
     if (!preloadImages.list) {
         preloadImages.list = [];
     }

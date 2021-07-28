@@ -1,0 +1,23 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/demonstration_modal.css' %}">
+<script src="{% static 'js/demonstration_modal.js' %}"></script>
+
+<!-- Demonstation Modal -->
+<div id="demonstationModal" class="demonstration-modal">
+    <span class="fas fa-times close" onclick="demonstationModalSetShow(false)"></span>
+    <!--video -->
+    <video id="videoPlayer" loop autoplay muted></video>
+    <!-- slide number -->
+    <span id="slideNumber" class="slide-number">Slide 3/4</span>
+    <!-- description -->
+    <div id="description" class="description">Create Project</div>
+    <!-- body -->
+    <div id="demonstrationBody" class="body">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Distinctio velit est unde hic ea, excepturi eaque repellendus blanditiis ipsam dolore voluptatibus asperiores cum, modi harum ipsum id earum eligendi! Obcaecati!</div>
+    <!-- buttons section -->
+    <div class="buttons">
+        <!-- previous button-->
+        <div class="previous-button" onclick="demonstationModalSlidePrevious()">Previous</div>
+        <!-- next button -->
+        <div class="green-button" onclick="demonstationModalSlideNext()">Next</div>
+    </div>
+</div>
