@@ -40,6 +40,18 @@
     function loadDemonstrationModal(objects){
         //add elements to array
         DemonstrationModalObjects = objects
+
+        //preload video 2 to n
+        video_url_list = []
+
+        objects.forEach(object => {
+           video_url_list.push(object.videoURL)
+        });
+
+        preloadVideos(video_url_list)
+
+        
+
         //set slide count
         demonstationModalSlideCount = DemonstrationModalObjects.length
 
@@ -119,4 +131,24 @@
             }
         }
         return elm;
+    }
+
+    function preloadVideos(array) {
+        if (!preloadVideos.list) {
+            preloadVideos.list = [];
+        }
+        var list = preloadVideos.list;
+        for (var i = 0; i < array.length; i++) {
+            var img = new Image();
+            img.onload = function() {
+                var index = list.indexOf(this);
+                if (index !== -1) {
+                    // remove image from the array once it's loaded
+                    // for memory consumption reasons
+                    list.splice(index, 1);
+                }
+            }
+            list.push(img);
+            img.src = array[i];
+        }
     }

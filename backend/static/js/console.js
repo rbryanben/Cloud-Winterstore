@@ -120,3 +120,21 @@ function fallbackCopyTextToClipboard(text) {
 function handleError(error,project){
     console.log(error + " in project " + project)
 }
+
+//show demonstration if first time loading project 
+window.addEventListener("DOMContentLoaded",()=>{
+    if (localStorage.getItem("new-account")){
+        //sampling
+        initializeDemonstrationModal("demonstationModal")
+        var sample_list = []
+        sample_list.push(new DemonstrationObject("/static/video/video1.mp4","Open file","Lorem ipsum dolor, sit amet consectetur adipisicing elit. Id sapiente dicta assumenda iure porro minus voluptate vitae consectetur laudantium sit iste facere, deleniti, accusantium reprehenderit error neque possimus perferendis debitis?"))
+        sample_list.push(new DemonstrationObject("/static/video/video2.mp4","Close file","Lorem ipsum dolor, sit amet consectetur adipisicing elit. Id sapiente dicta assumenda iure porro minus voluptate vitae consectetur laudantium sit iste facere, deleniti, accusantium reprehenderit error neque possimus perferendis debitis?"))
+        sample_list.push(new DemonstrationObject("/static/video/video3.mp4","Rename File" ,"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Id sapiente dicta assumenda iure porro minus voluptate vitae consectetur laudantium sit iste facere, deleniti, accusantium reprehenderit error neque possimus perferendis debitis?"))
+        
+        //show after loading
+        setTimeout(()=>{
+            loadDemonstrationModal(sample_list)
+        },2000)       
+   
+    }
+})
