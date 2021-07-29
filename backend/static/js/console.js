@@ -138,9 +138,9 @@ window.addEventListener("DOMContentLoaded",()=>{
 
         //set data
         var video_list = []
-        video_list.push(new DemonstrationObject("/static/video/create_project.mp4","Create Project","Lorem ipsum dolor, sit amet consectetur adipisicing elit. Id sapiente dicta assumenda iure porro minus voluptate vitae consectetur laudantium sit iste facere, deleniti, accusantium reprehenderit error neque possimus perferendis debitis?"))
-        video_list.push(new DemonstrationObject("/static/video/edit_project.mp4","Edit Project","Lorem ipsum dolor, sit amet consectetur adipisicing elit. Id sapiente dicta assumenda iure porro minus voluptate vitae consectetur laudantium sit iste facere, deleniti, accusantium reprehenderit error neque possimus perferendis debitis?"))
-        video_list.push(new DemonstrationObject("/static/video/load_project.mp4","Load Project" ,"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Id sapiente dicta assumenda iure porro minus voluptate vitae consectetur laudantium sit iste facere, deleniti, accusantium reprehenderit error neque possimus perferendis debitis?"))
+        video_list.push(new DemonstrationObject("/static/video/create_project.mp4","Create Project","Create a project by clicking on the plus icon. Then define the project name, storage type and stream data type. Your project will imediately show if creation was successful."))
+        video_list.push(new DemonstrationObject("/static/video/edit_project.mp4","Edit Project","Edit a projects details by clicking the edit icon. All files and objects belonging to that project will be imediately migrated to the new project details."))
+        video_list.push(new DemonstrationObject("/static/video/load_project.mp4","Load Project" ,"Load a project using the load button. This could be loading a collaborating project or a personal project."))
         
         //show after loading
         setTimeout(()=>{

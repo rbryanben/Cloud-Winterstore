@@ -188,7 +188,7 @@ function initializeAdminAccountsPage(){
 
         //set data
         var client_accounts_video_list = []
-        client_accounts_video_list.push(new DemonstrationObject("/static/video/add_someone.mp4","Add Someone","Lorem ipsum dolor, sit amet consectetur adipisicing elit. Id sapiente dicta assumenda iure porro minus voluptate vitae consectetur laudantium sit iste facere, deleniti, accusantium reprehenderit error neque possimus perferendis debitis?"))
+        client_accounts_video_list.push(new DemonstrationObject("/static/video/add_someone.mp4","Add Someone","Add someone else to manage this project by click the add button, and then define the identification for the person to add. Identification takes the form of an email and rather not the username of the person. Upon adding the project will appear on the person's console."))
  
         //show after loading
         setTimeout(()=>{

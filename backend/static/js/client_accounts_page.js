@@ -275,15 +275,15 @@ function showClientAccounts(){
     if (localStorage.getItem("seen-accounts-page-demo") && window.innerWidth >= 1000){
 
         localStorage.removeItem("seen-accounts-page-demo")
-        
+
         //Projects Modal (This should be the only initialization) , Already Initialized
         //initializeDemonstrationModal("demonstationModal")
 
         //set data
         var client_accounts_video_list = []
-        client_accounts_video_list.push(new DemonstrationObject("/static/video/client_account_create.mp4","Create Account","Lorem ipsum dolor, sit amet consectetur adipisicing elit. Id sapiente dicta assumenda iure porro minus voluptate vitae consectetur laudantium sit iste facere, deleniti, accusantium reprehenderit error neque possimus perferendis debitis?"))
-        client_accounts_video_list.push(new DemonstrationObject("/static/video/barn.mp4","Barn Account","Lorem ipsum dolor, sit amet consectetur adipisicing elit. Id sapiente dicta assumenda iure porro minus voluptate vitae consectetur laudantium sit iste facere, deleniti, accusantium reprehenderit error neque possimus perferendis debitis?"))
-        client_accounts_video_list.push(new DemonstrationObject("/static/video/unbarn.mp4","Remove Barn" ,"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Id sapiente dicta assumenda iure porro minus voluptate vitae consectetur laudantium sit iste facere, deleniti, accusantium reprehenderit error neque possimus perferendis debitis?"))
+        client_accounts_video_list.push(new DemonstrationObject("/static/video/client_account_create.mp4","Create Account","Create a Client Account by simply clicking the add button on the top right corner. A modal will be show to which you will define the Integration to add the account to, the identification of the client and their password."))
+        client_accounts_video_list.push(new DemonstrationObject("/static/video/barn.mp4","Barn Account","Barn a Client Account by clicking the Barn button. Barning a client will prevent them from uploading and downloading files to and from the project. Barning takes imediate effect."))
+        client_accounts_video_list.push(new DemonstrationObject("/static/video/unbarn.mp4","Remove Barn" ,"Remove Barn for Client Account by clicking the Barn button again. Removing Barn means client will be able to upload and download a files to and from the project.Removing Barn takes imediate effect."))
        
         //show after loading
         setTimeout(()=>{

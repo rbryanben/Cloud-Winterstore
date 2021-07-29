@@ -16,13 +16,13 @@ function initializeIntegrationsSubPage(){
     if (localStorage.getItem("seen-integration-page-demo") && window.innerWidth >= 1000){
         //remove item 
         localStorage.removeItem("seen-integration-page-demo")
-        
+
         //Projects Modal (This should be the only initialization) , Already Initialized
         //initializeDemonstrationModal("demonstationModal")
 
         //set data
         var integrations_video_list = []
-        integrations_video_list.push(new DemonstrationObject("/static/video/create_integration.mp4","Create Integration","Lorem ipsum dolor, sit amet consectetur adipisicing elit. Id sapiente dicta assumenda iure porro minus voluptate vitae consectetur laudantium sit iste facere, deleniti, accusantium reprehenderit error neque possimus perferendis debitis?"))
+        integrations_video_list.push(new DemonstrationObject("/static/video/create_integration.mp4","Create Integration","Create an Integration by clicking the add button, and then further define the name, the platform and the status of the integration. Integrations are what client accounts are added to, deleting one means deleting everyone in that integration."))
              
         //show after loading
         setTimeout(()=>{
