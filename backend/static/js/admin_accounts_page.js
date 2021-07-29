@@ -162,10 +162,7 @@ function showAdminAccounts(){
     pageAdminAccounts.style.display = "grid"
 
     //initialize
-    if (adminAccountsPageInitilized == false){
-        adminAccountsPageInitilized = true
-        initializeAdminAccountsPage()
-    }
+    initializeAdminAccountsPage()
 }
 
 function hideAdminAccounts(){
@@ -178,6 +175,27 @@ function hideAdminAccounts(){
 
 function initializeAdminAccountsPage(){
     getAdminAccounts();
+
+    //demonstration
+    //check variable and screen
+    //hide demonstration modal 
+    demonstationModalSetShow(false)
+    if (localStorage.getItem("seen-admin-accounts-page-demo") && window.innerWidth >= 1000){
+
+        localStorage.removeItem("seen-admin-accounts-page-demo")
+        //Projects Modal (This should be the only initialization) , Already Initialized
+        //initializeDemonstrationModal("demonstationModal")
+
+        //set data
+        var client_accounts_video_list = []
+        client_accounts_video_list.push(new DemonstrationObject("/static/video/add_someone.mp4","Add Someone","Lorem ipsum dolor, sit amet consectetur adipisicing elit. Id sapiente dicta assumenda iure porro minus voluptate vitae consectetur laudantium sit iste facere, deleniti, accusantium reprehenderit error neque possimus perferendis debitis?"))
+ 
+        //show after loading
+        setTimeout(()=>{
+            loadDemonstrationModal(client_accounts_video_list)
+        },500)       
+   
+    }
 }
 
 

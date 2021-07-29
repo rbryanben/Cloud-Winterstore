@@ -270,6 +270,28 @@ function updateClientHttpRequest(){
 
 //client accounts
 function showClientAccounts(){
+    //demonstration
+    //check variable and screen
+    if (localStorage.getItem("seen-accounts-page-demo") && window.innerWidth >= 1000){
+
+        localStorage.removeItem("seen-accounts-page-demo")
+        
+        //Projects Modal (This should be the only initialization) , Already Initialized
+        //initializeDemonstrationModal("demonstationModal")
+
+        //set data
+        var client_accounts_video_list = []
+        client_accounts_video_list.push(new DemonstrationObject("/static/video/client_account_create.mp4","Create Account","Lorem ipsum dolor, sit amet consectetur adipisicing elit. Id sapiente dicta assumenda iure porro minus voluptate vitae consectetur laudantium sit iste facere, deleniti, accusantium reprehenderit error neque possimus perferendis debitis?"))
+        client_accounts_video_list.push(new DemonstrationObject("/static/video/barn.mp4","Barn Account","Lorem ipsum dolor, sit amet consectetur adipisicing elit. Id sapiente dicta assumenda iure porro minus voluptate vitae consectetur laudantium sit iste facere, deleniti, accusantium reprehenderit error neque possimus perferendis debitis?"))
+        client_accounts_video_list.push(new DemonstrationObject("/static/video/unbarn.mp4","Remove Barn" ,"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Id sapiente dicta assumenda iure porro minus voluptate vitae consectetur laudantium sit iste facere, deleniti, accusantium reprehenderit error neque possimus perferendis debitis?"))
+       
+        //show after loading
+        setTimeout(()=>{
+            loadDemonstrationModal(client_accounts_video_list)
+        },500)       
+   
+    }
+
     //page
     var pageClientAccounts = document.getElementById("client-accounts")
 

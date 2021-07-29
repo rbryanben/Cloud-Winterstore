@@ -123,17 +123,28 @@ function handleError(error,project){
 
 //show demonstration if first time loading project 
 window.addEventListener("DOMContentLoaded",()=>{
-    if (localStorage.getItem("new-account")){
-        //sampling
+    if (localStorage.getItem("new-account") && window.innerWidth >= 1000){
+        //remove new account variable
+        localStorage.removeItem("new-account")
+        
+        //create varibles to store which demonstrations have been seen
+        localStorage.setItem("seen-file-browser-demo",true)
+        localStorage.setItem("seen-accounts-page-demo",true)
+        localStorage.setItem("seen-admin-accounts-page-demo",true)
+        localStorage.setItem("seen-integration-page-demo",true)
+    
+        //Projects Modal (This should be the only initialization)
         initializeDemonstrationModal("demonstationModal")
-        var sample_list = []
-        sample_list.push(new DemonstrationObject("/static/video/video1.mp4","Open file","Lorem ipsum dolor, sit amet consectetur adipisicing elit. Id sapiente dicta assumenda iure porro minus voluptate vitae consectetur laudantium sit iste facere, deleniti, accusantium reprehenderit error neque possimus perferendis debitis?"))
-        sample_list.push(new DemonstrationObject("/static/video/video2.mp4","Close file","Lorem ipsum dolor, sit amet consectetur adipisicing elit. Id sapiente dicta assumenda iure porro minus voluptate vitae consectetur laudantium sit iste facere, deleniti, accusantium reprehenderit error neque possimus perferendis debitis?"))
-        sample_list.push(new DemonstrationObject("/static/video/video3.mp4","Rename File" ,"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Id sapiente dicta assumenda iure porro minus voluptate vitae consectetur laudantium sit iste facere, deleniti, accusantium reprehenderit error neque possimus perferendis debitis?"))
+
+        //set data
+        var video_list = []
+        video_list.push(new DemonstrationObject("/static/video/create_project.mp4","Create Project","Lorem ipsum dolor, sit amet consectetur adipisicing elit. Id sapiente dicta assumenda iure porro minus voluptate vitae consectetur laudantium sit iste facere, deleniti, accusantium reprehenderit error neque possimus perferendis debitis?"))
+        video_list.push(new DemonstrationObject("/static/video/edit_project.mp4","Edit Project","Lorem ipsum dolor, sit amet consectetur adipisicing elit. Id sapiente dicta assumenda iure porro minus voluptate vitae consectetur laudantium sit iste facere, deleniti, accusantium reprehenderit error neque possimus perferendis debitis?"))
+        video_list.push(new DemonstrationObject("/static/video/load_project.mp4","Load Project" ,"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Id sapiente dicta assumenda iure porro minus voluptate vitae consectetur laudantium sit iste facere, deleniti, accusantium reprehenderit error neque possimus perferendis debitis?"))
         
         //show after loading
         setTimeout(()=>{
-            loadDemonstrationModal(sample_list)
+            loadDemonstrationModal(video_list)
         },2000)       
    
     }

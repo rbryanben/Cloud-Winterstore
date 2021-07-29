@@ -27,13 +27,15 @@
     //function 
     // Sets the modal visible to the client
     function demonstationModalSetShow(show){
-        if (show){
-            if (!demonstrationModal.classList.contains("show")){
-                demonstrationModal.classList.add("show")
+        if (demonstrationModal != null){
+            if (show){
+                if (!demonstrationModal.classList.contains("show")){
+                    demonstrationModal.classList.add("show")
+                }
+                return
             }
-            return
+            demonstrationModal.classList.remove("show")
         }
-        demonstrationModal.classList.remove("show")
     }
 
     //loads demonstration modal
@@ -55,6 +57,9 @@
         //set slide count
         demonstationModalSlideCount = DemonstrationModalObjects.length
 
+        //reset slide count
+        demonstationModalCurrentPosition = 1
+        
         //set description
         demonstrationModalShowSlide(demonstationModalCurrentPosition)
 

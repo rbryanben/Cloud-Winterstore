@@ -503,6 +503,9 @@
     //LOAD PROJECT
     // To load a project you need to parse a name of format <username>.<project_name>
     function loadProject(name){
+        //hide demonstration modal 
+        demonstationModalSetShow(false)
+        
         var thisModal = document.querySelector(".admin-panel")
 
         //set the selected porject

@@ -9,6 +9,27 @@ function initializeIntegrationsSubPage(){
     //get integrations
     getIntegrationsList()
     getPlatformsForIntegrationsHttpRequest()
+
+
+    //demonstration
+    //check variable and screen
+    if (localStorage.getItem("seen-integration-page-demo") && window.innerWidth >= 1000){
+        //remove item 
+        localStorage.removeItem("seen-integration-page-demo")
+        
+        //Projects Modal (This should be the only initialization) , Already Initialized
+        //initializeDemonstrationModal("demonstationModal")
+
+        //set data
+        var integrations_video_list = []
+        integrations_video_list.push(new DemonstrationObject("/static/video/create_integration.mp4","Create Integration","Lorem ipsum dolor, sit amet consectetur adipisicing elit. Id sapiente dicta assumenda iure porro minus voluptate vitae consectetur laudantium sit iste facere, deleniti, accusantium reprehenderit error neque possimus perferendis debitis?"))
+             
+        //show after loading
+        setTimeout(()=>{
+            loadDemonstrationModal(integrations_video_list)
+        },500)       
+   
+    }
 }
 
 //entry

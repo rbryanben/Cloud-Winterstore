@@ -1,10 +1,12 @@
 //page
 var filesPageBrowser 
 
-//check if 
+//check if loaded 
 window.addEventListener("DOMContentLoaded",()=>{
     filesPageBrowser = document.querySelector(".folder-browser-page")
 })
+
+
 
 //IndexObject Class
 // ? Why does it exist
@@ -77,6 +79,32 @@ function hideBrowserFilePage(){
 
 //function to initialize the page
 function intialize(){
+    //demonstration
+    //check variable and screen
+    if (localStorage.getItem("seen-file-browser-demo") && window.innerWidth >= 1000){
+
+        localStorage.removeItem("seen-file-browser-demo")
+
+        //Projects Modal (This should be the only initialization) , Already Initialized
+        //initializeDemonstrationModal("demonstationModal")
+
+        //set data
+        var client_video_list = []
+        client_video_list.push(new DemonstrationObject("/static/video/create_folder.mp4","Create Folder","Lorem ipsum dolor, sit amet consectetur adipisicing elit. Id sapiente dicta assumenda iure porro minus voluptate vitae consectetur laudantium sit iste facere, deleniti, accusantium reprehenderit error neque possimus perferendis debitis?"))
+        client_video_list.push(new DemonstrationObject("/static/video/upload_file.mp4","Upload File","Lorem ipsum dolor, sit amet consectetur adipisicing elit. Id sapiente dicta assumenda iure porro minus voluptate vitae consectetur laudantium sit iste facere, deleniti, accusantium reprehenderit error neque possimus perferendis debitis?"))
+        client_video_list.push(new DemonstrationObject("/static/video/download_file.mp4","Download File" ,"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Id sapiente dicta assumenda iure porro minus voluptate vitae consectetur laudantium sit iste facere, deleniti, accusantium reprehenderit error neque possimus perferendis debitis?"))
+        client_video_list.push(new DemonstrationObject("/static/video/upload_modal.mp4","Open Upload Modal" ,"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Id sapiente dicta assumenda iure porro minus voluptate vitae consectetur laudantium sit iste facere, deleniti, accusantium reprehenderit error neque possimus perferendis debitis?"))
+        client_video_list.push(new DemonstrationObject("/static/video/download_modal.mp4","Open Download Modal" ,"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Id sapiente dicta assumenda iure porro minus voluptate vitae consectetur laudantium sit iste facere, deleniti, accusantium reprehenderit error neque possimus perferendis debitis?"))
+        client_video_list.push(new DemonstrationObject("/static/video/access_control.mp4","Access Control Modal" ,"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Id sapiente dicta assumenda iure porro minus voluptate vitae consectetur laudantium sit iste facere, deleniti, accusantium reprehenderit error neque possimus perferendis debitis?"))
+        client_video_list.push(new DemonstrationObject("/static/video/reload_index.mp4","Reload Index" ,"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Id sapiente dicta assumenda iure porro minus voluptate vitae consectetur laudantium sit iste facere, deleniti, accusantium reprehenderit error neque possimus perferendis debitis?"))
+
+        //show after loading
+        setTimeout(()=>{
+            loadDemonstrationModal(client_video_list)
+        },2000)       
+   
+    }
+
     //reset map 
     BrowserPageInitialized = true
     //load files in the root directory 
