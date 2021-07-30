@@ -6,6 +6,7 @@ window.document.addEventListener("readystatechange",()=>{
         case "complete":
             setTimeout(function(){
                 hideConsoleLoading()
+                demonstationModalCheck()
             },1000)
             break;
         }
@@ -122,7 +123,7 @@ function handleError(error,project){
 }
 
 //show demonstration if first time loading project 
-window.addEventListener("DOMContentLoaded",()=>{
+function demonstationModalCheck(){
     if (localStorage.getItem("new-account") && window.innerWidth >= 1000){
         //remove new account variable
         localStorage.removeItem("new-account")
@@ -148,4 +149,4 @@ window.addEventListener("DOMContentLoaded",()=>{
         },2000)       
    
     }
-})
+}
