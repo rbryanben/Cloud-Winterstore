@@ -1,0 +1,58 @@
+    /* COOKIES MODAL */
+    .cookies-modal {
+        position: fixed;
+        z-index: 103;
+        bottom: 50px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-family: Arial, Helvetica, sans-serif;
+        display: grid;
+        border-radius: 6px;
+        grid-template-columns: 15% 60% 25%;
+        padding: 20px;
+        width: 450px;
+        margin-bottom: -90px;
+        transition: all 0.5s ease-in;
+        opacity: 0;
+        background-color: white;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+
+    .cookies-modal.show {
+        opacity: 1;
+        margin-bottom: 0;
+    }
+
+    .cookies-modal .cookies-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        
+    }
+
+    .cookies-modal .fas {
+        color: gray;
+    }
+
+    .cookies-modal .text {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: rgb(29, 29, 29);
+        font-size: small;
+    }
+
+    .cookies-modal .button {
+        display: flex;
+        justify-content: center;
+        font-size: small;
+        align-items: center;
+
+    }
+
+    .cookies-modal .ok-button {
+        cursor: pointer;
+        background-color: gray;
+        color: white;
+        padding: 8px 25px;
+    }
