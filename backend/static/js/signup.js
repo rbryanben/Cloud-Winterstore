@@ -1,4 +1,5 @@
 localStorage.clear()
+localStorage.setItem("showed-cookies",true)
 
 //first function to trigger
 window.addEventListener("DOMContentLoaded", function() {
