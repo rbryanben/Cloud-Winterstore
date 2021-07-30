@@ -85,8 +85,8 @@ function intialize(){
 
         localStorage.removeItem("seen-file-browser-demo")
 
-        //Projects Modal (This should be the only initialization) , Already Initialized
-        //initializeDemonstrationModal("demonstationModal")
+        //Projects Modal (This should be the only initialization)
+        initializeDemonstrationModal("demonstationModal")
 
         //set data
         var client_video_list = []

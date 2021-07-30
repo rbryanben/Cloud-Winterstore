@@ -17,8 +17,8 @@ function initializeIntegrationsSubPage(){
         //remove item 
         localStorage.removeItem("seen-integration-page-demo")
 
-        //Projects Modal (This should be the only initialization) , Already Initialized
-        //initializeDemonstrationModal("demonstationModal")
+        //Projects Modal (This should be the only initialization) 
+        initializeDemonstrationModal("demonstationModal")
 
         //set data
         var integrations_video_list = []

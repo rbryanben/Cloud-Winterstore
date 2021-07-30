@@ -183,8 +183,8 @@ function initializeAdminAccountsPage(){
     if (localStorage.getItem("seen-admin-accounts-page-demo") && window.innerWidth >= 1000){
 
         localStorage.removeItem("seen-admin-accounts-page-demo")
-        //Projects Modal (This should be the only initialization) , Already Initialized
-        //initializeDemonstrationModal("demonstationModal")
+        //Projects Modal (This should be the only initialization)
+        initializeDemonstrationModal("demonstationModal")
 
         //set data
         var client_accounts_video_list = []
