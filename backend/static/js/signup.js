@@ -18,7 +18,6 @@ function watchEmail() {
         if (!validateEmail(emailInput.value)) {
             if (!emailInput.classList.contains("error")) {
                 emailInput.classList.add("error")
-
             }
             emailPass = false;
         } else {
@@ -103,7 +102,7 @@ let passwordPass = false
 let termsPass = false
 
 //validations 
-let strongPassword = new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})')
+let strongPassword = new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])')
 let mediumPassword = new RegExp('((?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{6,}))|((?=.*[a-z])(?=.*[A-Z])(?=.*[^A-Za-z0-9])(?=.{8,}))')
 
 function StrengthChecker(PasswordParameter) {
