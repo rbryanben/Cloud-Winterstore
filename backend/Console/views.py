@@ -482,6 +482,14 @@ def createProject(request):
             return HttpResponse("200")
         return HttpResponse("500")
 
+#
+# Barn Client: barns a developer client account given JSON data containing
+#              project and identification
+# Response Types:
+#               not found -- project || client to barn was not found 
+#               500 -- an error occured on our side
+#               denied -- user does not have access to perform task
+#               200 -- success
 @require_http_methods(["POST",])
 @csrf_exempt
 @login_required
