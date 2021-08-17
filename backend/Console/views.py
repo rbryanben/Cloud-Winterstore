@@ -594,7 +594,32 @@ def search_update_integration(request):
 
         return JsonResponse(data.data,safe=False)
 
-# Create Project API
+##
+#  Integrations: applys creation, upddating, deletion and retriving of integrations in a project
+#  GET Integrations: implemented using the POST method, returns a list of integrations in a
+#                    project as JSON data.
+#                    Receives JSON data containing the project
+# GET Response Types:
+#                    not found -- project was not found
+#                    Does'nt seem like the JSON we need -- invalid JSON supplied
+#                    denied -- user does not have admin access to a project
+# Create Integration: implemented using the UPDATE method, creates an integration given input 
+#                     JSON data containing the project, platform, status and identification
+# Create Response Types:
+#                    not found -- project was not found
+#                    Does'nt seem like the JSON we need -- invalid JSON supplied
+#                    denied -- user does not have admin access to a project
+#                    1705 -- an integration exists under that supplied name
+# Update Integration: Implemented using the patch method
+#                    changes the values of an integration given JSON data containing
+#                    status, identification, platform and id (representing the previous identification)
+# Update Response Types: 
+#                    not found -- project was not found
+#                    Does'nt seem like the JSON we need -- invalid JSON supplied
+#                    denied -- user does not have admin access to a project
+# Delete Integration: Deletes an integration given the project and the identification
+# Response Types(Overall):
+#                200 -- success                    
 @require_http_methods(["POST","UPDATE","PATCH","DELETE"])
 @csrf_exempt
 @login_required(login_url='/console/login-required')
