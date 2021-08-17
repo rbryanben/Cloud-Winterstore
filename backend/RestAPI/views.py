@@ -516,6 +516,12 @@ def deleteIndexObject(request):
 ####################################################################################
 ##### Used by client libraries
 
+#
+# Get Token: returns a client token given JSON data containing 
+#            username and password
+# Response Type: 
+#               token -- success
+#               500 -- failed
 @api_view(['POST'])
 @csrf_exempt
 def getToken(request):
@@ -525,14 +531,14 @@ def getToken(request):
         return HttpResponse("Does'nt seem like JSON")
     
     #attempt login
-    #try:
-    user = authenticate(username=receivedJSON["username"], password=receivedJSON["password"])
-    if (user is not None):
-        return HttpResponse(Token.objects.get(user=user).key)
-    else:
-        return HttpResponse("500")
-    #except:
-        # HttpResponse("500")
+    try:
+        user = authenticate(username=receivedJSON["username"], password=receivedJSON["password"])
+        if (user is not None):
+            return HttpResponse(Token.objects.get(user=user).key)
+        else:
+            return HttpResponse("500")
+    except:
+         HttpResponse("500")
 
 @api_view(['POST','GET'])
 @csrf_exempt
