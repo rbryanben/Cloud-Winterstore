@@ -586,7 +586,12 @@ def openStream(request,slug):
     return resp
 
 
-#this method is invalid
+# Download File : Returns a requested file given identification of a file
+# Response Type : 
+#                 not found -- the file was not found
+#                 500 -- an error occured on our end
+#                 denied -- the client does not have pemission to that file
+#                 Streaming Http Response -- returns the file requested
 @api_view(['POST','GET'])
 @csrf_exempt
 @permission_classes([IsAuthenticated])
