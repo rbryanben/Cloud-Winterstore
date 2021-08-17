@@ -129,6 +129,12 @@ def getPeopleWithKey(request):
     except:
         return HttpResponse({})
 
+# Get Deleted Objects: give JSON data containing the project name,
+#                      returns a List of deleted objects
+# Response Types:
+#                 not found -- the project was not found
+#                 denied -- user does not have access to a project
+#                 500 - an error occured on our side
 @login_required(login_url='/console/login-required')
 def getDeletedObjectsForProject(request):
     project = None
