@@ -46,6 +46,24 @@ def console(request):
     }
     return render(request,"Console/console.html",context)
 
+#
+# Upload File : Uploads a file to a folder in a project given the parameters in multi-part form data.
+#               file -- The actual binary file
+#               allowAllUsersWrite -- Access control variable
+#               allowAllUsersRead -- Access control variable
+#               allowKeyUsersWrite -- Access control variable
+#               allowKeyUsersRead -- Access control variable
+#               name -- The name to store the file as
+#               project -- The project the file belongs to, also used to obtain the correct folder to insert to 
+#               parent(ID) -- The identification of the parent folder
+#               size -- The computed size of the file as bytes by the library (Not Secure - People can bypass)
+# Response Types :
+#               woahh - does'nt seem like the data we need -- Invalid form data
+#               1702 -- name contains unwanted charectors
+#               500 -- failed to get the folder to insert to || the user does not have access to the project
+#               1703 -- a files exists under that name
+#               Boss man! something is seriously wrong -- Failed to save the file
+#               200 -- success
 @login_required(login_url='/console/login-required')
 @require_http_methods(["POST",])
 def uploadFile(request):  
@@ -79,7 +97,7 @@ def uploadFile(request):
     if any(c in special_characters for c in name):
         return HttpResponse("1702")
 
-    #check if the username exists in the directory 
+    # Get the parent index object to insert the file to
     parentIndexObject = None
     try:
         if (parent == "root"):
@@ -100,10 +118,7 @@ def uploadFile(request):
     except:
         pass
 
-    #check if the client as not reached maximum limit 
-    #
-    #
-
+    # Add the file to the parent object
     try:
         #create an index object 
         newIndexObject = IndexObject()
