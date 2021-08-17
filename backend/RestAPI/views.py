@@ -219,6 +219,29 @@ def giveKey(request):
 
     return HttpResponse("200")
 
+# Get or Set Access Control: This method either gets the access control values or set them
+# Get: Implemented using the POST method, it returns the values given the id of the file or object
+#       as JSON data
+# Get Response Types:
+#       not found -- file/folder was not found
+#       Doesn't look like the JSON we need -- supplied JSON is invalid
+#       denied -- user does not have access to write the file
+#       JsonResponse containing
+#                'allowAllUsersWrite' : boolean,
+#                'allowAllUsersRead' : boolean,
+#                'allowKeyUsersRead' : boolean,
+#                'allowKeyUsersWrite' : boolean
+# Set: Implemented using the PUT method, updates the access control measures of an index object
+#       given JSON data that contains keys
+#          'AUW'
+#          'AUR'
+#          'AKR'
+#          'AKW'
+# Response types:
+#                not found -- object was not found
+#                woahh -- does'nt seem like the data we need  -- invalid JSON data
+#                denied -- user does not have access to a file
+#                200 -- success 
 @login_required(login_url='/console/login-required')
 def getSetAccessControl(request):
     if request.method == "POST":
