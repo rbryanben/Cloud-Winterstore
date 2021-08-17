@@ -275,6 +275,14 @@ def getSetAccessControl(request):
         
         return HttpResponse("200")
 
+# Remove Key: Removes a key from a client given JSON data with 
+#             file -- identification of the file
+#             accounts [] -- a list for accounts to remove
+# Response Types :
+#              not found -- file/folder specified was not found
+#              500 -- error occured on our side
+#              deined -- user does not have access to that file
+#              200 - success 
 @login_required(login_url='/console/login-required')
 def removeKeys(request):
     userList = None
