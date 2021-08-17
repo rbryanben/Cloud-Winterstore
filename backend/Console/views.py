@@ -527,6 +527,14 @@ def barnClient(request):
 
     return HttpResponse("200")
 
+#
+# Remove Barn: remove barn inflicted on a developer account given JSON data containing 
+#              project and identification of developer client to unbarn
+# Response Types:
+#               not found -- project || client to remove barn was not found 
+#               500 -- an error occured on our side
+#               denied -- user does not have access to perform task
+#               200 -- success              
 @require_http_methods(["POST",])
 @csrf_exempt
 @login_required
