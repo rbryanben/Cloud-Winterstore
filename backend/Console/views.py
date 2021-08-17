@@ -757,6 +757,19 @@ def searchDeveloperClients(request):
 
     return JsonResponse(serializer.data,safe=False)
 
+#
+# Add Update and Delete Clients: This function alters developer clients given JSON data
+# Add Client: Implemented using a POST method, it adds a developer client to a project given JSON data 
+#             containing the  identification,password and integration to add to
+# Update: update client details given the same data set as post
+# Delete: deletes a client
+# Response Types: 
+#              500 -- an error occured || invalid JSON data
+#              denied -- user does not admin access to the project
+#              200 -- success
+#              1704 -- client exists
+#              1706 -- new user is not compatible
+# Only God knows why I wrote this method that way
 @require_http_methods(["POST","UPDATE","DELETE"])
 @csrf_exempt
 @login_required(login_url='/console/login-required')
@@ -804,7 +817,7 @@ def addDeveloperClient(request):
         except:
             return HttpResponse("500")
 
-    #DELET
+    #DELETE
     if (request.method == "DELETE"):
         try:
             client_to_update = DeveloperClient.objects.get(integration=integration_to_add_to,identification=client_to_add_identification)
