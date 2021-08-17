@@ -148,6 +148,13 @@ def uploadFile(request):
     except:
         return HttpResponse("Boss man! something is seriously wrong")
 
+
+# Get Download Stats: returns a JSON list of download statistics given the project as JSON data containing 
+#                     the project
+# Response Types:
+#                not found -- the index object was not found
+#                stat[] -- JSON list
+#                500 -- an error occured on our side
 @login_required(login_url='/console/login-required')
 @require_http_methods(["POST",])
 def getDownloadStats(request):
@@ -264,6 +271,12 @@ def auth_user(request):
         return HttpResponse("200")
 
 
+# Search Download Stats: given JSON data containing the project and a criteria, returns stats 
+#                        for an individual file
+# Response Types: 
+#                 not found -- the project was not found 
+#                 JSON[] -- a list of the stats
+#                 500 -- an error occured 
 @login_required(login_url='/console/login-required')
 @require_http_methods(["POST",])
 def searchDownloadStats(request):
