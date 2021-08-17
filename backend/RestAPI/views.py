@@ -179,6 +179,13 @@ def getDeletedObjectsForProjectWithCriteria(request):
 
     return JsonResponse(serializerObject.data,safe=False)
 
+# Give Key : Gives a key to a client to access a files given JSON data with the clients account
+#            and the id of the index object to give access to
+# Response Types: 
+#            not found -- the file/folder specified does not exists
+#            500 -- an error occured on our end
+#            denied -- user does not have access to write that file
+#            200 -- success
 @login_required(login_url='/console/login-required')
 def giveKey(request):
     account = None
