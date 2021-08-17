@@ -96,6 +96,13 @@ def gateway(request):
     #return
     return JsonResponse(response)
 
+# Get People With Key : Returns a JSON list of people who have access to a file/folder given JSON data 
+#                       that contains the identification of the file/folder
+# Response Types:
+#                not found -- index object was not found
+#                Doesn't look like the JSON we need -- invalid JSON data
+#                denied -- the user does not have access to write the file
+#                JSON[] -- the users with keys to the file
 @login_required(login_url='/console/login-required')
 def getPeopleWithKey(request):
     indexObject = None
