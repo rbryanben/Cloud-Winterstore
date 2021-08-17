@@ -35,6 +35,9 @@ def getProjectFromRequest(request):
     except:
         return False
 
+#
+# Console : Will return the frontend client application and a parametre of the
+#           current developers username
 @login_required(login_url='/')
 def console(request):
     #return frontend application
@@ -799,7 +802,13 @@ def addDeveloperClient(request):
 
     return HttpResponse("200")
 
-#gets files a folder
+# Get Folder : Given the project name and the folder identification
+#              returns a list of files that belong to the folder in that project
+#              as a rendered page
+# Response Types : 
+#                   500 -- means we failed to find the folder you are looking for
+#                   denied -- means you do not have access to that folder
+#                   render -- success
 @require_http_methods(["POST",])
 @login_required(login_url='/console/login-required')
 @csrf_exempt
@@ -929,7 +938,6 @@ def isAdministrator(request,project):
 
 def meetsHTMLCompatability(string):
     return True
-
 
 
 def getProjectOwnerFromRequest(request):
