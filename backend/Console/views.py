@@ -728,6 +728,17 @@ def developerClient(request):
 
         return JsonResponse(serializer.data,safe=False)
 
+
+#
+# Search Developer Client: returns a JSON list of developers that meet a criteria given JSON data
+#                          containing a project.
+# Response Types:
+#                 not found -- the project was not found
+#                 denied -- user does not have access to that project
+#                 Does'nt seem like the JSON we need -- invalid JSON data
+#                 Json[] -- list of developer clients matching criteria             
+@require_http_methods(["POST"])
+@csrf_exempt
 def searchDeveloperClients(request):
     #get project
     project = None
