@@ -296,11 +296,20 @@ def removeKeys(request):
     
     return HttpResponse("200")
 
+# Rename : Renames an index object given the objects id and new name as JSON data
+# Response Types: 
+#           Does'nt seem like the JSON we need -- supplied JSON is invalid
+#           Object not found -- object to rename was not found
+#           denied -- the user does not have access to write that file
+#           1703 -- the new name already exists in that directory 
+#           500 -- Failed
 @login_required(login_url='/console/login-required')
 def renameIndexObject(request):
+    #presets
     objectID = None
     newName = None
 
+    # extract the objectID and the new name to assign
     try:
         receivedJSON = json.loads(request.body)
         objectID = receivedJSON["id"]
@@ -683,8 +692,6 @@ def getFileWithName(request):
         return HttpResponse(returnedFile.read(),content_type='application/octet-stream')  
     except:
         return HttpResponse("500")
-
-
 
 #methods to help with some functins
 def deleteFolder(folder,request):
