@@ -128,7 +128,6 @@ def getPath(request):
 
 # Get Folder : Given a project name and a path 
 #              returns a files
-#              as a JSON (API CALL)
 # Response Types : 
 #                   500 -- means we failed to find the file you are looking for
 #                   denied -- means you do not have access to that folder
@@ -177,7 +176,7 @@ def getFile(request):
     if (not isAdministrator(request,currentIndexObject.project)):
         return HttpResponse("denied")
 
-    #if final directoryObject is a file return msg
+    #if final directoryObject is a folder return msg
     if (currentIndexObject.objectType == "FD"):
         return HttpResponse("Not File")  
     
@@ -187,3 +186,51 @@ def getFile(request):
         return HttpResponse(returnedFile.read(),content_type='application/octet-stream')  
     except:
         return HttpResponse("500")
+
+
+
+# Get Folder : Given a file id 
+#              returns infomation on a file
+#              as a JSON (API CALL)
+# Response Types : 
+#                   500 -- means we failed to find the file you are looking for
+#                   denied -- means you do not have access to that folder
+#                   Invalid Path -- the path supplied is invalid
+#                   Not File -- the path supplied leads to a folder and not a file
+#                   StreamingHttpResponse -- success
+@require_http_methods(["POST",])
+@csrf_exempt
+@login_required(login_url='/console/login-required')
+def fileInfo(request):
+    # Variable to store the file identification 
+    fileIdentification = None
+
+    # Extract the file identification from the request
+    # Extract the path and project from the request body
+    try:
+        receivedJSON = json.loads(request.body)
+        fileIdentification = receivedJSON["id"]
+    except:
+        return HttpResponse("Does'nt seem like the json we need")
+
+    # Variable to store the indexObject for the file
+    fileIndexObject = None
+    # Get the indexObject with that identification
+    try:
+        fileIndexObject = IndexObject.objects.get(id=fileIdentification)
+    except:
+        return HttpResponse("not found")
+
+    #check if the fileIndexObject is a file
+    if (fileIndexObject.objectType == "FD"):
+        return HttpResponse("Not File")  
+
+    # Check if the user has access to that file
+    if (not isAdministrator(request,fileIndexObject.project)):
+        return HttpResponse("denied")
+    
+    # serialize the object
+    serializedIndexObject = IndexObjectSerializer(fileIndexObject)
+
+    #return infomation on the file
+    return JsonResponse(serializedIndexObject.data,safe=False)

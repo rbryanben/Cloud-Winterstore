@@ -1,4 +1,5 @@
 from django.urls import path
+from rest_framework.decorators import api_view
 from . import views , api_views
 
 
@@ -35,6 +36,7 @@ urlpatterns = [
     path('api/get-folder/',api_views.getFolder), # Get FOlder
     path('api/get-path/',api_views.getPath), # Get Path
     path('api/get-file/path/',api_views.getFile), # Get File With Path
+    path('api/file-info/',api_views.fileInfo), # Get File Infomation
     
     ###############
     ############### Fallback 
