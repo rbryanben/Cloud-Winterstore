@@ -33,7 +33,7 @@ urlpatterns = [
     ##
     ## API URLs that could not be serverd by the console APIs
     path('api/get-folder/',api_views.getFolder), # Get FOlder
-    
+    path('api/get-path/',api_views.getPath), # Get Path
     
     ###############
     ############### Fallback 
