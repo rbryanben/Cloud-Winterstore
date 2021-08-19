@@ -228,7 +228,11 @@ def verifyUser(request,link):
 @csrf_exempt
 @require_http_methods(["POST"])
 def loginAPI(request):
-    receivedJSON = json.loads(request.body)
+    try:
+        print(request.body)
+        receivedJSON = json.loads(request.body)
+    except:
+        return HttpResponse("Invalid JSON supplied")
     #attempt login
     try:
         user = authenticate(username=receivedJSON["username"], password=receivedJSON["password"])

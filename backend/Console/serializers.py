@@ -5,15 +5,18 @@ from django.contrib.auth.models import User
 from .models import FileDownloadInstance
 from SharedApp.models import string_generator
 
+from Console import models
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ["username","date_joined","email",]
 
 class IndexObjectSerializer(serializers.ModelSerializer):
+    owner = UserSerializer()
     class Meta:
         model = IndexObject
-        fields = ['id','name']
+        fields = ['id','name','owner',"size"]
 
 
 class FileDownloadInstanceSerializer(serializers.ModelSerializer):
@@ -54,3 +57,4 @@ class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = ['owner','dateCreated','name','admin_count']
+

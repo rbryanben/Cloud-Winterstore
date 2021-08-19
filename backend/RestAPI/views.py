@@ -27,7 +27,7 @@ from django.contrib.auth.models import User
 from django.core import exceptions
 from  SharedApp.mongohelper import mongoGetFile
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate , login
 from django.db.models import Q
 from Console.models import FileDownloadInstance
 
@@ -534,6 +534,7 @@ def getToken(request):
     try:
         user = authenticate(username=receivedJSON["username"], password=receivedJSON["password"])
         if (user is not None):
+            login(request, user)
             return HttpResponse(Token.objects.get(user=user).key)
         else:
             return HttpResponse("500")

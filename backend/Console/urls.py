@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views
+from . import views , api_views
 
 
 urlpatterns = [
@@ -29,6 +29,12 @@ urlpatterns = [
     path("developer-projects",views.developer_projects), #developer projects
     path("auth-user",views.auth_user), #Auth User
     path("logout",views.logout_developer), #Logout
+    
+    ##
+    ## API URLs that could not be serverd by the console APIs
+    path('api/get-folder/',api_views.getFolder), # Get FOlder
+    
+    
     ###############
     ############### Fallback 
     path("login-required",views.loginRequired), #login required
