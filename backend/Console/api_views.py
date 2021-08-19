@@ -8,6 +8,7 @@ from django.views.decorators.http import require_http_methods
 from django.http import HttpResponse
 from .views import isAdministrator
 from .serializers import IndexObjectSerializer
+from SharedApp.mongohelper import mongoGetFile
 
 # Get Folder : Given the project name and the folder identification
 #              returns a list of files that belong to the folder in that project
@@ -123,3 +124,66 @@ def getPath(request):
 
     # return JSON List
     return JsonResponse(serializedFolderChildren.data,safe=False)
+
+
+# Get Folder : Given a project name and a path 
+#              returns a files
+#              as a JSON (API CALL)
+# Response Types : 
+#                   500 -- means we failed to find the file you are looking for
+#                   denied -- means you do not have access to that folder
+#                   Invalid Path -- the path supplied is invalid
+#                   Not File -- the path supplied leads to a folder and not a file
+#                   StreamingHttpResponse -- success
+@require_http_methods(["POST",])
+@csrf_exempt
+@login_required(login_url='/console/login-required')
+def getFile(request):
+    # Variables to store the path and the project
+    projectName = None
+    path = None
+
+    # Extract the path and project from the request body
+    try:
+        receivedJSON = json.loads(request.body)
+        projectName = receivedJSON["projectName"]
+        path = receivedJSON["path"]
+    except:
+        return HttpResponse("Does'nt seem like the json we need")
+    
+    # Split the path into an array so that we can iterate the paths
+    pathDirectories = path.split("/")
+    
+    # Variable to store the current directory, this will eventually become the final directory
+    currentIndexObject = None
+    
+    # iterate the path in pathMap till we get the final directory
+    try:
+        for indexItem in pathDirectories:
+            #the root directory is made of 2 variable the <username>.<project>
+            #here if the currentDirectory is none that mean we need to assign current derectory to the root folder of 
+            #the given project. This is because the root directory name is not the project name
+            if (indexItem == "root"):
+                # set the currentDirectory as the root
+                currentIndexObject = IndexObject.objects.get(name=projectName)
+            else:
+                currentIndexObject = IndexObject.objects.get(parent=currentIndexObject,name=indexItem)
+    # Navigation failed
+    except:
+        return HttpResponse("Invalid Path")    
+
+    
+    # Check if the user has access to the folder 
+    if (not isAdministrator(request,currentIndexObject.project)):
+        return HttpResponse("denied")
+
+    #if final directoryObject is a file return msg
+    if (currentIndexObject.objectType == "FD"):
+        return HttpResponse("Not File")  
+    
+    #get file from mongo 
+    try:
+        returnedFile = mongoGetFile(currentIndexObject.fileReference)
+        return HttpResponse(returnedFile.read(),content_type='application/octet-stream')  
+    except:
+        return HttpResponse("500")

@@ -34,6 +34,7 @@ urlpatterns = [
     ## API URLs that could not be serverd by the console APIs
     path('api/get-folder/',api_views.getFolder), # Get FOlder
     path('api/get-path/',api_views.getPath), # Get Path
+    path('api/get-file/path/',api_views.getFile), # Get File With Path
     
     ###############
     ############### Fallback 
