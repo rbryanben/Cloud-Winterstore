@@ -1,6 +1,7 @@
 # Required Imports
 import json
 import os
+from django.contrib import auth
 import requests 
 from requests_toolbelt.multipart import encoder
 
@@ -262,4 +263,25 @@ def giveKey(account,file_id):
     # return
     return giveKeyRequest.text
 
+
+# Remove Key: Removes a key from a client given JSON data with 
+#             file -- identification of the file
+#             accounts [] -- a list for accounts to remove
+# Response Types :
+#              not found -- file/folder specified was not found
+#              500 -- error occured on our side
+#              deined -- user does not have access to that file
+#              200 - success 
+def removeKey(accounts,file_id):
+    # data to send to the server
+    data = {
+        "accounts" : accounts,
+        "file": file_id
+    }
+
+    # remove key request
+    removeKeyRequest = SessionConnection.post(serverURL+"/api/remove-keys/",json=data)
+
+    #return the result
+    return removeKeyRequest.text
 
