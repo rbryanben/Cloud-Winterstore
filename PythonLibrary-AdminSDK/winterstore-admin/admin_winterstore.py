@@ -241,3 +241,25 @@ def rename(id,new_name):
     #return 
     return renameRequest.text
 
+
+# Give Key : Gives a key to a client to access a files given JSON data with the clients account
+#            and the id of the index object to give access to
+# Response Types: 
+#            not found -- the file/folder specified does not exists
+#            500 -- an error occured on our end
+#            denied -- user does not have access to write that file
+#            200 -- success
+def giveKey(account,file_id):
+    # data to send to the server 
+    data = {
+        "file" : file_id,
+        "account" : account
+    }
+
+    # send request
+    giveKeyRequest = SessionConnection.post(serverURL+"/api/give-key/",json=data)
+
+    # return
+    return giveKeyRequest.text
+
+
