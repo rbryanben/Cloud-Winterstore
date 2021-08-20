@@ -1,3 +1,4 @@
+import json
 import requests 
 
 ##
@@ -59,8 +60,41 @@ def getFolder(projectName,id="root"):
     return getFolderRequest.text
 
 
+# Get Folder : Given a project name and a path 
+#              returns a list of files that belong to the folder in that project
+#              as a JSON (API CALL)
+# Response Types : 
+#                   500 -- means we failed to find the folder you are looking for
+#                   denied -- means you do not have access to that folder
+#                   Invalid Path -- the path supplied is invalid
+#                   Not Folder -- the path supplied leads to a file and not a folder
+#                   JSON[] -- success
+def getPath(projectName,path="root"):
+    # Data to send to the server
+    data = {
+        "projectName" : projectName,
+        "path" : path
+    }
 
+    # Request
+    getPathRequest = SessionConnection.post(serverURL+"/console/api/get-path/",json=data)
 
+    # return response
+    return getPathRequest.text
 
+# Test Authenticate "
+print(authenticate({"username" : "test","password" : "test"}))
+print("============================================================")
+# Test Get Folder
+children = json.loads(getFolder("rbryanben.Demo-Project",id="VTITGJMX4T9TAT54P4MVMIWOGB3ZAEUOL0QGVFZ4V4U2DKKF3U8KY5BXSS2FUQZZ"))
+for child in children:
+    print(child["name"])
+print("============================================================")
 
+# Test Get Path
+children = json.loads(getPath("test.Demo-Project",path="root/Media/Drama"))
+for child in children:
+    print(child["name"])
+
+print("============================================================")
 
