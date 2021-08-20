@@ -576,7 +576,7 @@ def logout_developer(request):
     except:
         return HttpResponse("500") 
 
-# Create Project API
+# Search Update Intergration
 @require_http_methods(["POST"])
 @csrf_exempt
 @login_required(login_url='/console/login-required')
@@ -966,6 +966,9 @@ def getFile(request):
     except:
         return HttpResponse("500") 
 
+# Login Required: Serves as a redirect for denied users
+# Response Types: 
+#                denied -- user is not allowed to read the file
 def loginRequired(request):
     return HttpResponse("denied")
 

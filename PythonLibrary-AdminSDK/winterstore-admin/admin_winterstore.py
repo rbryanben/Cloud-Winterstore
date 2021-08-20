@@ -1,4 +1,5 @@
 # Required Imports
+import json
 import os
 import requests 
 from requests_toolbelt.multipart import encoder
@@ -198,3 +199,25 @@ def getFileInfo(id):
 
     # return 
     return getFileInfoRequest.text
+
+
+
+# 
+# Delete : Deletes an index object given the id of the object as JSON Data. 
+# Response Types:
+#                  Hey! This does'nt look like the json file we need -- The JSON supplied is invalid
+#                  Not Found -- the file index object specified was not found
+#                  denied -- user does not have pemmision to delete the index object
+#                  200 -- success
+def deleteIndexObject(id):
+    # data to send to the server 
+    data = {
+        "id" : id
+    }
+
+    # delete request
+    deleteIndexObjectRequest = SessionConnection.post(serverURL+"/api/delete/",json=data)
+
+    return deleteIndexObjectRequest.text
+
+
