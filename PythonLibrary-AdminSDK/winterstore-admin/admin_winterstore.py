@@ -7,7 +7,7 @@ SessionConnection = requests.session()
 
 ##
 ## Server URL: Keeps the address of the Cloud Winterstore Server
-serverURL = "https://cloudwinterstore.co.zw"
+serverURL = "http://192.168.1.5"
 
 #
 # Check Gateway: Is used to check if the server gateway is open
@@ -38,6 +38,25 @@ def checkAuthentication():
     checkAuthenticationRequest = SessionConnection.post(serverURL+"/checkAuthentication")
     return checkAuthenticationRequest.text  
 
+
+# Get Folder : Given the project name and the folder identification
+#              returns a list of files that belong to the folder in that project
+#              as a JSON (API CALL)
+# Response Types : 
+#                   500 -- means we failed to find the folder you are looking for
+#                   denied -- means you do not have access to that folder
+#                   JSON[] -- success
+def getFolder(projectName,id="root"):
+    # JSON data to send
+    data =  {
+        "projectName" : projectName,
+        "folderID" : id
+    }
+    # send request
+    getFolderRequest = SessionConnection.post(serverURL+"/console/api/get-folder/",json=data)
+
+    #return the response
+    return getFolderRequest.text
 
 
 
