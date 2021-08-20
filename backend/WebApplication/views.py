@@ -229,7 +229,6 @@ def verifyUser(request,link):
 @require_http_methods(["POST"])
 def loginAPI(request):
     try:
-        print(request.body)
         receivedJSON = json.loads(request.body)
     except:
         return HttpResponse("Invalid JSON supplied")

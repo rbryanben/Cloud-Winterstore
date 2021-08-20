@@ -126,8 +126,8 @@ def getPath(request):
     return JsonResponse(serializedFolderChildren.data,safe=False)
 
 
-# Get Folder : Given a project name and a path 
-#              returns a files
+# Get File Using Path : Given a projectName and a path 
+#              returns a file
 # Response Types : 
 #                   500 -- means we failed to find the file you are looking for
 #                   denied -- means you do not have access to that folder
