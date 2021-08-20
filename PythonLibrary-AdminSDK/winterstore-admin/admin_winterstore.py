@@ -156,4 +156,45 @@ def getFile(id):
     return getFileRequest.content
 
 
+# Get File Using Path : Given a project name and a path 
+#              returns a file
+# Response Types : 
+#                   500 -- means we failed to find the file you are looking for
+#                   denied -- means you do not have access to that folder
+#                   Invalid Path -- the path supplied is invalid
+#                   Not File -- the path supplied leads to a folder and not a file
+#                   StreamingHttpResponse -- success
+def getFileUsingPath(projectName,path):
+    # data to send to the server
+    data = {
+        "projectName" : projectName,
+        "path" : path
+    }
 
+    # request
+    getFileUsingPathRequest = SessionConnection.post(serverURL+"/console/api/get-file/path/",json=data)
+
+    # return file contents
+    return getFileUsingPathRequest.content
+
+
+# File Info : Given a file id 
+#              returns infomation on a file
+#              as a JSON (API CALL)
+# Response Types : 
+#                   500 -- means we failed to find the file you are looking for
+#                   denied -- means you do not have access to that folder
+#                   Invalid Path -- the path supplied is invalid
+#                   Not File -- the path supplied leads to a folder and not a file
+#                   StreamingHttpResponse -- success
+def getFileInfo(id):
+    # data to send to the server 
+    data = {
+        "id" : id
+    }
+
+    # request 
+    getFileInfoRequest = SessionConnection.post(serverURL+"/console/api/file-info/",json=data)
+
+    # return 
+    return getFileInfoRequest.text
