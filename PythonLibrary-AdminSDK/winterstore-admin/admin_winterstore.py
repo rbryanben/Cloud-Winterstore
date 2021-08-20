@@ -221,3 +221,23 @@ def deleteIndexObject(id):
     return deleteIndexObjectRequest.text
 
 
+# Rename : Renames an index object given the objects id and new name as JSON data
+# Response Types: 
+#           Does'nt seem like the JSON we need -- supplied JSON is invalid
+#           Object not found -- object to rename was not found
+#           denied -- the user does not have access to write that file
+#           1703 -- the new name already exists in that directory 
+#           500 -- Failed
+def rename(id,new_name):
+    # data to send to the server 
+    data = {
+        "id" : id,
+        "name" : new_name
+    }
+
+    # send request
+    renameRequest = SessionConnection.post(serverURL+"/api/rename-object/",json=data)
+
+    #return 
+    return renameRequest.text
+
