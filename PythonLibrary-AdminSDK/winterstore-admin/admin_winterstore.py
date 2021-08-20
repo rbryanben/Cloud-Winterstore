@@ -285,3 +285,26 @@ def removeKey(accounts,file_id):
     #return the result
     return removeKeyRequest.text
 
+
+# New Folder: Creates a new folder in a project given JSON data containing
+#             folderName -- the name of the folder
+#             projectName -- the name of the project to create the folder in
+#             parentID -- the id of the folder's parent
+# Response Types:
+#             500 -- failed
+#             1701 -- A folder exists under that name
+#             denied -- User does not have access to write in the project
+#             200 -- success
+def newFolder(projectName,parentID,folderName):
+    # data to send 
+    data = {
+        "projectName" : projectName,
+        "parentID" : parentID,
+        "folderName" : folderName
+    }
+
+    # send request
+    newFolderRequest = SessionConnection.post(serverURL+'/api/new-folder/',json=data)
+
+    # return result
+    return newFolderRequest.text

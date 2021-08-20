@@ -16,7 +16,7 @@ class IndexObjectSerializer(serializers.ModelSerializer):
     owner = UserSerializer()
     class Meta:
         model = IndexObject
-        fields = ['id','name','owner',"size","created"]
+        fields = ['id','name','owner',"size","created","allowAllUsersWrite","allowAllUsersRead","allowKeyUsersRead","allowKeyUsersWrite"]
 
 
 class FileDownloadInstanceSerializer(serializers.ModelSerializer):

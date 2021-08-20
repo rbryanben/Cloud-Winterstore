@@ -1,3 +1,4 @@
+from backend.Console.views import isAdministrator
 from distutils.util import strtobool
 from io import BytesIO
 from math import trunc
@@ -393,7 +394,15 @@ def renameIndexObject(request):
 
     return HttpResponse("200")
 
-#is not checking permission 
+# New Folder: Creates a new folder in a project given JSON data containing
+#             folderName -- the name of the folder
+#             projectName -- the name of the project to create the folder in
+#             parentID -- the id of the folder's parent
+# Response Types:
+#             500 -- failed
+#             1701 -- A folder exists under that name
+#             denied -- User does not have access to write in the project
+#             200 -- success
 @login_required(login_url='/console/login-required')
 def newFolder(request):
     #check if owner of project
@@ -407,9 +416,6 @@ def newFolder(request):
         parentID = receivedJSON['parentID']
     except:
         return HttpResponse("500")
-    
-
-
 
     #parent object container
     parentObject = None
@@ -426,6 +432,11 @@ def newFolder(request):
     #if parent object is root
     if (parentID == "root"):
         parentObject = IndexObject.objects.get(name=projectName)
+
+    # check pemmision 
+    if (not isAdministrator(request,parentObject.project)):
+        return HttpResponse("denied")
+    
 
     #check if similar name exists in parent
     try:
@@ -444,6 +455,8 @@ def newFolder(request):
 
     return HttpResponse("200")
 
+
+# 
 # Delete : Deletes an index object given the id of the object as JSON Data. 
 # Response Types:
 #                  Hey! This does'nt look like the json file we need -- The JSON supplied is invalid
