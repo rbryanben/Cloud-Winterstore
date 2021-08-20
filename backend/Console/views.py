@@ -933,8 +933,14 @@ def getFolder(request):
     except:
         return HttpResponse("doesn't seem like json data")
 
+
+# Get File: Returns a streaming file given JSON containing the id if a file
+# Response Types: 
+#                denied -- user is not allowed to read the file
+#                500 -- failed
+#                   StreamingHttpResponse -- success
 @csrf_exempt
-@require_http_methods(["POST","GET"])
+@require_http_methods(["POST"])
 @login_required(login_url='/console/login-required')
 def getFile(request):
     try:

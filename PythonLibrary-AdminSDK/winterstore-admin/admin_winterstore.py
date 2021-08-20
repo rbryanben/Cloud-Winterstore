@@ -27,7 +27,11 @@ def checkGateWay():
 # Response Types:
 #               200 -- success
 #               500 -- fail
-def authenticate(credentials):
+def authenticate(username,password):
+    credentials = {
+        "username" : username,
+        "password" : password
+    }
     authenticationRequest = SessionConnection.post(serverURL+'/login',json=credentials)
     return authenticationRequest.text
 
@@ -133,3 +137,23 @@ def uploadFile(file,allowAllUsersWrite,allowAllUsersRead,allowKeyUsersWrite,allo
     # return result
     return uploadFileRequest.text
   
+
+# Get File: Returns a streaming file given JSON containing the id if a file
+# Response Types: 
+#                denied -- user is not allowed to read the file
+#                500 -- failed
+#                   StreamingHttpResponse -- success
+def getFile(id):
+    # data to send to server 
+    data = {
+        "id" : id
+    }
+
+    # send 
+    getFileRequest = SessionConnection.post(serverURL+"/console/get-file",json=data)
+
+    # return the content
+    return getFileRequest.content
+
+
+
