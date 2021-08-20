@@ -1,5 +1,7 @@
-import json
+# Required Imports
+import os
 import requests 
+from requests_toolbelt.multipart import encoder
 
 ##
 ## Global Session: Keeps the http session because we do not want to lose
@@ -82,19 +84,52 @@ def getPath(projectName,path="root"):
     # return response
     return getPathRequest.text
 
-# Test Authenticate "
-print(authenticate({"username" : "test","password" : "test"}))
-print("============================================================")
-# Test Get Folder
-children = json.loads(getFolder("rbryanben.Demo-Project",id="VTITGJMX4T9TAT54P4MVMIWOGB3ZAEUOL0QGVFZ4V4U2DKKF3U8KY5BXSS2FUQZZ"))
-for child in children:
-    print(child["name"])
-print("============================================================")
 
-# Test Get Path
-children = json.loads(getPath("test.Demo-Project",path="root/Media/Drama"))
-for child in children:
-    print(child["name"])
+#
+# Upload File : Uploads a file to a folder in a project given the parameters in multi-part form data.
+#               file -- The actual binary file
+#               allowAllUsersWrite -- Access control variable
+#               allowAllUsersRead -- Access control variable
+#               allowKeyUsersWrite -- Access control variable
+#               allowKeyUsersRead -- Access control variable
+#               name -- The name to store the file as
+#               project -- The project the file belongs to, also used to obtain the correct folder to insert to 
+#               parent(ID) -- The identification of the parent folder
+#               size -- The computed size of the file as bytes by the library (Not Secure - People can bypass)
+# Response Types :
+#               woahh - does'nt seem like the data we need -- Invalid form data
+#               1702 -- name contains unwanted charectors
+#               500 -- failed to get the folder to insert to || the user does not have access to the project
+#               1703 -- a files exists under that name
+#               Boss man! something is seriously wrong -- Failed to save the file
+#               200 -- success
+def uploadFile(file,allowAllUsersWrite,allowAllUsersRead,allowKeyUsersWrite,allowKeyUsersRead,
+                name,project,parent):
 
-print("============================================================")
+    # Compute size
+    file.seek(0, os.SEEK_END)
+    size = file.tell()
+    file.seek(0)
 
+    # Multipart Form data to send
+    form = encoder.MultipartEncoder({
+        "file": ("file",file, "application/octet-stream"),
+        'allowAllUsersWrite' : str(allowAllUsersWrite),
+        "allowAllUsersRead" : str(allowAllUsersRead),
+        "allowKeyUsersWrite" : str(allowKeyUsersWrite),
+        "allowKeyUsersRead" : str(allowKeyUsersRead),
+        "name" : name,
+        "project" : project,
+        "parent" : parent,
+        "size" : str(size)
+    })
+
+    # Define async Headers
+    headers = {"Prefer": "respond-async", "Content-Type": form.content_type}
+
+    # Upload 
+    uploadFileRequest = SessionConnection.post(serverURL+"/console/upload-file", headers=headers, data=form)
+    
+    # return result
+    return uploadFileRequest.text
+  
