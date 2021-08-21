@@ -327,5 +327,22 @@ def getPeopleWithKey(id):
     #return response from the server
     return getPeopleWithKeyRequest.text
 
+# Add Client: Implemented using a POST method, it adds a developer client to a project given JSON data 
+#             containing the  identification,password and integration to add to
+def addClient(identification,integration,password,project):
+    # data to send
+    data = {
+        "identification" : identification,
+        "integration" : integration,
+        "password" : password,
+        "project" : project
+    }
+
+    # send request to the server
+    addClientRequest = SessionConnection.post(serverURL+"/console/add-developer-client",json=data)
+
+    # return response
+    return addClientRequest.text
 
 print(authenticate("test","test"))
+print(addClient("ryan.ben.nafe@gmail.com","Winterstore","mayday2018","test.Demo-Project"))

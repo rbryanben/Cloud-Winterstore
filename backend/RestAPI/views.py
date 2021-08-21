@@ -1,6 +1,5 @@
 from Console.views import isAdministrator
 from distutils.util import strtobool
-from io import BytesIO
 from math import trunc
 from os import name
 from typing import Sized
