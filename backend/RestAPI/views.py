@@ -1,4 +1,4 @@
-from backend.Console.views import isAdministrator
+from Console.views import isAdministrator
 from distutils.util import strtobool
 from io import BytesIO
 from math import trunc

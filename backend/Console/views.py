@@ -430,7 +430,12 @@ def projectAdminAccounts(request):
         
         return JsonResponse(serializer.data,safe=False)
 
-# Create Project API
+# Create Project or Delete : This method creates or deletes a project given JSON Data containing 
+#               name - name of the project
+# Response Types:
+#               500 -- failed
+#               1707 -- there are unwanted charectors in the project name
+#               200 -- success              
 @require_http_methods(["POST","DELETE"])
 @csrf_exempt
 @login_required
@@ -568,6 +573,10 @@ def removeBarnForClient(request):
 
     return HttpResponse("200")
 
+# Logout Developer: This function is used to logout a developer from the console
+# Response Types: 
+#               200 -- success
+#               500 -- fail
 @login_required(login_url='/console/login-required')
 def logout_developer(request):
     try:

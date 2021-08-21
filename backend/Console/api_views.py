@@ -189,7 +189,7 @@ def getFile(request):
 
 
 
-# Get Folder : Given a file id 
+# File Info : Given a file id 
 #              returns infomation on a file
 #              as a JSON (API CALL)
 # Response Types : 

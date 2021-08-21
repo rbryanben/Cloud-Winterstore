@@ -1,7 +1,6 @@
 # Required Imports
 import json
 import os
-from django.contrib import auth
 import requests 
 from requests_toolbelt.multipart import encoder
 
@@ -308,3 +307,25 @@ def newFolder(projectName,parentID,folderName):
 
     # return result
     return newFolderRequest.text
+
+# Get People With Key : Returns a JSON list of people who have access to a file/folder given JSON data 
+#                       that contains the identification of the file/folder
+# Response Types:
+#                not found -- index object was not found
+#                Doesn't look like the JSON we need -- invalid JSON data
+#                denied -- the user does not have access to write the file
+#                JSON[] -- the users with keys to the file
+def getPeopleWithKey(id):
+    # data to send
+    data = {
+        "id" : id
+    }
+
+    # send request
+    getPeopleWithKeyRequest = SessionConnection.post(serverURL+"/api/get-people-with-key/",json=data)
+
+    #return response from the server
+    return getPeopleWithKeyRequest.text
+
+
+print(authenticate("test","test"))
