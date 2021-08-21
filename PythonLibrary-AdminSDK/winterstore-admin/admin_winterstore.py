@@ -1,5 +1,4 @@
 # Required Imports
-import json
 import os
 import requests 
 from requests_toolbelt.multipart import encoder
@@ -11,7 +10,7 @@ SessionConnection = requests.session()
 
 ##
 ## Server URL: Keeps the address of the Cloud Winterstore Server
-serverURL = "http://192.168.1.5"
+serverURL = "https://cloudwinterstore.co.zw/"
 
 #
 # Check Gateway: Is used to check if the server gateway is open
@@ -394,7 +393,7 @@ def searchClient(criteria,project):
 #               500 -- an error occured on our side
 #               denied -- user does not have access to perform task
 #               200 -- success
-def barnClient(idetification,project):
+def banClient(idetification,project):
     # data to send
     data = {
         "identification" : idetification,
@@ -408,3 +407,23 @@ def barnClient(idetification,project):
     return barnClientRequest.text
 
 
+#
+# Remove Barn: remove barn inflicted on a developer account given JSON data containing 
+#              project and identification of developer client to unbarn
+# Response Types:
+#               not found -- project || client to remove barn was not found 
+#               500 -- an error occured on our side
+#               denied -- user does not have access to perform task
+#               200 -- success  
+def unbanClient(idetification,project):
+    # data to send
+    data = {
+        "identification" : idetification,
+        "project" : project
+    }
+
+    # send request
+    unbarnClientRequest = SessionConnection.post(serverURL+"/console/remove-barn-client-account",json=data)
+
+    # return response
+    return unbarnClientRequest.text
