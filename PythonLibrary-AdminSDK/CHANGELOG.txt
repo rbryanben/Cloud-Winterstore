@@ -1,0 +1,3 @@
+Winterstore Admin v.0.0.1
+======================================================
+No changes - this is the first release

@@ -10,7 +10,7 @@ SessionConnection = requests.session()
 
 ##
 ## Server URL: Keeps the address of the Cloud Winterstore Server
-serverURL = "https://cloudwinterstore.co.zw/"
+serverURL = "https://cloudwinterstore.co.zw"
 
 #
 # Check Gateway: Is used to check if the server gateway is open
