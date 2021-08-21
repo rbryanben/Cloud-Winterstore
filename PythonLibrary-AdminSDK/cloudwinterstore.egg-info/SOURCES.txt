@@ -1,0 +1,12 @@
+CHANGELOG.txt
+LICENCE.txt
+MANIFEST.in
+README.txt
+setup.py
+cloudwinterstore/__init__.py
+cloudwinterstore/cloudwinterstore.py
+cloudwinterstore.egg-info/PKG-INFO
+cloudwinterstore.egg-info/SOURCES.txt
+cloudwinterstore.egg-info/dependency_links.txt
+cloudwinterstore.egg-info/requires.txt
+cloudwinterstore.egg-info/top_level.txt
