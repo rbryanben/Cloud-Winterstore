@@ -362,3 +362,25 @@ def deleteClient(identification,integration,password,project):
     # return response
     return addClientRequest.text
 
+
+#
+# Search Developer Client: returns a JSON list of developers that meet a criteria given JSON data
+#                          containing a project.
+# Response Types:
+#                 not found -- the project was not found
+#                 denied -- user does not have access to that project
+#                 Does'nt seem like the JSON we need -- invalid JSON data
+#                 Json[] -- list of developer clients matching criteria     
+def searchClient(criteria,project):
+    # data to send
+    data = {
+        "criteria" : criteria,
+        "project" : project
+    }
+
+    # send request
+    searchClientRequest = SessionConnection.post(serverURL+"/console/search-developer-clients",json=data)
+
+    # return response
+    return searchClientRequest.text
+
