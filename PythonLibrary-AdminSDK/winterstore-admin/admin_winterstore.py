@@ -357,10 +357,10 @@ def deleteClient(identification,integration,password,project):
     }
 
     # send request to the server
-    addClientRequest = SessionConnection.delete(serverURL+"/console/add-developer-client",json=data)
+    deleteClientRequest = SessionConnection.delete(serverURL+"/console/add-developer-client",json=data)
 
     # return response
-    return addClientRequest.text
+    return deleteClientRequest.text
 
 
 #
@@ -383,4 +383,28 @@ def searchClient(criteria,project):
 
     # return response
     return searchClientRequest.text
+
+
+
+#
+# Barn Client: barns a developer client account given JSON data containing
+#              project and identification
+# Response Types:
+#               not found -- project || client to barn was not found 
+#               500 -- an error occured on our side
+#               denied -- user does not have access to perform task
+#               200 -- success
+def barnClient(idetification,project):
+    # data to send
+    data = {
+        "identification" : idetification,
+        "project" : project
+    }
+
+    # send request
+    barnClientRequest = SessionConnection.post(serverURL+"/console/barn-client-account",json=data)
+
+    # return response
+    return barnClientRequest.text
+
 
