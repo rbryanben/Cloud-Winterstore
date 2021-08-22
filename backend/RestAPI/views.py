@@ -1,4 +1,4 @@
-from Console.views import isAdministrator
+from Console.views import developerClient, isAdministrator
 from distutils.util import strtobool
 from math import trunc
 from os import name
@@ -14,7 +14,7 @@ from django.http import response
 from django.http.response import HttpResponse, JsonResponse, StreamingHttpResponse
 from django.shortcuts import redirect, render
 from datetime import datetime
-from SharedApp.models import BarnedDeveloperClient, Developer, DeveloperClient, IndexObject, Project, TeamCollaboration ,FileKey , deletedFile
+from SharedApp.models import BarnedDeveloperClient, Developer, DeveloperClient, IndexObject, Integration, Project, TeamCollaboration ,FileKey , deletedFile
 from django.contrib.admin.utils import NestedObjects
 from django.db import router
 from pymongo import MongoClient
@@ -537,21 +537,36 @@ def deleteIndexObject(request):
 @api_view(['POST'])
 @csrf_exempt
 def getToken(request):
+    # Variables to store the developer client's identification, password and integration
+    clientIdentification = None
+    clientPassword = None
+    clientIntegration = None
+
+    # Extract data from the request 
     try:
         receivedJSON = json.loads(request.body)
+        clientIdentification = receivedJSON["username"]
+        clientPassword = receivedJSON["password"]
+        clientIntegration = receivedJSON["integration"]
     except:
-        return HttpResponse("Does'nt seem like JSON")
+        return HttpResponse("Invalid JSON")
     
-    #attempt login
+    # variable to store the client
+    client = None
+
+    # Get a devloper client that meets the criteria
     try:
-        user = authenticate(username=receivedJSON["username"], password=receivedJSON["password"])
-        if (user is not None):
-            login(request, user)
-            return HttpResponse(Token.objects.get(user=user).key)
-        else:
-            return HttpResponse("500")
+        integrationSpecified = Integration.objects.get(integrationKey=clientIntegration)    
+        client = DeveloperClient.objects.get(integration=integrationSpecified,identification=clientIdentification)
     except:
-         HttpResponse("500")
+        return HttpResponse("not found")
+    
+    # Check the password 
+    if (client.user.check_password(clientPassword)):
+        return HttpResponse(Token.objects.get(user=client.user).key)
+    
+    # Invalid password
+    return HttpResponse("denied")
 
 @api_view(['POST','GET'])
 @csrf_exempt
