@@ -13,6 +13,7 @@ import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
 import com.wapazockdemo.winterstoreconnector.interfaces.ConnectionInterface;
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -36,6 +37,7 @@ public class Connection {
     private String serverURL = "http://192.168.1.5:80";
     private String getTokenURL =  serverURL + "/api/get-token/";
     private String downloadURL = serverURL + "/api/download/";
+    private String createFolderURL = serverURL + "/api/create-client-folder";
 
 
     //variables
@@ -211,7 +213,80 @@ public class Connection {
                 .into(imageView);
     }
 
+    // Create Folder: Creates a folder in the client's project given
+    // the parentID and the FolderName
+    public void createFolder(String parentID,String folderName){
+        // Client
+        OkHttpClient client = new OkHttpClient();
 
+        // Data to send
+        JSONObject newDataObject = new JSONObject();
+        try {
+            newDataObject.put("parentID", parentID);
+            newDataObject.put("folderName", folderName);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+        // Body
+        RequestBody body = RequestBody.create(JSON,newDataObject.toString());
+
+        // Request
+        Request request = new Request.Builder()
+                .url(createFolderURL)
+                .post(body)
+                .addHeader("Authorization","Token " + TOKEN)
+                .build();
+
+        // Send request
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        connectionInterface.connectionFailed("Network Error");
+                    }
+                });
+
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                //if response is not successful, server unreachable
+                if (!response.isSuccessful()) {
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            connectionInterface.connectionFailed("Server Unreachable");
+                        }
+                    });
+                }
+
+                //result
+                String result = response.body().string();
+
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        switch (result) {
+                            case "Invalid JSON":
+                                connectionInterface.connectionFailed(result);
+                                break;
+                            case  "1701":
+                                connectionInterface.connectionFailed("Folder Already Exists");
+                            case "denied":
+                                connectionInterface.connectionFailed(result);
+                                break;
+                            default:
+                                connectionInterface.folderCreated(result);
+                        }
+                    }
+                });
+            }
+        });
+    }
 
     // Get URL - Given a file id, returns the final URL for the file
     private String compileDownloadURL(String id){

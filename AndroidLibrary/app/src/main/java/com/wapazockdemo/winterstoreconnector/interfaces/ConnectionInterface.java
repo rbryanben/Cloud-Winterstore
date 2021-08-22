@@ -7,4 +7,5 @@ public interface ConnectionInterface {
     void connectionFailed(String error);
     void fileSaved(File file);
     void fileError(String error);
+    void folderCreated(String id);
 }

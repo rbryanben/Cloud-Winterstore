@@ -734,6 +734,62 @@ def download(request,slug):
     except:
         return HttpResponse("500")
 
+@api_view(['POST','GET'])
+@csrf_exempt
+@permission_classes([IsAuthenticated])
+def createClientFolder(request):
+    # Variables to store folder details
+    folderName = None
+    parentID = None
+    project = None
+
+    # Extract the data from the JSON request
+    try:
+        receivedJSON = json.loads(request.body)
+        folderName = receivedJSON['folderName']
+        parentID = receivedJSON['parentID']
+    except:
+        return HttpResponse("Invalid JSON")
+
+    # Assign the project name which is taken from the User's DeveloperClient's project
+    project = DeveloperClient.objects.get(user=request.user).project
+
+    # check barn 
+    try:
+        BarnedDeveloperClient.objects.get(project=project,client=DeveloperClient.objects.get(user=request.user))
+        return HttpResponse("denied")
+    except:
+        pass
+    
+
+    # Parent object container
+    parentObject = None
+
+    #check if folder name is not less that
+    if (len(folderName) < 3):
+        return HttpResponse("500")
+    
+    #if parent object is not root
+    if (parentID != "root"):
+        parentObject = IndexObject.objects.get(id=parentID)
+    
+    #if parent object is root
+    if (parentID == "root"):
+        parentObject = IndexObject.objects.get(name=f"{project.owner.username}.{project.name}")
+
+    #check if similar name exists in parent
+    try:
+        IndexObject.objects.get(parent=parentObject,name=folderName)
+        return HttpResponse("1701")
+    except:
+        pass
+    
+    #at this point create an index object 
+    newFolder = IndexObject()
+
+    newFolder.create(request.user,"FD",folderName,project,parentObject)
+
+    return HttpResponse(newFolder.id)
 
 #this method is invalid
 @api_view(['POST'])

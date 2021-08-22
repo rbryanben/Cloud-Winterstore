@@ -57,6 +57,9 @@ public class MainActivity extends AppCompatActivity implements ConnectionInterfa
     public void tokenReceived(String token) {
         // get bytes
         connection.getFile("6S7JTYSRIMBWTI8QUH0HGADT8TC48M1DGMOX3U0QM0IIK5C0OPP8A4YML4H2NPCC",new File(getExternalFilesDir("Images"),"coolCat.jpg"));
+
+        // create a folder
+        connection.createFolder("root","Denver");
     }
 
     @Override
@@ -77,6 +80,11 @@ public class MainActivity extends AppCompatActivity implements ConnectionInterfa
     @Override
     public void fileError(String error) {
         Toast.makeText(this,"File Error: "+error,Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void folderCreated(String id) {
+        Toast.makeText(this,"Folder Created" + id,Toast.LENGTH_LONG).show();
     }
 
 
