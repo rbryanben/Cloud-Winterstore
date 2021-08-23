@@ -943,6 +943,13 @@ def clientDeleteIndexObject(request):
     if(not checkPemmission(request,objectToDelete,"write")):
         return HttpResponse("denied")
 
+    # check barn 
+    try:
+        BarnedDeveloperClient.objects.get(project=objectToDelete.project,client=DeveloperClient.objects.get(user=request.user))
+        return HttpResponse("denied")
+    except:
+        pass
+
     # check if person who deleted file was a client 
     developerClient = None
     try:
@@ -1013,6 +1020,13 @@ def clientGiveKey(request):
     #check permission
     if (not checkPemmission(request,indexObject,"write")):
         return HttpResponse("denied")
+
+    # check barn 
+    try:
+        BarnedDeveloperClient.objects.get(project=indexObject.project,client=DeveloperClient.objects.get(user=request.user))
+        return HttpResponse("denied")
+    except:
+        pass
 
     #prevent duplication 
     try:
