@@ -836,7 +836,6 @@ def clientUploadFile(request):
     try:
         uploadedFile = request.FILES['file'].read()
         name = request.POST.get("name")
-        print(name)
         allowAllUsersWrite = strtobool(request.POST.get("allowAllUsersWrite"))
         allowAllUsersRead = strtobool(request.POST.get("allowAllUsersRead"))
         allowKeyUsersRead = strtobool(request.POST.get("allowKeyUsersRead"))
@@ -910,10 +909,80 @@ def clientUploadFile(request):
         newIndexObject.allowAllUsersWrite=allowAllUsersWrite
         newIndexObject.save()
 
-        return HttpResponse("200")
+        return HttpResponse(newIndexObject.id)
     except:
         return HttpResponse("Boss man! something is seriously wrong")
 
+# 
+# Delete : Deletes an index object given the id of the object as JSON Data. 
+# Response Types:
+#                  Hey! This does'nt look like the json file we need -- The JSON supplied is invalid
+#                  Not Found -- the file index object specified was not found
+#                  denied -- user does not have pemmision to delete the index object
+#                  200 -- success
+@api_view(['POST'])
+@csrf_exempt
+@permission_classes([IsAuthenticated])
+def clientDeleteIndexObject(request):
+    objectID =None
+    #try and extract json 
+    try:
+        receivedJSON = json.loads(request.body)
+        objectID = receivedJSON['id']
+    except:
+        return HttpResponse("Hey! This does'nt look like the json file we need")
+    
+    #get object to delete
+    objectToDelete = None
+    try:
+        objectToDelete = IndexObject.objects.get(id=objectID)
+    except:
+        return HttpResponse("Not Found")
+
+    #check if owner of project
+    if(not checkPemmission(request,objectToDelete,"write")):
+        return HttpResponse("denied")
+
+    # check if person who deleted file was a client 
+    developerClient = None
+    try:
+        developerClient = DeveloperClient.objects.get(user=request.user).identification
+    except:
+        pass
+
+    # If file, delete the file and respond with 200
+    # A file constists of 2 parts, the index object in SQL and the file in mongo 
+    # If the file is a startup file, then delete the index object only
+    if (objectToDelete.objectType == "FL"):
+        #Check if file is a startup file
+        if (objectToDelete.fileReference == "HUJDKMEBEJN2G456SGTYINGHT6782HBCDHETYUSHJTIONH7890IFHGR678HNGJOT"or objectToDelete.fileReference == "HYU789IUJ87YHUYT67YGVCFDSER456YTGVBNMKJIKJJ8UUY76TTTFDSER543EFRT"):
+            # keep record of deleted record 
+            newDeletedFile = deletedFile()
+            # decides who deleted file developer or client
+            # developer and client are not stored as the same model
+            if (developerClient != None):
+                #store the record with the client's username
+                newDeletedFile.create(objectToDelete.name,developerClient,developerClient,objectToDelete.id,objectToDelete.project)
+            else:
+                #store the record with the developers username
+                newDeletedFile.create(objectToDelete.name,request.user.username,objectToDelete.owner.username,objectToDelete.id,objectToDelete.project)
+            
+            #delete the object
+            objectToDelete.delete()
+            #return success
+            return HttpResponse("200")
+
+        #The file is not a startup file hence delete the mongo file and the SQL record
+        destroyIndexObject(objectToDelete,request,developerClient=developerClient)
+        return HttpResponse("200")
+
+    #If folder, delete object cause it has no file in Mongo
+    #    but now there is a problem which is to delete all children belonging to the parent object
+    #       hence we call the delete folder method
+    if (objectToDelete.objectType == "FD"):
+        deleteFolder(objectToDelete,request)
+
+    return HttpResponse("200")
 
 
 #methods to help with some functins
