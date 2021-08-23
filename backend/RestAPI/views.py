@@ -1041,6 +1041,49 @@ def clientGiveKey(request):
 
     return HttpResponse("200")
 
+# Remove Key: Removes a key from a client given JSON data with 
+#             file -- identification of the file
+#             accounts [] -- a list for accounts to remove
+# Response Types :
+#              not found -- file/folder specified was not found
+#              500 -- error occured on our side
+#              deined -- user does not have access to that file
+#              200 - success 
+@login_required(login_url='/console/login-required')
+def clientRemoveKeys(request):
+    userList = None
+    indexObject = None
+    try:
+        receivedJSON = json.loads(request.body)
+        userList = receivedJSON["accounts"]
+        indexObject = IndexObject.objects.get(id=receivedJSON['file'])
+    except exceptions.ObjectDoesNotExist:
+        return HttpResponse("not found")
+    except:
+        return HttpResponse("500")
+    
+    #check permission
+    if (not checkPemmission(request,indexObject,"write")):
+        return HttpResponse("denied")
+    
+    # check barn 
+    try:
+        BarnedDeveloperClient.objects.get(project=indexObject.project,client=DeveloperClient.objects.get(user=request.user))
+        return HttpResponse("denied")
+    except:
+        pass
+
+    #delete users
+    for email in userList:
+        try:
+            #get developer client user
+            userToRemove = DeveloperClient.objects.get(identification=email).user
+            FileKey.objects.filter(file=indexObject,user=userToRemove).delete()
+        except:
+            pass
+    
+    return HttpResponse("200")
+
 
 #methods to help with some functins
 def deleteFolder(folder,request):
