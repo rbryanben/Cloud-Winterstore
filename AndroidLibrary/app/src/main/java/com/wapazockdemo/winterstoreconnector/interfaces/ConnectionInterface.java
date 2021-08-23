@@ -8,4 +8,5 @@ public interface ConnectionInterface {
     void fileSaved(File file);
     void fileError(String error);
     void folderCreated(String id);
+    void uploadResults(int uploadID, Boolean wasSuccessful,String result);
 }

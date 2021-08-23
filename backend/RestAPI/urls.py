@@ -14,9 +14,9 @@ urlpatterns = [
     path('get-deleted-files/',views.getDeletedObjectsForProject), #get deleted files
     path('search-deleted-files/',views.getDeletedObjectsForProjectWithCriteria), #search for deleted files
     path('download/<str:slug>',views.download), #to download a file
-    path('get-file/',views.getFileWithName), #gets the file using a path
     path('stream/<str:slug>',views.streamFile), #streams the file
     path('create-client-folder',views.createClientFolder), #create client folder
+    path('upload-file/',views.clientUploadFile), #Upload A File
 
     #for developer demonstration 
     path('open-stream/<str:slug>',views.openStream), #open stream

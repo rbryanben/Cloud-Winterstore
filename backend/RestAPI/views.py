@@ -30,6 +30,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate , login
 from django.db.models import Q
 from Console.models import FileDownloadInstance
+from Console.views import mongoUploadFile
 
 #rest framework permmisions
 from rest_framework.decorators import api_view, permission_classes
@@ -734,7 +735,14 @@ def download(request,slug):
     except:
         return HttpResponse("500")
 
-@api_view(['POST','GET'])
+
+# Create Client Folder : Creates a folder in a project
+# Response Type : 
+#                 not found -- the parent folder was not found
+#                 1701 -- A folder under that name already exists
+#                 500 -- an error occured on our end
+#                 denied -- the client does not have pemission to that file
+@api_view(['POST'])
 @csrf_exempt
 @permission_classes([IsAuthenticated])
 def createClientFolder(request):
@@ -791,48 +799,122 @@ def createClientFolder(request):
 
     return HttpResponse(newFolder.id)
 
-#this method is invalid
+#
+# Upload File : Uploads a file to a folder in a project given the parameters in multi-part form data.
+#               file -- The actual binary file
+#               allowAllUsersWrite -- Access control variable
+#               allowAllUsersRead -- Access control variable
+#               allowKeyUsersWrite -- Access control variable
+#               allowKeyUsersRead -- Access control variable
+#               name -- The name to store the file as
+#               integration -- The project the file belongs to, also used to obtain the correct folder to insert to 
+#               parent(ID) -- The identification of the parent folder
+#               size -- The computed size of the file as bytes by the library (Not Secure - People can bypass)
+# Response Types :
+#               woahh - does'nt seem like the data we need -- Invalid form data
+#               1702 -- name contains unwanted charectors
+#               500 -- failed to get the folder to insert to || the user does not have access to the project
+#               1703 -- a files exists under that name
+#               Boss man! something is seriously wrong -- Failed to save the file
+#               not found -- invalid integration
+#               200 -- success
 @api_view(['POST'])
 @csrf_exempt
 @permission_classes([IsAuthenticated])
-def getFileWithName(request):
-    pathMap = None
+def clientUploadFile(request):  
+    #Get Attributes
+    uploadedFile = None
+    allowAllUsersWrite = None
+    allowAllUsersRead = None
+    allowKeyUsersRead = None
+    allowKeyUsersWrite = None
+    name = None
+    integration = None
+    parent = None
+    size = None
+
     try:
-        pathMap = receivedJSON = json.loads(request.body)["path"].split("/")
+        uploadedFile = request.FILES['file'].read()
+        name = request.POST.get("name")
+        print(name)
+        allowAllUsersWrite = strtobool(request.POST.get("allowAllUsersWrite"))
+        allowAllUsersRead = strtobool(request.POST.get("allowAllUsersRead"))
+        allowKeyUsersRead = strtobool(request.POST.get("allowKeyUsersRead"))
+        allowKeyUsersWrite = strtobool(request.POST.get("allowKeyUsersWrite"))
+        integration = request.POST.get("integration")
+        parent = request.POST.get("parent")
+        size= request.POST.get("size")
     except:
-        return HttpResponse("Does'nt seem like the json we need")
+        return HttpResponse("woahh - does'nt seem like the data we need")
     
-    #store the current directory
-    currentDirectory = None
 
-    #iterate the path in pathMap till we get an index object that if not a folder
-    for indexItem in pathMap:
-        #the root directory is made of 2 variable the <username>.<project>
-        #here if the currentDirectory is none that mean we need to assign current derectory to the root folder of 
-        #the given project. This is because the root directory name is not the project name
-        try:
-            if (currentDirectory == None):
-                #get the root directory for supplied project
-                currentDirectory = IndexObject.objects.get(name=f"{request.user.username}.{indexItem}")
-            else:
-                currentDirectory = IndexObject.objects.get(name=indexItem)
-        except:
-            return HttpResponse("not found")  
+    #check if folder contains unwanted charectors
+    special_characters = "'""!@#$%^&*+?=,<>/""'"
+    if any(c in special_characters for c in name):
+        return HttpResponse("1702")
 
-    #check pemmissions to the currentDirectory 
-    if (not checkPemmission(request,currentDirectory,"read")):
-        return HttpResponse("denied")
-
-    #if final directoryObject is a folder return msg
-    if (currentDirectory.objectType == "FD"):
-        return HttpResponse("This is a directory")  
-    
-    #get file from mongo 
+    # Get the integration and project
     try:
-        returnedFile = mongoGetFile(currentDirectory.fileReference)
-        return HttpResponse(returnedFile.read(),content_type='application/octet-stream')  
+        clientsIntegration = Integration.objects.get(integrationKey=integration)
+        project = clientsIntegration.project
+    except:
+        return HttpResponse("not found")
+
+    # Get the parent index object to insert the file to
+    parentIndexObject = None
+    try:
+        if (parent == "root"):
+            parentIndexObject = IndexObject.objects.get(name=f"{project.owner.username}.{project.name}")
+        else:
+            parentIndexObject = IndexObject.objects.get(id=parent)
     except:
         return HttpResponse("500")
+
+    # check barn 
+    try:
+        BarnedDeveloperClient.objects.get(project=project,client=DeveloperClient.objects.get(user=request.user))
+        return HttpResponse("denied")
+    except:
+        pass
+   
+    #check if the filename file exists 
+    try:
+        IndexObject.objects.get(name=name,parent=parentIndexObject)
+        return HttpResponse("1703")
+    except:
+        pass
+
+    # Add the file to the parent object
+    try:
+        #create an index object 
+        newIndexObject = IndexObject()
+        newIndexObject.create(request.user,"FL",name,parentIndexObject.project,parentIndexObject,size=size) #create first time to get reference
+        
+        #upload to mongo
+        mongoUploadFile(uploadedFile,newIndexObject.id,name,request.user.username)
+    
+        #update indexObject
+        fileType = "file"
+        if (name.endswith(".mp3") or name.endswith(".WAV")):
+            fileType = "audio"
+        elif (name.endswith(".mp4") or name.endswith(".MOV") or name.endswith(".WMV") or name.endswith(".FLV")  or name.endswith(".MKV")):
+            fileType = "video"
+        elif (name.endswith(".pdf")):
+            fileType = "pdf" 
+
+        newIndexObject.fileReference= newIndexObject.id
+        newIndexObject.fileType=fileType
+        newIndexObject.allowKeyUsersWrite=allowKeyUsersWrite
+        newIndexObject.allowKeyUsersRead=allowKeyUsersRead
+        newIndexObject.allowAllUsersRead=allowAllUsersRead
+        newIndexObject.allowAllUsersWrite=allowAllUsersWrite
+        newIndexObject.save()
+
+        return HttpResponse("200")
+    except:
+        return HttpResponse("Boss man! something is seriously wrong")
+
+
 
 #methods to help with some functins
 def deleteFolder(folder,request):

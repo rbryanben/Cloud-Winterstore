@@ -22,6 +22,7 @@ import java.io.IOException;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -38,6 +39,7 @@ public class Connection {
     private String getTokenURL =  serverURL + "/api/get-token/";
     private String downloadURL = serverURL + "/api/download/";
     private String createFolderURL = serverURL + "/api/create-client-folder";
+    private String uploadURL = serverURL + "/api/upload-file/";
 
 
     //variables
@@ -50,7 +52,7 @@ public class Connection {
 
 
     //constructor with credentials
-    public Connection(@NonNull ConnectionInterface connectionInterface,@NonNull Credentials credentials, Activity activity){
+    public Connection( Activity activity, @NonNull Credentials credentials,@NonNull ConnectionInterface connectionInterface){
         this.connectionInterface = connectionInterface;
         this.clientCredentials = credentials;
         this.activity = activity;
@@ -197,7 +199,6 @@ public class Connection {
         });
     }
 
-
     // Load Image: Given an object to display the image, assigns the given
     // imageID as the image received from the server
     public void loadImage(ImageView imageView, String imageID){
@@ -284,6 +285,98 @@ public class Connection {
                         }
                     }
                 });
+            }
+        });
+    }
+
+    // Upload File: Uploads to a folder in the client's project, given
+    // a file, name, parentFolder, accessControl and integration
+    public void uploadFile(File file, String name,Boolean allowAllUsersWrite, Boolean allowAllUsersRead, Boolean allowKeyUsersRead,
+                           Boolean allowKeyUsersWrite, String integration,String parent, int uploadID)
+    {
+        //calculate size
+        long size = file.getAbsoluteFile().length();
+
+        // client
+        OkHttpClient client = new OkHttpClient();
+
+        // multipart form body
+        RequestBody requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM)
+                .addFormDataPart("file", file.getName(),
+                        RequestBody.create(MediaType.parse("text/csv"), file))
+                .addFormDataPart("name", name)
+                .addFormDataPart("allowAllUsersWrite", String.valueOf(allowAllUsersWrite))
+                .addFormDataPart("allowAllUsersRead", String.valueOf(allowAllUsersRead))
+                .addFormDataPart("allowKeyUsersWrite", String.valueOf(allowKeyUsersWrite))
+                .addFormDataPart("allowKeyUsersRead", String.valueOf(allowKeyUsersRead))
+                .addFormDataPart("integration",integration)
+                .addFormDataPart("parent",parent)
+                .addFormDataPart("size", String.valueOf(size))
+                .build();
+        
+        // request
+        Request request = new Request.Builder()
+                .post(requestBody)
+                .url(uploadURL)
+                .addHeader("Authorization","Token " + TOKEN)
+                .build();
+        
+        // send request
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        connectionInterface.connectionFailed("Network Error");
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                // If the upload was not successful
+                if (!response.isSuccessful()){
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            connectionInterface.connectionFailed("Server Unreachable");
+                        }
+                    });
+                }
+
+                //keep the result in a variable
+                String result = response.body().string();
+                int uploadIdentification = uploadID;
+
+
+                //if the request was successful
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        switch (result) {
+                            case "woahh - does'nt seem like the data we need -- Invalid form data":
+                                connectionInterface.uploadResults(uploadIdentification,false,"Invalid Form");
+                                break;
+                            case  "1703":
+                                connectionInterface.uploadResults(uploadIdentification,false,"Filename Exist");
+                                break;
+                            case "500":
+                                connectionInterface.uploadResults(uploadIdentification,false,"Error");
+                                break;
+                            case "1702":
+                                connectionInterface.uploadResults(uploadIdentification,false,"Bad Filename");
+                                break;
+                            case "not found":
+                                connectionInterface.uploadResults(uploadIdentification,false,"Invalid Integration");
+                                break;
+                            default:
+                                connectionInterface.uploadResults(uploadIdentification,true,"Successful");
+                                break;
+                        }
+                    }
+                });
+
             }
         });
     }

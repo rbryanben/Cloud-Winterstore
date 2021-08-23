@@ -29,7 +29,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.time.ZoneId;
 
-public class MainActivity extends AppCompatActivity implements ConnectionInterface {
+public class MainActivity extends AppCompatActivity {
     // TAG
     public static String TAG = "MainActivity";
 
@@ -45,46 +45,49 @@ public class MainActivity extends AppCompatActivity implements ConnectionInterfa
         //set variables
         myImage = findViewById(R.id.myImageView);
 
-        //test credentials
+        //Credentials
         Credentials credentials = new Credentials("client@cloudwinterstore.co.zw","password25","19FJ221PWTOOO546X35LMIT5RPJQ4E4QFR4TZN");
 
-        // create a connection
-        connection = new Connection(this,credentials,this);
-
+        //bind connection
+        bindConnection(credentials);
     }
 
-    @Override
-    public void tokenReceived(String token) {
-        // get bytes
-        connection.getFile("6S7JTYSRIMBWTI8QUH0HGADT8TC48M1DGMOX3U0QM0IIK5C0OPP8A4YML4H2NPCC",new File(getExternalFilesDir("Images"),"coolCat.jpg"));
+    // This method bind the connection to Cloud
+    private void bindConnection(Credentials credentials){
+        connection = new Connection(MainActivity.this, credentials, new ConnectionInterface() {
+            @Override
+            public void tokenReceived(String token) {
+                //download a video
+                connection.getFile("EWFXY954SEO5FF4JTNVFAVQSG7AKO6PE1ZST9YJRKJ9HQ160QT829FEPWW30KOGX",new File(getExternalFilesDir("Images"),"cat.jpg"));
+            }
 
-        // create a folder
-        connection.createFolder("root","Denver");
-    }
+            @Override
+            public void connectionFailed(String error) {
 
-    @Override
-    public void connectionFailed(String error) {
-        Toast.makeText(this,"Connection Error: "+error,Toast.LENGTH_LONG).show();
-    }
+            }
 
-    @Override
-    public void fileSaved(File file) {
-        Toast.makeText(this,"File Saved: "+file.getName(),Toast.LENGTH_LONG).show();
-        Glide.with(this)
-                .load(file)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .into(myImage);
+            @Override
+            public void fileSaved(File file) {
+                connection.uploadFile(file,"cat.jpg",true,true,true,true,"19FJ221PWTOOO546X35LMIT5RPJQ4E4QFR4TZN","66TCW7Q9BGLIFEJLBN4PYNLOGO3P2TP82MKQO1RQX2FMSRIDJWLNHK32K9YKZHE6",23);
+            }
 
-    }
+            @Override
+            public void fileError(String error) {
 
-    @Override
-    public void fileError(String error) {
-        Toast.makeText(this,"File Error: "+error,Toast.LENGTH_LONG).show();
-    }
+            }
 
-    @Override
-    public void folderCreated(String id) {
-        Toast.makeText(this,"Folder Created" + id,Toast.LENGTH_LONG).show();
+            @Override
+            public void folderCreated(String id) {
+
+            }
+
+            @Override
+            public void uploadResults(int uploadID, Boolean wasSuccessful, String result) {
+                Toast.makeText(MainActivity.this,"Upload Result: "+result,Toast.LENGTH_LONG).show();
+            }
+
+
+        });
     }
 
 
