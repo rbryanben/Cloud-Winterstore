@@ -17,6 +17,7 @@ urlpatterns = [
     path('stream/<str:slug>',views.streamFile), #streams the file
     path('create-client-folder',views.createClientFolder), #create client folder
     path('upload-file/',views.clientUploadFile), #Upload A File
+    path('client-delete-index-object/',views.clientDeleteIndexObject), # Client Delete Index Object
 
     #for developer demonstration 
     path('open-stream/<str:slug>',views.openStream), #open stream
