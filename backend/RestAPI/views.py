@@ -1085,11 +1085,11 @@ def clientRemoveKeys(request):
 #              returns infomation on a file
 #              as a JSON (API CALL)
 # Response Types : 
-#                   500 -- means we failed to find the file you are looking for
+#                   Does'nt seem like the json we need -- Invalid JSON
+#                   not found -- means we failed to find the file you are looking for
 #                   denied -- means you do not have access to that folder
-#                   Invalid Path -- the path supplied is invalid
 #                   Not File -- the path supplied leads to a folder and not a file
-#                   StreamingHttpResponse -- success
+#                   JSON -- success
 @api_view(['POST'])
 @csrf_exempt
 @permission_classes([IsAuthenticated])
