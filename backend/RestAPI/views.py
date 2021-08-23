@@ -1049,13 +1049,15 @@ def clientGiveKey(request):
 #              500 -- error occured on our side
 #              deined -- user does not have access to that file
 #              200 - success 
-@login_required(login_url='/console/login-required')
+@api_view(['POST'])
+@csrf_exempt
+@permission_classes([IsAuthenticated])
 def clientRemoveKeys(request):
-    userList = None
+    account = None
     indexObject = None
     try:
         receivedJSON = json.loads(request.body)
-        userList = receivedJSON["accounts"]
+        account = receivedJSON["account"]
         indexObject = IndexObject.objects.get(id=receivedJSON['file'])
     except exceptions.ObjectDoesNotExist:
         return HttpResponse("not found")
@@ -1066,21 +1068,13 @@ def clientRemoveKeys(request):
     if (not checkPemmission(request,indexObject,"write")):
         return HttpResponse("denied")
     
-    # check barn 
+
+    #remove key
     try:
-        BarnedDeveloperClient.objects.get(project=indexObject.project,client=DeveloperClient.objects.get(user=request.user))
-        return HttpResponse("denied")
+        userToRemove = DeveloperClient.objects.get(identification=account).user
+        FileKey.objects.filter(file=indexObject,user=userToRemove).delete()
     except:
         pass
-
-    #delete users
-    for email in userList:
-        try:
-            #get developer client user
-            userToRemove = DeveloperClient.objects.get(identification=email).user
-            FileKey.objects.filter(file=indexObject,user=userToRemove).delete()
-        except:
-            pass
     
     return HttpResponse("200")
 
