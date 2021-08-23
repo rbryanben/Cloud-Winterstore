@@ -721,6 +721,7 @@ def integrations(request):
         Integration.objects.get(project=project,identifier=identification).delete()
 
         return HttpResponse("200")
+
 # Create Project API
 @require_http_methods(["POST","UPDATE"])
 @csrf_exempt

@@ -18,6 +18,7 @@ urlpatterns = [
     path('create-client-folder',views.createClientFolder), #create client folder
     path('upload-file/',views.clientUploadFile), #Upload A File
     path('client-delete-index-object/',views.clientDeleteIndexObject), # Client Delete Index Object
+    path('client-give-key/',views.clientGiveKey), # Client Give Key API
 
     #for developer demonstration 
     path('open-stream/<str:slug>',views.openStream), #open stream

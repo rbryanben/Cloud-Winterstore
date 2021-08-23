@@ -985,6 +985,49 @@ def clientDeleteIndexObject(request):
     return HttpResponse("200")
 
 
+# Give Key : Gives a key to a client to access a files given JSON data with the clients account
+#            and the id of the index object to give access to
+# Response Types: 
+#            not found -- the file/folder specified does not exists
+#            500 -- an error occured on our end
+#            denied -- user does not have access to write that file
+#            200 -- success
+@api_view(['POST'])
+@csrf_exempt
+@permission_classes([IsAuthenticated])
+def clientGiveKey(request):
+    account = None
+    indexObject = None
+
+    try:
+        receivedJSON = json.loads(request.body)
+        #get developer
+        clientToGiveKey = DeveloperClient.objects.get(identification=receivedJSON['account'])
+        account = clientToGiveKey.user
+        indexObject = IndexObject.objects.get(id=receivedJSON['file'])
+    except exceptions.ObjectDoesNotExist:
+        return HttpResponse("not found")
+    except:
+        return HttpResponse("500")
+
+    #check permission
+    if (not checkPemmission(request,indexObject,"write")):
+        return HttpResponse("denied")
+
+    #prevent duplication 
+    try:
+        FileKey.objects.get(file=indexObject,user=account)
+        return HttpResponse("200")
+    except:
+        pass
+
+    #add a new Key 
+    newKey = FileKey()
+    newKey.create(indexObject,account)
+
+    return HttpResponse("200")
+
+
 #methods to help with some functins
 def deleteFolder(folder,request):
     childObject = IndexObject.objects.filter(parent=folder)
