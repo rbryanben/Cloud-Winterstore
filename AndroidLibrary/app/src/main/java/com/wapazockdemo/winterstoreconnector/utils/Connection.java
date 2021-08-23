@@ -2,10 +2,7 @@ package com.wapazockdemo.winterstoreconnector.utils;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import android.widget.ImageView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -28,19 +25,21 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
-
 public class Connection {
     // TAG
     public static String TAG = "Connection";
 
     //server urls
-    private String serverURL = "http://192.168.1.5:80";
+    private String serverURL = "https://cloudwinterstore.co.zw";
     private String getTokenURL =  serverURL + "/api/get-token/";
     private String downloadURL = serverURL + "/api/download/";
     private String createFolderURL = serverURL + "/api/create-client-folder";
     private String uploadURL = serverURL + "/api/upload-file/";
-
+    private String deleteURL = serverURL + "/api/client-delete-index-object/";
+    private String giveKeyURL = serverURL + "/api/client-give-key/";
+    private String removeKeysURL = serverURL + "/api/client-remove-keys/";
+    private String getFolderURL = serverURL + "/api/client-get-folder/";
+    private String fileInfoURL = serverURL + "/api/client-file-info/";
 
     //variables
     private Activity activity;
@@ -371,8 +370,390 @@ public class Connection {
                                 connectionInterface.uploadResults(uploadIdentification,false,"Invalid Integration");
                                 break;
                             default:
-                                connectionInterface.uploadResults(uploadIdentification,true,"Successful");
+                                connectionInterface.uploadResults(uploadIdentification,true,result);
                                 break;
+                        }
+                    }
+                });
+
+            }
+        });
+    }
+
+    // Delete Index Object: Deletes an index object given the id
+    //  of the object
+    public void deleteIndexObject(String id){
+        //Client
+        OkHttpClient client = new OkHttpClient();
+
+        //data to send
+        JSONObject data = new JSONObject();
+        try{
+            data.put("id",id);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+        // Request Body
+        RequestBody body = RequestBody.create(JSON,data.toString());
+
+        // Request
+        Request request = new Request.Builder()
+                .url(deleteURL)
+                .addHeader("Authorization","Token " + TOKEN)
+                .post(body)
+                .build();
+
+        // Send the request
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        connectionInterface.connectionFailed("Network Error");
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                // If the upload was not successful
+                if (!response.isSuccessful()){
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //server unreachable
+                            connectionInterface.deleteResults(id,false,"Server Unreachable");
+                        }
+                    });
+                }
+
+                //keep the result in a variable
+                String result = response.body().string();
+
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        switch (result){
+                            case  "Hey! This does'nt look like the json file we need -- The JSON supplied is invalid":
+                                connectionInterface.deleteResults(id,false,"Invalid JSON");
+                                break;
+                            case "Not Found":
+                                connectionInterface.deleteResults(id,false,"not found");
+                                break;
+                            case "denied":
+                                connectionInterface.deleteResults(id,false,"denied");
+                                break;
+                            default:
+                                connectionInterface.deleteResults(id,true,id);
+                        }
+                    }
+                });
+
+            }
+        });
+    }
+
+
+    // Give Key: This method gives a key to another client
+    public void giveKey(String clientAccount, String fileID){
+        //Client
+        OkHttpClient client = new OkHttpClient();
+
+        //data to send
+        JSONObject data = new JSONObject();
+        try{
+            data.put("account",clientAccount);
+            data.put("file",fileID);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+        // Request Body
+        RequestBody body = RequestBody.create(JSON,data.toString());
+
+        // Request
+        Request request = new Request.Builder()
+                .url(giveKeyURL)
+                .addHeader("Authorization","Token " + TOKEN)
+                .post(body)
+                .build();
+
+        // Send the request
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        connectionInterface.connectionFailed("Network Error");
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                // If the upload was not successful
+                if (!response.isSuccessful()){
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //server unreachable
+                            connectionInterface.giveKeyResults(clientAccount,false,"Server Unreachable");
+                        }
+                    });
+                }
+
+                //keep the result in a variable
+                String result = response.body().string();
+
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        switch (result){
+                            case  "500":
+                                connectionInterface.giveKeyResults(clientAccount,false,"Invalid JSON");
+                                break;
+                            case "not found":
+                                connectionInterface.giveKeyResults(clientAccount,false,"not found");
+                                break;
+                            case "denied":
+                                connectionInterface.giveKeyResults(clientAccount,false,"denied");
+                                break;
+                            default:
+                                connectionInterface.giveKeyResults(clientAccount,true,clientAccount);
+                        }
+                    }
+                });
+
+            }
+        });
+    }
+
+    // Give Key: This method gives a key to another client
+    public void removeKeys(String clientAccount, String fileID){
+        //Client
+        OkHttpClient client = new OkHttpClient();
+
+        //data to send
+        JSONObject data = new JSONObject();
+        try{
+            data.put("account",clientAccount);
+            data.put("file",fileID);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+        // Request Body
+        RequestBody body = RequestBody.create(JSON,data.toString());
+
+        // Request
+        Request request = new Request.Builder()
+                .url(removeKeysURL)
+                .addHeader("Authorization","Token " + TOKEN)
+                .post(body)
+                .build();
+
+        // Send the request
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        connectionInterface.connectionFailed("Network Error");
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                // If the upload was not successful
+                if (!response.isSuccessful()){
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //server unreachable
+                            connectionInterface.removeKeysResults(clientAccount,false,"Server Unreachable");
+                        }
+                    });
+                }
+
+                //keep the result in a variable
+                String result = response.body().string();
+
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        switch (result){
+                            case  "500":
+                                connectionInterface.removeKeysResults(clientAccount,false,"Invalid JSON");
+                                break;
+                            case "not found":
+                                connectionInterface.removeKeysResults(clientAccount,false,"not found");
+                                break;
+                            case "denied":
+                                connectionInterface.removeKeysResults(clientAccount,false,"denied");
+                                break;
+                            default:
+                                connectionInterface.removeKeysResults(clientAccount,true,"200");
+                        }
+                    }
+                });
+
+            }
+        });
+    }
+
+    // File Info: Gets information on a file given a file id
+    public void fileInfo(String fileID){
+        //Client
+        OkHttpClient client = new OkHttpClient();
+
+        //data to send
+        JSONObject data = new JSONObject();
+        try{
+            data.put("id",fileID);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+        // Request Body
+        RequestBody body = RequestBody.create(JSON,data.toString());
+
+        // Request
+        Request request = new Request.Builder()
+                .url(fileInfoURL)
+                .addHeader("Authorization","Token " + TOKEN)
+                .post(body)
+                .build();
+
+        // Send the request
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        connectionInterface.connectionFailed("Network Error");
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                // If the upload was not successful
+                if (!response.isSuccessful()){
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //server unreachable
+                            connectionInterface.fileInfoResults(fileID,false,"Server Unreachable");
+                        }
+                    });
+                }
+
+                //keep the result in a variable
+                String result = response.body().string();
+
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        switch (result){
+                            case  "Does'nt seem like the json we need":
+                                connectionInterface.fileInfoResults(fileID,false,"Invalid JSON");
+                                break;
+                            case "not found":
+                                connectionInterface.fileInfoResults(fileID,false,"not found");
+                                break;
+                            case "denied":
+                                connectionInterface.fileInfoResults(fileID,false,"denied");
+                                break;
+                            case "Not File":
+                                connectionInterface.fileInfoResults(fileID,false,"Not File");
+                                break;
+                            default:
+                                connectionInterface.fileInfoResults(fileID,true,result);
+                        }
+                    }
+                });
+
+            }
+        });
+    }
+
+    // File Info: Gets information on a file given a file id
+    public void listFolder(String folderID){
+        //Client
+        OkHttpClient client = new OkHttpClient();
+
+        //data to send
+        JSONObject data = new JSONObject();
+        try{
+            data.put("folderID",folderID);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+        // Request Body
+        RequestBody body = RequestBody.create(JSON,data.toString());
+
+        // Request
+        Request request = new Request.Builder()
+                .url(getFolderURL)
+                .addHeader("Authorization","Token " + TOKEN)
+                .post(body)
+                .build();
+
+        // Send the request
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        connectionInterface.connectionFailed("Network Error");
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                // If the upload was not successful
+                if (!response.isSuccessful()){
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //server unreachable
+                            connectionInterface.getFolderResults(folderID,false,"Server Unreachable");
+                        }
+                    });
+                }
+
+                //keep the result in a variable
+                String result = response.body().string();
+
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        switch (result){
+                            case  "doesn't seem like json data":
+                                connectionInterface.getFolderResults(folderID,false,"Invalid JSON");
+                                break;
+                            case "Folder Not Found":
+                                connectionInterface.getFolderResults(folderID,false,"not found");
+                                break;
+                            case "denied":
+                                connectionInterface.getFolderResults(folderID,false,"denied");
+                                break;
+                            default:
+                                connectionInterface.getFolderResults(folderID,true,result);
                         }
                     }
                 });
