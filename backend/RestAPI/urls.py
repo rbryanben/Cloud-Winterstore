@@ -20,7 +20,9 @@ urlpatterns = [
     path('client-delete-index-object/',views.clientDeleteIndexObject), # Client Delete Index Object
     path('client-give-key/',views.clientGiveKey), # Client Give Key API
     path('client-remove-keys/',views.clientRemoveKeys), # Client Remove Keys Method
-
+    path('client-file-info/',views.clientFileInfo), # Client Remove Keys Method
+    path('client-get-folder/',views.clientGetFolder), # Client Remove Keys Method
+ 
     #for developer demonstration 
     path('open-stream/<str:slug>',views.openStream), #open stream
 ]

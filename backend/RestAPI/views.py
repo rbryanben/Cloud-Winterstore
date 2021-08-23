@@ -31,6 +31,7 @@ from django.contrib.auth import authenticate , login
 from django.db.models import Q
 from Console.models import FileDownloadInstance
 from Console.views import mongoUploadFile
+from Console.serializers import IndexObjectSerializer
 
 #rest framework permmisions
 from rest_framework.decorators import api_view, permission_classes
@@ -1079,6 +1080,102 @@ def clientRemoveKeys(request):
     return HttpResponse("200")
 
 
+
+# File Info : Given a file id 
+#              returns infomation on a file
+#              as a JSON (API CALL)
+# Response Types : 
+#                   500 -- means we failed to find the file you are looking for
+#                   denied -- means you do not have access to that folder
+#                   Invalid Path -- the path supplied is invalid
+#                   Not File -- the path supplied leads to a folder and not a file
+#                   StreamingHttpResponse -- success
+@api_view(['POST'])
+@csrf_exempt
+@permission_classes([IsAuthenticated])
+def clientFileInfo(request):
+    # Variable to store the file identification 
+    fileIdentification = None
+
+    # Extract the file identification from the request
+    # Extract the path and project from the request body
+    try:
+        receivedJSON = json.loads(request.body)
+        fileIdentification = receivedJSON["id"]
+    except:
+        return HttpResponse("Does'nt seem like the json we need")
+
+    # Variable to store the indexObject for the file
+    fileIndexObject = None
+
+    # Get the indexObject with that identification
+    try:
+        fileIndexObject = IndexObject.objects.get(id=fileIdentification)
+    except:
+        return HttpResponse("not found")
+
+    #check permission
+    if (not checkPemmission(request,fileIndexObject,"write")):
+        return HttpResponse("denied")
+
+    #check if the fileIndexObject is a file
+    if (fileIndexObject.objectType == "FD"):
+        return HttpResponse("Not File") 
+
+    # serialize the object
+    serializedIndexObject = IndexObjectSerializer(fileIndexObject)
+
+    #return infomation on the file
+    return JsonResponse(serializedIndexObject.data,safe=False)
+
+# Get Folder : Given the project name and the folder identification
+#              returns a list of files that belong to the folder in that project
+#              as a JSON (API CALL)
+# Response Types : 
+#                   500 -- means we failed to find the folder you are looking for
+#                   denied -- means you do not have access to that folder
+#                   JSON[] -- success
+@api_view(['POST'])
+@csrf_exempt
+@permission_classes([IsAuthenticated])
+def clientGetFolder(request):
+    # Variables to assign the request infomation to
+    integration = None
+    folderID = None
+
+    # Extract the project name and folder id from the request
+    try:
+        receivedJSON = json.loads(request.body)
+        folderID = receivedJSON["folderID"]
+    except:
+        return HttpResponse("doesn't seem like json data")
+    
+ 
+    # Variable to store the folder we want to get infomation from
+    folder = None
+    
+    # Get the right folder. 
+    # If the folderID is root the assign the folder to be the projects root folder.
+    #      this is because the root folder is stored differently from subfolders and files
+    # If not, simply assign the folder as the folder with the given folderID
+    try:
+        # assign normal folder
+        folder = IndexObject.objects.get(id=folderID)
+    except:
+        return HttpResponse("Folder Not Found")
+
+    #check permission
+    if (not checkPemmission(request,folder,"write")):
+        return HttpResponse("denied")
+
+    # Get the objects in that folder and serialize them 
+    folderChildren = IndexObject.objects.filter(parent=folder)
+    serializedFolderChildren = IndexObjectSerializer(folderChildren,many=True)
+
+    # Return a list of the children belonging to the folder
+    return JsonResponse(serializedFolderChildren.data,safe=False)
+
+
 #methods to help with some functins
 def deleteFolder(folder,request):
     childObject = IndexObject.objects.filter(parent=folder)
@@ -1153,11 +1250,14 @@ def checkPemmission(request,IndexFile,method):
     except:
         pass
     
-    #check if owner of project 
+    #check if owner of the file
     projectFileObjectBelong =  IndexFile.project
     if (projectFileObjectBelong.owner == request.user):
         return True
     
+    # check if owner of the index object
+    if (IndexFile.owner == request.user):
+        return True
 
     #if not the owner check if the user is collborating in the project
     try:
