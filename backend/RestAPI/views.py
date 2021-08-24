@@ -668,17 +668,12 @@ def openStream(request,slug):
     range_header = request.META.get('HTTP_RANGE', '').strip()
     range_match = range_re.match(range_header)
 
-    #create temporary file
-    try:
-        os.mkdir('temporary_files')
-    except:
-        pass
-    temporaryFile = open('temporary_files/' + indexObject.fileReference,'wb')
-    temporaryFile.write(fileToStream.read())
-    temporaryFile.close()
-
+    # calculate the size
     fileToStream.seek(0,2)
     size = fileToStream.tell()
+    fileToStream.seek(0)
+    
+    #set the content type
     content_type, encoding = mimetypes.guess_type(filename)
     content_type = content_type or 'application/octet-stream'
     if range_match:
@@ -688,11 +683,11 @@ def openStream(request,slug):
         if last_byte >= size:
             last_byte = size - 1
         length = last_byte - first_byte + 1
-        resp = StreamingHttpResponse(RangeFileWrapper(open('temporary_files/' + indexObject.fileReference,'rb'), offset=first_byte, length=length), status=206, content_type=content_type)
+        resp = StreamingHttpResponse(RangeFileWrapper(fileToStream, offset=first_byte, length=length), status=206, content_type=content_type)
         resp['Content-Length'] = str(length)
         resp['Content-Range'] = 'bytes %s-%s/%s' % (first_byte, last_byte, size)
     else:
-        resp = StreamingHttpResponse(FileWrapper(open('temporary_files/' + indexObject.fileReference,'rb')), content_type=content_type)
+        resp = StreamingHttpResponse(FileWrapper(fileToStream), content_type=content_type)
         resp['Content-Length'] = str(size)
     resp['Accept-Ranges'] = 'bytes'
     return resp
@@ -1134,13 +1129,13 @@ def clientFileInfo(request):
 # Response Types : 
 #                   500 -- means we failed to find the folder you are looking for
 #                   denied -- means you do not have access to that folder
+#                   doesn't seem like json data -- Invalid JSON
 #                   JSON[] -- success
 @api_view(['POST'])
 @csrf_exempt
 @permission_classes([IsAuthenticated])
 def clientGetFolder(request):
     # Variables to assign the request infomation to
-    integration = None
     folderID = None
 
     # Extract the project name and folder id from the request
