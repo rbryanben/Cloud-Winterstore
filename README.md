@@ -16,4 +16,5 @@ the person is authenticated they can view any file you created, they just have t
 So my goal is to remake a service like firestore, but this time be a little bit better than the engineers at Google and add  secure access control for sakes.
 Fingers crossed on finding someone who will use my code base, but right now its meant for my dissertation
 
-
+# Console Demo
+https://user-images.githubusercontent.com/63599157/163562936-6d86de01-a999-4448-8361-283da2c46634.mp4
